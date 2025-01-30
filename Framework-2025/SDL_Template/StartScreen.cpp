@@ -32,15 +32,12 @@ StartScreen::StartScreen() {
 	/*mTopScore->Score(645987);*/
 
 	// logo entities
-<<<<<<< Updated upstream
 	mLogo = new GLTexture("GalagaLogo.png", 0, 0, 360, 180);
 	mAnimatedLogo = new AnimatedGLTexture("GalagaLogo.png", 0, 0, 360, 180, 3, 0.2f, Animation::Layouts::Vertical);
 
-=======
 	mLogo = new GLTexture("Auto-BahnLogo.png", 0, 0, 360, 180);
 	mAnimatedLogo = new AnimatedGLTexture("Auto-Bahn.png", 0, 0, 360, 180, 3, 0.2f, Animation::Layouts::Vertical);
 	
->>>>>>> Stashed changes
 	mLogo->Parent(this);
 	mAnimatedLogo->Parent(this);
 
