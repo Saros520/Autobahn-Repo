@@ -35,7 +35,6 @@
 # Visual Studio build folders
 
 Debug/
-Release/
 # Whitelist
 !dep/devel/x64
 
