@@ -6,54 +6,67 @@ StartScreen::StartScreen() {
 
 	// top bar entities
 	mTopBar = new GameEntity(Graphics::SCREEN_WIDTH * 0.5f, 80.0f);
-	mPlayerOne = new GLTexture("1UP", "emulogic.ttf", 32, { 200, 0, 0 });
-	mPlayerTwo = new GLTexture("2UP", "emulogic.ttf", 32, { 200, 0, 0 });
-	mHiScore = new GLTexture("HI SCORE", "emulogic.ttf", 32, { 200, 0, 0 });
-	mPlayerOneScore = new Scoreboard();
-	mPlayerTwoScore = new Scoreboard();
-	mTopScore = new Scoreboard();
+	mPlayerScore = new GLTexture("1UP", "emulogic.ttf", 32, { 200, 0, 0 });
+	/*mPlayerTwo = new GLTexture("2UP", "emulogic.ttf", 32, { 200, 0, 0 });
+	mHiScore = new GLTexture("HI SCORE", "emulogic.ttf", 32, { 200, 0, 0 });*/
+	mPlayerScoreNumber = new Scoreboard();
+	/*mPlayerTwoScore = new Scoreboard();
+	mTopScore = new Scoreboard();*/
 
 	mTopBar->Parent(this);
-	mPlayerOne->Parent(mTopBar);
-	mPlayerTwo->Parent(mTopBar);
+	mPlayerScore->Parent(mTopBar);
+	/*mPlayerTwo->Parent(mTopBar);
 	mHiScore->Parent(mTopBar);
 	mPlayerOneScore->Parent(mTopBar);
 	mPlayerTwoScore->Parent(mTopBar);
-	mTopScore->Parent(mTopBar);
+	mTopScore->Parent(mTopBar);*/
 
-	mPlayerOne->Position(-Graphics::SCREEN_WIDTH * 0.35f, 0.0f);
-	mPlayerTwo->Position(Graphics::SCREEN_WIDTH * 0.2f, 0.0f);
+	mPlayerScore->Position(-Graphics::SCREEN_WIDTH * 0.35f, 0.0f);
+	/*mPlayerTwo->Position(Graphics::SCREEN_WIDTH * 0.2f, 0.0f);
 	mHiScore->Position(-30.0f, 0.0f);
 
 	mPlayerOneScore->Position(-Graphics::SCREEN_WIDTH * 0.23f, 40.0f);
 	mPlayerTwoScore->Position(Graphics::SCREEN_WIDTH * 0.32f, 40.0f);
-	mTopScore->Position(Graphics::SCREEN_WIDTH * 0.05f, 40.0f);
+	mTopScore->Position(Graphics::SCREEN_WIDTH * 0.05f, 40.0f);*/
 
-	mTopScore->Score(645987);
+	/*mTopScore->Score(645987);*/
 
 	// logo entities
+<<<<<<< Updated upstream
 	mLogo = new GLTexture("GalagaLogo.png", 0, 0, 360, 180);
 	mAnimatedLogo = new AnimatedGLTexture("GalagaLogo.png", 0, 0, 360, 180, 3, 0.2f, Animation::Layouts::Vertical);
 
+=======
+	mLogo = new GLTexture("Auto-BahnLogo.png", 0, 0, 360, 180);
+	mAnimatedLogo = new AnimatedGLTexture("Auto-Bahn.png", 0, 0, 360, 180, 3, 0.2f, Animation::Layouts::Vertical);
+	
+>>>>>>> Stashed changes
 	mLogo->Parent(this);
 	mAnimatedLogo->Parent(this);
 
 	mLogo->Position(Graphics::SCREEN_WIDTH * 0.5f, Graphics::SCREEN_HEIGHT * 0.32f);
 	mAnimatedLogo->Position(Graphics::SCREEN_WIDTH * 0.5f, Graphics::SCREEN_HEIGHT * 0.32f);
 
+	// Side Bar Entities
+	mSideBar = new GameEntity(Graphics::SCREEN_HEIGHT * 0.5f, Graphics::SCREEN_HEIGHT * 0.5f);
+	mCars = new AnimatedGLTexture("Cars.png", 0, 0, 100, 100, 4, 0.2f, Animation::Layouts::Vertical);
+
 	// play mode entities
 	mPlayModes = new GameEntity(Graphics::SCREEN_WIDTH * 0.5f, Graphics::SCREEN_HEIGHT * 0.55f);
-	mOnePlayerMode = new GLTexture("1 Player ", "emulogic.ttf", 32, { 230, 230, 230 });
-	mTwoPlayerMode = new GLTexture("2 Players", "emulogic.ttf", 32, { 230, 230, 230 });
+	mStartGame = new GLTexture("1 Player ", "emulogic.ttf", 32, { 230, 230, 230 });
+	mOptions = new GLTexture("2 Players", "emulogic.ttf", 32, { 230, 230, 230 });
+	mExit = new GLTexture("2 Players", "emulogic.ttf", 32, { 230, 230, 230 });
 	mCursor = new GLTexture("Cursor.png");
 
 	mPlayModes->Parent(this);
-	mOnePlayerMode->Parent(mPlayModes);
-	mTwoPlayerMode->Parent(mPlayModes);
+	mStartGame->Parent(mPlayModes);
+	mOptions->Parent(mPlayModes);
+	mExit->Parent(mPlayModes);
 	mCursor->Parent(mPlayModes);
 
-	mOnePlayerMode->Position(0.0f, -35.0f);
-	mTwoPlayerMode->Position(0.0f, 35.0f);
+	mStartGame->Position(0.0f, -35.0f);
+	mOptions->Position(0.0f, 35.0f);
+	mExit->Position(0.0f, 105.0f);
 	mCursor->Position(-175.0f, -35.0f);
 
 	mCursorStartPos = mCursor->Position(Local);
@@ -62,16 +75,16 @@ StartScreen::StartScreen() {
 
 	// bottom bar entities
 	mBottomBar = new GameEntity(Graphics::SCREEN_WIDTH * 0.5f, Graphics::SCREEN_HEIGHT * 0.7f);
-	mNamco = new GLTexture("namcot", "namco__.ttf", 36, { 200, 0, 0 });
-	mDates = new GLTexture("1981 1985 NAMCO LTD.", "emulogic.ttf", 32, { 230, 230, 230 });
+	mDreamTeamStudios = new GLTexture("Dream Team Studios", "namco__.ttf", 36, { 200, 0, 0 });
+	mDates = new GLTexture("2025.", "emulogic.ttf", 32, { 230, 230, 230 });
 	mRights = new GLTexture("ALL RIGHTS RESERVED", "emulogic.ttf", 32, { 230, 230, 230 });
 
 	mBottomBar->Parent(this);
-	mNamco->Parent(mBottomBar);
+	mDreamTeamStudios->Parent(mBottomBar);
 	mDates->Parent(mBottomBar);
 	mRights->Parent(mBottomBar);
 
-	mNamco->Position(Vec2_Zero);
+	mDreamTeamStudios->Position(Vec2_Zero);
 	mDates->Position(0.0f, 90.0f);
 	mRights->Position(0.0f, 170.0f);
 
@@ -84,9 +97,11 @@ StartScreen::~StartScreen() {
 	// top bar entities
 	delete mTopBar;
 	mTopBar = nullptr;
-	delete mPlayerOne;
-	mPlayerOne = nullptr;
-	delete mPlayerTwo;
+	delete mPlayerScore;
+	mPlayerScore = nullptr;
+	delete mPlayerScoreNumber;
+	mPlayerScoreNumber = nullptr;
+	/*delete mPlayerTwo;
 	mPlayerTwo = nullptr;
 	delete mHiScore;
 	mHiScore = nullptr;
@@ -95,7 +110,7 @@ StartScreen::~StartScreen() {
 	delete mPlayerTwoScore;
 	mPlayerTwoScore = nullptr;
 	delete mTopScore;
-	mTopScore = nullptr;
+	mTopScore = nullptr;*/
 
 	// logo entities
 	delete mLogo;
@@ -103,21 +118,29 @@ StartScreen::~StartScreen() {
 	delete mAnimatedLogo;
 	mAnimatedLogo = nullptr;
 
+	// Sidebar entities
+	delete mSideBar;
+	mSideBar = nullptr;
+	delete mCars;
+	mCars = nullptr;
+
 	// play mode entities
 	delete mPlayModes;
 	mPlayModes = nullptr;
-	delete mOnePlayerMode;
-	mOnePlayerMode = nullptr;
-	delete mTwoPlayerMode;
-	mTwoPlayerMode = nullptr;
+	delete mStartGame;
+	mStartGame = nullptr;
+	delete mOptions;
+	mOptions = nullptr;
+	delete mExit;
+	mExit = nullptr;
 	delete mCursor;
 	mCursor = nullptr;
 
 	// bottom bar entities
 	delete mBottomBar;
 	mBottomBar = nullptr;
-	delete mNamco;
-	mNamco = nullptr;
+	delete mDreamTeamStudios;
+	mDreamTeamStudios = nullptr;
 	delete mDates;
 	mDates = nullptr;
 	delete mRights;
@@ -134,7 +157,7 @@ void StartScreen::ResetAnimation() {
 	mAnimationTimer = 0.0f;
 	mAnimationDone = false;
 
-	Position(mAnimationStartPos);
+	/*Position(mAnimationStartPos);*/
 }
 
 int StartScreen::SelectedMode() {
@@ -180,12 +203,12 @@ void StartScreen::Update() {
 }
 
 void StartScreen::Render() {
-	mPlayerOne->Render();
-	mPlayerTwo->Render();
+	mPlayerScore->Render();
+	/*mPlayerTwo->Render();
 	mHiScore->Render();
 	mPlayerOneScore->Render();
 	mPlayerTwoScore->Render();
-	mTopScore->Render();
+	mTopScore->Render();*/
 
 	if (!mAnimationDone) {
 		mLogo->Render();
@@ -194,11 +217,12 @@ void StartScreen::Render() {
 		mAnimatedLogo->Render();
 	}
 
-	mOnePlayerMode->Render();
-	mTwoPlayerMode->Render();
+	mStartGame->Render();
+	mOptions->Render();
+	mExit->Render();
 	mCursor->Render();
 
-	mNamco->Render();
+	mDreamTeamStudios->Render();
 	mDates->Render();
 	mRights->Render();
 }

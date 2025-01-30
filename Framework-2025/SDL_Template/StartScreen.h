@@ -12,23 +12,33 @@ private:
 	Timer * mTimer;
 	InputManager * mInput;
 
+	// TODO:
 	// Top Bar Entities
 	GameEntity * mTopBar;
-	Texture * mPlayerOne;
-	Texture * mPlayerTwo;
-	Texture * mHiScore;
-	Scoreboard * mPlayerOneScore;
-	Scoreboard * mPlayerTwoScore;
-	Scoreboard * mTopScore;
+	Texture * mPlayerScore;
+	/*Texture * mPlayerTwo;
+	Texture * mHiScore;*/
+	Scoreboard * mPlayerScoreNumber;
+	/*Scoreboard * mPlayerTwoScore;
+	Scoreboard * mTopScore;*/
 
+	// TODO:
 	// Logo Entities
 	Texture * mLogo;
 	AnimatedGLTexture * mAnimatedLogo;
 
+	// TODO:
+	// Side Bar Entities
+	GameEntity* mSideBar;
+	
+	GLTexture* mCars;
+
+	// TODO:
 	// Play Mode Entities
 	GameEntity * mPlayModes;
-	Texture * mOnePlayerMode;
-	Texture * mTwoPlayerMode;
+	Texture * mStartGame;
+	Texture * mOptions;
+	Texture * mExit;
 	Texture * mCursor;
 	Vector2 mCursorStartPos;
 	Vector2 mCursorOffset;
@@ -36,7 +46,9 @@ private:
 
 	// Bottom Bar Entities
 	GameEntity * mBottomBar;
-	Texture * mNamco;
+	
+	// TODO:
+	Texture * mDreamTeamStudios;
 	Texture * mDates;
 	Texture * mRights;
 
