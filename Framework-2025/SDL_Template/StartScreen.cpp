@@ -6,7 +6,7 @@ StartScreen::StartScreen() {
 
 	// top bar entities
 	mTopBar = new GameEntity(Graphics::SCREEN_WIDTH * 0.5f, 80.0f);
-	mPlayerScore = new GLTexture("1UP", "emulogic.ttf", 32, { 200, 0, 0 });
+	mPlayerScore = new GLTexture("PlayerScore", "emulogic.ttf", 32, { 200, 0, 0 });
 	/*mPlayerTwo = new GLTexture("2UP", "emulogic.ttf", 32, { 200, 0, 0 });
 	mHiScore = new GLTexture("HI SCORE", "emulogic.ttf", 32, { 200, 0, 0 });*/
 	mPlayerScoreNumber = new Scoreboard();
@@ -32,8 +32,6 @@ StartScreen::StartScreen() {
 	/*mTopScore->Score(645987);*/
 
 	// logo entities
-	mLogo = new GLTexture("GalagaLogo.png", 0, 0, 360, 180);
-	mAnimatedLogo = new AnimatedGLTexture("GalagaLogo.png", 0, 0, 360, 180, 3, 0.2f, Animation::Layouts::Vertical);
 
 	mLogo = new GLTexture("Auto-BahnLogo.png", 0, 0, 360, 180);
 	mAnimatedLogo = new AnimatedGLTexture("Auto-Bahn.png", 0, 0, 360, 180, 3, 0.2f, Animation::Layouts::Vertical);
@@ -50,9 +48,9 @@ StartScreen::StartScreen() {
 
 	// play mode entities
 	mPlayModes = new GameEntity(Graphics::SCREEN_WIDTH * 0.5f, Graphics::SCREEN_HEIGHT * 0.55f);
-	mStartGame = new GLTexture("1 Player ", "emulogic.ttf", 32, { 230, 230, 230 });
-	mOptions = new GLTexture("2 Players", "emulogic.ttf", 32, { 230, 230, 230 });
-	mExit = new GLTexture("2 Players", "emulogic.ttf", 32, { 230, 230, 230 });
+	mStartGame = new GLTexture("Start Game", "emulogic.ttf", 32, { 230, 230, 230 });
+	mOptions = new GLTexture("Options", "emulogic.ttf", 32, { 230, 230, 230 });
+	mExit = new GLTexture("Exit", "emulogic.ttf", 32, { 230, 230, 230 });
 	mCursor = new GLTexture("Cursor.png");
 
 	mPlayModes->Parent(this);
@@ -183,17 +181,17 @@ void StartScreen::Update() {
 			mAnimationDone = true;
 		}
 
-		if (mInput->KeyPressed(SDL_SCANCODE_DOWN) || mInput->KeyPressed(SDL_SCANCODE_UP)) {
+		if (mInput->KeyPressed(SDL_SCANCODE_S) || mInput->KeyPressed(SDL_SCANCODE_W)) {
 			mAnimationTimer = mAnimationTotalTime;
 		}
 	}
 	else {
 		mAnimatedLogo->Update();
 
-		if (mInput->KeyPressed(SDL_SCANCODE_DOWN)) {
+		if (mInput->KeyPressed(SDL_SCANCODE_S)) {
 			ChangeSelectedMode(1);
 		}
-		else if (mInput->KeyPressed(SDL_SCANCODE_UP)) {
+		else if (mInput->KeyPressed(SDL_SCANCODE_W)) {
 			ChangeSelectedMode(-1);
 		}
 	}
