@@ -21,7 +21,7 @@ StartScreen::StartScreen() {
 	mPlayerTwoScore->Parent(mTopBar);
 	mTopScore->Parent(mTopBar);*/
 
-	mPlayerScore->Position(-Graphics::SCREEN_WIDTH * 0.35f, 0.0f);
+	mPlayerScore->Position(-Graphics::SCREEN_WIDTH * 0.0f, 0.0f);
 	/*mPlayerTwo->Position(Graphics::SCREEN_WIDTH * 0.2f, 0.0f);
 	mHiScore->Position(-30.0f, 0.0f);
 
@@ -32,19 +32,18 @@ StartScreen::StartScreen() {
 	/*mTopScore->Score(645987);*/
 
 	// logo entities
-
-	mLogo = new GLTexture("Auto-BahnLogo.png", 0, 0, 360, 180);
-	mAnimatedLogo = new AnimatedGLTexture("Auto-Bahn.png", 0, 0, 360, 180, 3, 0.2f, Animation::Layouts::Vertical);
+	mLogo = new GLTexture("Auto-bahnLogo.png", 0, 0, 500, 200);
+	mAnimatedLogo = new AnimatedGLTexture("Auto-bahnLogo.png", 0, 0, 500, 200, 3, 0.0f, Animation::Layouts::Vertical);
 	
 	mLogo->Parent(this);
 	mAnimatedLogo->Parent(this);
 
-	mLogo->Position(Graphics::SCREEN_WIDTH * 0.5f, Graphics::SCREEN_HEIGHT * 0.32f);
-	mAnimatedLogo->Position(Graphics::SCREEN_WIDTH * 0.5f, Graphics::SCREEN_HEIGHT * 0.32f);
+	mLogo->Position(Graphics::SCREEN_WIDTH * 0.5f, Graphics::SCREEN_HEIGHT * 0.22f);
+	mAnimatedLogo->Position(Graphics::SCREEN_WIDTH * 0.5f, Graphics::SCREEN_HEIGHT * 0.2f);
 
 	// Side Bar Entities
 	mSideBar = new GameEntity(Graphics::SCREEN_HEIGHT * 0.5f, Graphics::SCREEN_HEIGHT * 0.5f);
-	mCars = new AnimatedGLTexture("Cars.png", 0, 0, 100, 100, 4, 0.2f, Animation::Layouts::Vertical);
+	/*mCars = new AnimatedGLTexture("Cars.png", 0, 0, 100, 100, 4, 0.2f, Animation::Layouts::Vertical);*/
 
 	// play mode entities
 	mPlayModes = new GameEntity(Graphics::SCREEN_WIDTH * 0.5f, Graphics::SCREEN_HEIGHT * 0.55f);
@@ -59,29 +58,29 @@ StartScreen::StartScreen() {
 	mExit->Parent(mPlayModes);
 	mCursor->Parent(mPlayModes);
 
-	mStartGame->Position(0.0f, -35.0f);
-	mOptions->Position(0.0f, 35.0f);
-	mExit->Position(0.0f, 105.0f);
-	mCursor->Position(-175.0f, -35.0f);
+	mStartGame->Position(0.0f, 105.0f);
+	mOptions->Position(0.0f, 175.0f);
+	mExit->Position(0.0f, 245.0f);
+	mCursor->Position(-185.0f, 105.0f);
 
 	mCursorStartPos = mCursor->Position(Local);
-	mCursorOffset = Vector2(0.0f, 70.0f);
+	mCursorOffset = Vector2(50.0f, 70.0f);
 	mSelectedMode = 0;
 
 	// bottom bar entities
 	mBottomBar = new GameEntity(Graphics::SCREEN_WIDTH * 0.5f, Graphics::SCREEN_HEIGHT * 0.7f);
-	mDreamTeamStudios = new GLTexture("Dream Team Studios", "namco__.ttf", 36, { 200, 0, 0 });
-	mDates = new GLTexture("2025.", "emulogic.ttf", 32, { 230, 230, 230 });
-	mRights = new GLTexture("ALL RIGHTS RESERVED", "emulogic.ttf", 32, { 230, 230, 230 });
+	mDreamTeamStudios = new GLTexture("Dream Team Studios", "namco__.ttf", 10, { 200, 0, 0 });
+	mDates = new GLTexture("2025.", "emulogic.ttf", 15, { 230, 230, 230 });
+	mRights = new GLTexture("ALL RIGHTS RESERVED", "emulogic.ttf", 10, { 230, 230, 230 });
 
 	mBottomBar->Parent(this);
 	mDreamTeamStudios->Parent(mBottomBar);
 	mDates->Parent(mBottomBar);
 	mRights->Parent(mBottomBar);
 
-	mDreamTeamStudios->Position(Vec2_Zero);
-	mDates->Position(0.0f, 90.0f);
-	mRights->Position(0.0f, 170.0f);
+	mDreamTeamStudios->Position(300.0f, 180.0f);
+	mDates->Position(-300.0f, 200.0f);
+	mRights->Position(300.0f, 200.0f);
 
 	// screen animation variables
 	ResetAnimation();
@@ -163,9 +162,9 @@ void StartScreen::ChangeSelectedMode(int change) {
 	mSelectedMode += change;
 
 	if (mSelectedMode < 0) {
-		mSelectedMode = 1;
+		mSelectedMode = 2;
 	}
-	else if (mSelectedMode > 1) {
+	else if (mSelectedMode > 2) {
 		mSelectedMode = 0;
 	}
 
