@@ -16,6 +16,7 @@ namespace SDLFramework {
 		mDestinationRect.h = mHeight;
 
 		mFlip = SDL_FLIP_NONE;
+
 	}
 
 	Texture::Texture(std::string filename, int x, int y, int w, int h, bool managed) {

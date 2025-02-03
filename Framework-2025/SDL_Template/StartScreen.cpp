@@ -85,16 +85,6 @@ StartScreen::~StartScreen() {
 	mPlayerScore = nullptr;
 	delete mPlayerScoreNumber;
 	mPlayerScoreNumber = nullptr;
-	/*delete mPlayerTwo;
-	mPlayerTwo = nullptr;
-	delete mHiScore;
-	mHiScore = nullptr;
-	delete mPlayerOneScore;
-	mPlayerOneScore = nullptr;
-	delete mPlayerTwoScore;
-	mPlayerTwoScore = nullptr;
-	delete mTopScore;
-	mTopScore = nullptr;*/
 
 	// logo entities
 	delete mLogo;
@@ -202,11 +192,6 @@ void StartScreen::Update() {
 
 void StartScreen::Render() {
 	mPlayerScore->Render();
-	/*mPlayerTwo->Render();
-	mHiScore->Render();
-	mPlayerOneScore->Render();
-	mPlayerTwoScore->Render();
-	mTopScore->Render();*/
 
 	if (!mAnimationDone) {
 		mLogo->Render();
