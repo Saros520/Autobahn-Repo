@@ -30,6 +30,8 @@ namespace SDLFramework {
 		void SetSurfaceTexture(std::string filename, bool managed = false);
 		void SetSurfaceTextTexture(std::string text, std::string filename, int size, SDL_Color color, bool managed = false);
 
+		void SetColor(Uint8 red, Uint8 green, Uint8);
+
 		// Inherited from Texture
 		virtual void Render() override;
 	};

@@ -7,29 +7,12 @@ StartScreen::StartScreen() {
 	// top bar entities
 	mTopBar = new GameEntity(Graphics::SCREEN_WIDTH * 0.5f, 80.0f);
 	mPlayerScore = new GLTexture("PlayerScore", "emulogic.ttf", 32, { 200, 0, 0 });
-	/*mPlayerTwo = new GLTexture("2UP", "emulogic.ttf", 32, { 200, 0, 0 });
-	mHiScore = new GLTexture("HI SCORE", "emulogic.ttf", 32, { 200, 0, 0 });*/
 	mPlayerScoreNumber = new Scoreboard();
-	/*mPlayerTwoScore = new Scoreboard();
-	mTopScore = new Scoreboard();*/
 
 	mTopBar->Parent(this);
 	mPlayerScore->Parent(mTopBar);
-	/*mPlayerTwo->Parent(mTopBar);
-	mHiScore->Parent(mTopBar);
-	mPlayerOneScore->Parent(mTopBar);
-	mPlayerTwoScore->Parent(mTopBar);
-	mTopScore->Parent(mTopBar);*/
 
 	mPlayerScore->Position(-Graphics::SCREEN_WIDTH * 0.0f, 0.0f);
-	/*mPlayerTwo->Position(Graphics::SCREEN_WIDTH * 0.2f, 0.0f);
-	mHiScore->Position(-30.0f, 0.0f);
-
-	mPlayerOneScore->Position(-Graphics::SCREEN_WIDTH * 0.23f, 40.0f);
-	mPlayerTwoScore->Position(Graphics::SCREEN_WIDTH * 0.32f, 40.0f);
-	mTopScore->Position(Graphics::SCREEN_WIDTH * 0.05f, 40.0f);*/
-
-	/*mTopScore->Score(645987);*/
 
 	// logo entities
 	mLogo = new GLTexture("Auto-bahnLogo.png", 0, 0, 500, 200);
@@ -84,6 +67,10 @@ StartScreen::StartScreen() {
 
 	// screen animation variables
 	ResetAnimation();
+
+	// Initialize flicker variables
+	mFlickerTimer = 0.0f;
+	mFlickerRed = true;
 }
 
 
@@ -192,6 +179,20 @@ void StartScreen::Update() {
 		}
 		else if (mInput->KeyPressed(SDL_SCANCODE_W)) {
 			ChangeSelectedMode(-1);
+		}
+
+		// Update flicker timer
+		mFlickerTimer += mTimer->DeltaTime();
+		if (mFlickerTimer >= 1.5f) { // Change color every 0.5 seconds
+			mFlickerRed = !mFlickerRed;
+			mFlickerTimer = 0.0f;
+
+			if (mFlickerRed) {
+				mAnimatedLogo->SetColor(255, 0, 0); // Red
+			}
+			else {
+				mAnimatedLogo->SetColor(255, 255, 0); // Yellow
+			}
 		}
 	}
 }

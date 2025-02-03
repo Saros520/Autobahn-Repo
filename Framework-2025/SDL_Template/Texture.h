@@ -31,6 +31,8 @@ namespace SDLFramework {
 
 		void Flip(bool hFlip, bool vFLip);
 
+		void SetColor(Uint8 red, Uint8 green, Uint8 blue);
+
 		virtual void Render() override;
 
 	protected:

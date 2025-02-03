@@ -98,4 +98,8 @@ namespace SDLFramework {
 			mFlip = SDL_FLIP_NONE;
 		}
 	}
+
+	void Texture::SetColor(Uint8 red, Uint8 green, Uint8 blue) {
+		SDL_SetTextureColorMod(mTex, red, green, blue);
+	}
 }

@@ -46,8 +46,6 @@ private:
 
 	// Bottom Bar Entities
 	GameEntity * mBottomBar;
-	
-	// TODO:
 	Texture * mDreamTeamStudios;
 	Texture * mDates;
 	Texture * mRights;
@@ -58,6 +56,10 @@ private:
 	float mAnimationTotalTime;
 	float mAnimationTimer;
 	bool mAnimationDone;
+
+	// Flicker Variables
+	float mFlickerTimer;
+	bool mFlickerRed;
 
 public:
 	StartScreen();

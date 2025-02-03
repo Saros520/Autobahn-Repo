@@ -97,6 +97,11 @@ namespace SDLFramework {
         glBindTexture(GL_TEXTURE_2D, ID);
     }
 
+    void GLTexture::SetColor(Uint8 red, Uint8 green, Uint8 blue) {
+        // Modulate texture color
+        glColor3f(red / 255.0f, green / 255.0f, blue / 255.0f);
+    }
+
     void GLTexture::SetSurfaceTexture(std::string filename, bool managed) {
         Surface = AssetManager::Instance()->GetSurface(filename, managed);
         Data = Surface->pixels;
