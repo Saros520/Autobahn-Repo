@@ -57,7 +57,7 @@ StartScreen::StartScreen() {
 
 	// bottom bar entities
 	mBottomBar = new GameEntity(Graphics::SCREEN_WIDTH * 0.5f, Graphics::SCREEN_HEIGHT * 0.7f);
-	mDreamTeamStudios = new GLTexture("Dream Team Studios", "namco__.ttf", 10, { 200, 0, 0 });
+	mDreamTeamStudios = new GLTexture("dream team studios", "namco__.ttf", 10, { 200, 0, 0 });
 	mDates = new GLTexture("2025.", "emulogic.ttf", 15, { 230, 230, 230 });
 	mRights = new GLTexture("ALL RIGHTS RESERVED", "emulogic.ttf", 10, { 230, 230, 230 });
 
@@ -78,7 +78,7 @@ StartScreen::StartScreen() {
 	mFlickerRed = true;
 
 	// Debugging output
-	std::cout << "Dream Team Studios Texture Width: " << mDreamTeamStudios->ScaledDimensions().x << ", Height: " << mDreamTeamStudios->ScaledDimensions().y << std::endl;
+	/*std::cout << "Dream Team Studios Texture Width: " << mDreamTeamStudios->ScaledDimensions().x << ", Height: " << mDreamTeamStudios->ScaledDimensions().y << std::endl;*/
 }
 
 
@@ -169,17 +169,17 @@ void StartScreen::Update() {
 			mAnimationDone = true;
 		}
 
-		if (mInput->KeyPressed(SDL_SCANCODE_S) || mInput->KeyPressed(SDL_SCANCODE_W)) {
+		if (mInput->KeyPressed(SDL_SCANCODE_S) || mInput->KeyPressed(SDL_SCANCODE_W) || mInput->KeyPressed(SDL_SCANCODE_DOWN) || mInput->KeyPressed(SDL_SCANCODE_UP)) {
 			mAnimationTimer = mAnimationTotalTime;
 		}
 	}
 	else {
 		mAnimatedLogo->Update();
 
-		if (mInput->KeyPressed(SDL_SCANCODE_S)) {
+		if (mInput->KeyPressed(SDL_SCANCODE_S) || mInput->KeyPressed(SDL_SCANCODE_DOWN)) {
 			ChangeSelectedMode(1);
 		}
-		else if (mInput->KeyPressed(SDL_SCANCODE_W)) {
+		else if (mInput->KeyPressed(SDL_SCANCODE_W) || mInput->KeyPressed(SDL_SCANCODE_UP)) {
 			ChangeSelectedMode(-1);
 		}
 
@@ -198,6 +198,7 @@ void StartScreen::Update() {
 		}
 	}
 }
+
 
 void StartScreen::Render() {
 	mTitleScreen->Render();
