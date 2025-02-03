@@ -182,9 +182,11 @@ void StartScreen::Update() {
 
 			if (mFlickerRed) {
 				mAnimatedLogo->SetColor(255, 0, 0); // Red
+				std::cout << "Set color to Red" << std::endl;
 			}
 			else {
 				mAnimatedLogo->SetColor(255, 255, 0); // Yellow
+				std::cout << "Set color to Yellow" << std::endl;
 			}
 		}
 	}
@@ -194,12 +196,7 @@ void StartScreen::Update() {
 void StartScreen::Render() {
 	mPlayerScore->Render();
 
-	if (!mAnimationDone) {
-		mLogo->Render();
-	}
-	else {
-		mAnimatedLogo->Render();
-	}
+	mAnimatedLogo->Render();
 
 	mStartGame->Render();
 	mOptions->Render();
