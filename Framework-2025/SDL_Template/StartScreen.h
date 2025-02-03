@@ -1,6 +1,7 @@
 #ifndef __STARTSCREEN_H
 #define __STARTSCREEN_H
 #include "AnimatedGLTexture.h"
+#include "GLTexture.h"
 #include "InputManager.h"
 #include "Scoreboard.h"
 
@@ -12,7 +13,8 @@ private:
 	Timer * mTimer;
 	InputManager * mInput;
 
-	// TODO:
+	// Title Screen Entities
+	GLTexture * mTitleScreen;
 	// Top Bar Entities
 	GameEntity * mTopBar;
 	Texture * mPlayerScore;
