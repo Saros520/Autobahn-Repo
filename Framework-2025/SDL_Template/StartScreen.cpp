@@ -4,6 +4,11 @@ StartScreen::StartScreen() {
 	mTimer = Timer::Instance();
 	mInput = InputManager::Instance();
 
+	// Title Screen Entities
+	mTitleScreen = new GLTexture("TitleScreen.png");
+	mTitleScreen->Parent(this);
+	mTitleScreen->Position(Graphics::SCREEN_WIDTH * 0.5f, Graphics::SCREEN_HEIGHT * 0.5f);
+
 	// top bar entities
 	mTopBar = new GameEntity(Graphics::SCREEN_WIDTH * 0.5f, 80.0f);
 	mPlayerScore = new GLTexture("PlayerScore", "emulogic.ttf", 32, { 200, 0, 0 });
@@ -78,6 +83,8 @@ StartScreen::StartScreen() {
 
 
 StartScreen::~StartScreen() {
+	delete mTitleScreen;
+	mTitleScreen = nullptr;
 	// top bar entities
 	delete mTopBar;
 	mTopBar = nullptr;
@@ -192,6 +199,10 @@ void StartScreen::Update() {
 
 
 void StartScreen::Render() {
+	// Render the Title Screen
+	mTitleScreen->Render();
+
+	// Render other UI elements
 	mPlayerScore->Render();
 
 	if (!mAnimationDone) {
