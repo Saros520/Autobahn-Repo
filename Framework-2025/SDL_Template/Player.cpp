@@ -14,7 +14,7 @@ Player::Player() {
 	mScore = 0;
 	mLives = 2;
 	
-	mTexture = new GLTexture("PlayerShips.png", 0, 0, 60, 64);
+	mTexture = new GLTexture("Exit.png");
 	mTexture->Parent(this);
 	mTexture->Position(Vec2_Zero);
 
