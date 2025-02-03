@@ -1,5 +1,6 @@
 #ifndef __STARTSCREEN_H
 #define __STARTSCREEN_H
+
 #include "AnimatedGLTexture.h"
 #include "InputManager.h"
 #include "Scoreboard.h"

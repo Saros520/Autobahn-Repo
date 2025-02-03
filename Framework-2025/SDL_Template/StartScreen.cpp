@@ -69,8 +69,11 @@ StartScreen::StartScreen() {
 	ResetAnimation();
 
 	// Initialize flicker variables
-	mFlickerTimer = 0.0f;
+	mFlickerTimer = 1.0f;
 	mFlickerRed = true;
+
+	// Debugging output
+	std::cout << "Dream Team Studios Texture Width: " << mDreamTeamStudios->ScaledDimensions().x << ", Height: " << mDreamTeamStudios->ScaledDimensions().y << std::endl;
 }
 
 
