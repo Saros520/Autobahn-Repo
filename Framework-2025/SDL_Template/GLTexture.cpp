@@ -126,6 +126,11 @@ namespace SDLFramework {
 
     void GLTexture::Render() {
         UpdateDstRect();
+
+        // Bind the texture
+        glBindTexture(GL_TEXTURE_2D, ID);
+
+        // Render the texture
         GLGraphics::Instance()->DrawSprite(this, mClipped ? &mSourceRect : nullptr, &mDestinationRect, Rotation(World), mFlip);
     }
 }
