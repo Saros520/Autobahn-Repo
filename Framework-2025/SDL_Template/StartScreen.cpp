@@ -14,6 +14,11 @@ StartScreen::StartScreen() {
 
 	mPlayerScore->Position(-Graphics::SCREEN_WIDTH * 0.0f, 0.0f);
 
+	// Title Screen Entities
+	mTitleScreen = new GLTexture("TitleScreen.png");
+	mTitleScreen->Parent(this);
+	mTitleScreen->Position(Graphics::SCREEN_WIDTH * 0.5f, Graphics::SCREEN_HEIGHT * 0.5f);
+
 	// logo entities
 	mLogo = new GLTexture("Auto-bahnLogo.png", 0, 0, 500, 200);
 	mAnimatedLogo = new AnimatedGLTexture("Auto-bahnLogo.png", 0, 0, 500, 200, 3, 0.0f, Animation::Layouts::Vertical);
@@ -78,6 +83,10 @@ StartScreen::StartScreen() {
 
 
 StartScreen::~StartScreen() {
+	// Title Screen Entities
+	delete mTitleScreen;  
+	mTitleScreen = nullptr;
+	
 	// top bar entities
 	delete mTopBar;
 	mTopBar = nullptr;
@@ -191,6 +200,8 @@ void StartScreen::Update() {
 }
 
 void StartScreen::Render() {
+	mTitleScreen->Render();
+
 	mPlayerScore->Render();
 
 	if (!mAnimationDone) {
