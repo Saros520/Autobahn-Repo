@@ -52,7 +52,7 @@ StartScreen::StartScreen() {
 
 	// bottom bar entities
 	mBottomBar = new GameEntity(Graphics::SCREEN_WIDTH * 0.5f, Graphics::SCREEN_HEIGHT * 0.7f);
-	mDreamTeamStudios = new GLTexture("Dream Team Studios", "namco__.ttf", 10, { 200, 0, 0 });
+	mDreamTeamStudios = new GLTexture("dream team studios", "namco__.ttf", 10, { 200, 0, 0 });
 	mDates = new GLTexture("2025.", "emulogic.ttf", 15, { 230, 230, 230 });
 	mRights = new GLTexture("ALL RIGHTS RESERVED", "emulogic.ttf", 10, { 230, 230, 230 });
 
