@@ -73,7 +73,7 @@ StartScreen::StartScreen() {
 	mFlickerRed = true;
 
 	// Debugging output
-	std::cout << "Dream Team Studios Texture Width: " << mDreamTeamStudios->ScaledDimensions().x << ", Height: " << mDreamTeamStudios->ScaledDimensions().y << std::endl;
+	/*std::cout << "Dream Team Studios Texture Width: " << mDreamTeamStudios->ScaledDimensions().x << ", Height: " << mDreamTeamStudios->ScaledDimensions().y << std::endl;*/
 }
 
 
@@ -160,17 +160,17 @@ void StartScreen::Update() {
 			mAnimationDone = true;
 		}
 
-		if (mInput->KeyPressed(SDL_SCANCODE_S) || mInput->KeyPressed(SDL_SCANCODE_W)) {
+		if (mInput->KeyPressed(SDL_SCANCODE_S) || mInput->KeyPressed(SDL_SCANCODE_W) || mInput->KeyPressed(SDL_SCANCODE_DOWN) || mInput->KeyPressed(SDL_SCANCODE_UP)) {
 			mAnimationTimer = mAnimationTotalTime;
 		}
 	}
 	else {
 		mAnimatedLogo->Update();
 
-		if (mInput->KeyPressed(SDL_SCANCODE_S)) {
+		if (mInput->KeyPressed(SDL_SCANCODE_S) || mInput->KeyPressed(SDL_SCANCODE_DOWN)) {
 			ChangeSelectedMode(1);
 		}
-		else if (mInput->KeyPressed(SDL_SCANCODE_W)) {
+		else if (mInput->KeyPressed(SDL_SCANCODE_W) || mInput->KeyPressed(SDL_SCANCODE_UP)) {
 			ChangeSelectedMode(-1);
 		}
 
