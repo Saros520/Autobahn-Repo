@@ -190,6 +190,7 @@ void StartScreen::Update() {
 	}
 }
 
+
 void StartScreen::Render() {
 	mPlayerScore->Render();
 
