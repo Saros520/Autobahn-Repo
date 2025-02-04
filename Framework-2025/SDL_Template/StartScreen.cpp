@@ -138,13 +138,7 @@ StartScreen::~StartScreen() {
 }
 
 void StartScreen::ResetAnimation() {
-	mAnimationStartPos = Vector2(0.0f, Graphics::SCREEN_HEIGHT);
-	mAnimationEndPos = Vec2_Zero;
-	mAnimationTotalTime = 5.0f;
-	mAnimationTimer = 0.0f;
-	mAnimationDone = false;
-
-	/*Position(mAnimationStartPos);*/
+	
 }
 
 int StartScreen::SelectedMode() {
@@ -185,22 +179,6 @@ void StartScreen::Update() {
 		}
 		else if (mInput->KeyPressed(SDL_SCANCODE_W) || mInput->KeyPressed(SDL_SCANCODE_UP)) {
 			ChangeSelectedMode(-1);
-		}
-
-		// Update flicker timer
-		mFlickerTimer += mTimer->DeltaTime();
-		if (mFlickerTimer >= 1.5f) { // Change color every 0.5 seconds
-			mFlickerRed = !mFlickerRed;
-			mFlickerTimer = 0.0f;
-
-			if (mFlickerRed) {
-				mAnimatedLogo->SetColor(255, 0, 0); // Red
-				/*std::cout << "Set color to Red" << std::endl;*/
-			}
-			else {
-				mAnimatedLogo->SetColor(255, 255, 0); // Yellow
-				/*std::cout << "Set color to Yellow" << std::endl;*/
-			}
 		}
 	}
 }
