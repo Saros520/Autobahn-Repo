@@ -39,7 +39,7 @@ StartScreen::StartScreen() {
 	mLogoRed->Parent(this);
 	mLogoYellow->Parent(this);
 
-	mLogoRed->Position(Graphics::SCREEN_WIDTH * 0.5f, Graphics::SCREEN_HEIGHT * 0.22f);
+	mLogoRed->Position(Graphics::SCREEN_WIDTH * 0.5f, Graphics::SCREEN_HEIGHT * 0.2f);
 	mLogoYellow->Position(Graphics::SCREEN_WIDTH * 0.5f, Graphics::SCREEN_HEIGHT * 0.22f);
 
 	// Initialize flicker variables
