@@ -74,16 +74,6 @@ StartScreen::StartScreen() {
 	mDreamTeamStudios->Position(300.0f, 180.0f);
 	mDates->Position(-330.0f, 180.0f);
 	mRights->Position(300.0f, 200.0f);
-
-	// screen animation variables
-	ResetAnimation();
-
-	// Initialize flicker variables
-	mFlickerTimer = 1.0f;
-	mFlickerRed = true;
-
-	// Debugging output
-	/*std::cout << "Dream Team Studios Texture Width: " << mDreamTeamStudios->ScaledDimensions().x << ", Height: " << mDreamTeamStudios->ScaledDimensions().y << std::endl;*/
 }
 
 
