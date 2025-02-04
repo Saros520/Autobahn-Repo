@@ -22,7 +22,7 @@ StartScreen::StartScreen() {
 	mTopBar->Parent(this);
 	mPlayerScore->Parent(mTopBar);
 
-	mPlayerScore->Position(-Graphics::SCREEN_WIDTH * 0.0f, 0.0f);
+	mPlayerScore->Position(Graphics::SCREEN_WIDTH * 0.0f, 0.0f);
 
 	// Title Screen Entities
 	mTitleScreen = new GLTexture("TitleScreen.png");
