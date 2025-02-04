@@ -68,8 +68,8 @@ StartScreen::StartScreen() {
 	// bottom bar entities
 	mBottomBar = new GameEntity(Graphics::SCREEN_WIDTH * 0.5f, Graphics::SCREEN_HEIGHT * 0.7f);
 	mDreamTeamStudios = new GLTexture("dream team studios", "namco__.ttf", 10, { 200, 0, 0 });
-	mDates = new GLTexture("2025.", "emulogic.ttf", 15, { 230, 230, 230 });
-	mRights = new GLTexture("ALL RIGHTS RESERVED", "emulogic.ttf", 10, { 230, 230, 230 });
+	mDates = new GLTexture("2025.", "emulogic.ttf", 10, { 0, 0, 0 });
+	mRights = new GLTexture("ALL RIGHTS RESERVED", "emulogic.ttf", 10, { 0, 0, 0 });
 
 	mBottomBar->Parent(this);
 	mDreamTeamStudios->Parent(mBottomBar);
@@ -77,18 +77,8 @@ StartScreen::StartScreen() {
 	mRights->Parent(mBottomBar);
 
 	mDreamTeamStudios->Position(300.0f, 180.0f);
-	mDates->Position(-300.0f, 200.0f);
+	mDates->Position(-330.0f, 180.0f);
 	mRights->Position(300.0f, 200.0f);
-
-	// screen animation variables
-	ResetAnimation();
-
-	// Initialize flicker variables
-	mFlickerTimer = 1.0f;
-	mFlickerRed = true;
-
-	// Debugging output
-	/*std::cout << "Dream Team Studios Texture Width: " << mDreamTeamStudios->ScaledDimensions().x << ", Height: " << mDreamTeamStudios->ScaledDimensions().y << std::endl;*/
 }
 
 
@@ -205,11 +195,11 @@ void StartScreen::Update() {
 
 			if (mFlickerRed) {
 				mAnimatedLogo->SetColor(255, 0, 0); // Red
-				std::cout << "Set color to Red" << std::endl;
+				/*std::cout << "Set color to Red" << std::endl;*/
 			}
 			else {
 				mAnimatedLogo->SetColor(255, 255, 0); // Yellow
-				std::cout << "Set color to Yellow" << std::endl;
+				/*std::cout << "Set color to Yellow" << std::endl;*/
 			}
 		}
 	}
