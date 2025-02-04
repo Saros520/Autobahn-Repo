@@ -17,13 +17,15 @@ StartScreen::StartScreen() {
 
 	// top bar entities
 	mTopBar = new GameEntity(Graphics::SCREEN_WIDTH * 0.5f, 80.0f);
-	mPlayerScore = new GLTexture("PlayerScore", "emulogic.ttf", 32, { 200, 0, 0 });
+	mPlayerScore = new GLTexture("High-Score", "emulogic.ttf", 32, { 200, 0, 0 });
 	mPlayerScoreNumber = new Scoreboard();
 
 	mTopBar->Parent(this);
 	mPlayerScore->Parent(mTopBar);
 
-	mPlayerScore->Position(Graphics::SCREEN_WIDTH * 0.0f, 0.0f);
+	mPlayerScore->Position(Graphics::SCREEN_WIDTH * -0.12f, -48.0f);
+
+	
 
 	// Title Screen Entities
 	mTitleScreen = new GLTexture("TitleScreen.png");
@@ -68,18 +70,18 @@ StartScreen::StartScreen() {
 
 	// bottom bar entities
 	mBottomBar = new GameEntity(Graphics::SCREEN_WIDTH * 0.5f, Graphics::SCREEN_HEIGHT * 0.7f);
-	mDreamTeamStudios = new GLTexture("dream team studios", "namco__.ttf", 10, { 200, 0, 0 });
-	mDates = new GLTexture("2025.", "emulogic.ttf", 10, { 0, 0, 0 });
-	mRights = new GLTexture("ALL RIGHTS RESERVED", "emulogic.ttf", 10, { 0, 0, 0 });
+	mDreamTeamStudios = new GLTexture("dream team studios", "namco__.ttf", 20, { 200, 0, 0 });
+	mDates = new GLTexture("2025.", "emulogic.ttf", 20, { 200, 0, 0 });
+	mRights = new GLTexture("ALL RIGHTS RESERVED", "emulogic.ttf", 10, { 200, 0, 0 });
 
 	mBottomBar->Parent(this);
 	mDreamTeamStudios->Parent(mBottomBar);
 	mDates->Parent(mBottomBar);
 	mRights->Parent(mBottomBar);
 
-	mDreamTeamStudios->Position(300.0f, 180.0f);
-	mDates->Position(-330.0f, 180.0f);
-	mRights->Position(300.0f, 200.0f);
+	mDreamTeamStudios->Position(0.0f, 265.0f);
+	mDates->Position(-345.0f, 265.0f);
+	mRights->Position(0.0f, 285.0f);
 }
 
 
