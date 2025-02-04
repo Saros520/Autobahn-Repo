@@ -26,7 +26,7 @@ StartScreen::StartScreen() {
 
 	// logo entities
 	mLogo = new GLTexture("Auto-bahnLogo.png", 0, 0, 500, 200);
-	mAnimatedLogo = new AnimatedGLTexture("Auto-bahnLogo.png", 0, 0, 500, 200, 3, 0.0f, Animation::Layouts::Vertical);
+	mAnimatedLogo = new AnimatedGLTexture("Auto-bahnLogoRed.png", 0, 0, 500, 200, 3, 0.0f, Animation::Layouts::Vertical);
 	
 	mLogo->Parent(this);
 	mAnimatedLogo->Parent(this);
@@ -40,9 +40,9 @@ StartScreen::StartScreen() {
 
 	// play mode entities
 	mPlayModes = new GameEntity(Graphics::SCREEN_WIDTH * 0.5f, Graphics::SCREEN_HEIGHT * 0.55f);
-	mStartGame = new GLTexture("Start Game", "emulogic.ttf", 32, { 230, 230, 230 });
-	mOptions = new GLTexture("Options", "emulogic.ttf", 32, { 230, 230, 230 });
-	mExit = new GLTexture("Exit", "emulogic.ttf", 32, { 230, 230, 230 });
+	mStartGame = new GLTexture("Start Game", "emulogic.ttf", 32, { 200, 0, 0 });
+	mOptions = new GLTexture("Options", "emulogic.ttf", 32, { 200, 0, 0 });
+	mExit = new GLTexture("Exit", "emulogic.ttf", 32, { 200, 0, 0 });
 	mCursor = new GLTexture("Cursor.png");
 
 	mPlayModes->Parent(this);
