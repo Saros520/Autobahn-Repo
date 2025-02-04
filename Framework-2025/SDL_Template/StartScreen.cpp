@@ -3,7 +3,7 @@
 StartScreen::StartScreen() {
 	mTimer = Timer::Instance();
 	mInput = InputManager::Instance();
-
+	 
 	// Title Screen Entities
 	mTitleScreen = new GLTexture("TitleScreen.png");
 	mTitleScreen->Parent(this);
