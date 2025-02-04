@@ -9,6 +9,11 @@ StartScreen::StartScreen() {
 	mTitleScreen->Parent(this);
 	mTitleScreen->Position(Graphics::SCREEN_WIDTH * 0.5f, Graphics::SCREEN_HEIGHT * 0.5f);
 
+	// Player Car Entities
+	mPlayerCar = new GLTexture("PlayerCar1.png");
+	mPlayerCar->Parent(this);
+	mPlayerCar->Position(Graphics::SCREEN_WIDTH * 0.5f, Graphics::SCREEN_HEIGHT * 0.5f);
+
 	// top bar entities
 	mTopBar = new GameEntity(Graphics::SCREEN_WIDTH * 0.5f, 80.0f);
 	mPlayerScore = new GLTexture("PlayerScore", "emulogic.ttf", 32, { 200, 0, 0 });
@@ -91,6 +96,10 @@ StartScreen::~StartScreen() {
 	// Title Screen Entities
 	delete mTitleScreen;  
 	mTitleScreen = nullptr;
+
+	// Player Car Entities
+	delete mPlayerCar;
+	mPlayerCar = nullptr;
 	
 	// top bar entities
 	delete mTopBar;
@@ -209,6 +218,8 @@ void StartScreen::Update() {
 
 void StartScreen::Render() {
 	mTitleScreen->Render();
+
+	mPlayerCar->Render();
 
 	mPlayerScore->Render();
 

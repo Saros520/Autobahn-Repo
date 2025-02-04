@@ -24,18 +24,18 @@ private:
 	/*Scoreboard * mPlayerTwoScore;
 	Scoreboard * mTopScore;*/
 
-	// TODO:
+	// Player Car Entities
+	GLTexture* mPlayerCar;
+
 	// Logo Entities
 	Texture * mLogo;
 	AnimatedGLTexture * mAnimatedLogo;
 
-	// TODO:
 	// Side Bar Entities
 	GameEntity* mSideBar;
 	
 	GLTexture* mCars;
 
-	// TODO:
 	// Play Mode Entities
 	GameEntity * mPlayModes;
 	Texture * mStartGame;
