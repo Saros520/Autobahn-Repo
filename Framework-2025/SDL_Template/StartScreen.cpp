@@ -31,7 +31,7 @@ StartScreen::StartScreen() {
 	mTitleScreen->Position(Graphics::SCREEN_WIDTH * 0.5f, Graphics::SCREEN_HEIGHT * 0.5f);
 
 	// logo entities
-	mLogoRed = new GLTexture("Auto-bahnLogo.png", 0, 0, 500, 200);
+	mLogoRed = new GLTexture("Auto-bahnLogoRed.png", 0, 0, 500, 200);
 	mLogoYellow = new GLTexture("Auto-bahnLogoYellow.png", 0, 0, 500, 200);
 	
 	mLogoRed->Parent(this);
