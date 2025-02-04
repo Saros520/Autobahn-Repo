@@ -15,14 +15,14 @@ private:
 
 	// Title Screen Entities
 	GLTexture* mTitleScreen;
+	GLTexture* mTitleScreen2;
+	GLTexture* mTitleScreen3;
+
 	// Top Bar Entities
 	GameEntity * mTopBar;
 	Texture * mPlayerScore;
-	/*Texture * mPlayerTwo;
-	Texture * mHiScore;*/
+
 	Scoreboard * mPlayerScoreNumber;
-	/*Scoreboard * mPlayerTwoScore;
-	Scoreboard * mTopScore;*/
 
 	// Player Car Entities
 	GLTexture* mPlayerCar;
@@ -63,6 +63,12 @@ private:
 	// Flicker Variables
 	float mFlickerTimer;
 	bool mFlickerRed;
+
+	// Highway background variables
+	float mHighwayPosY;
+	float mHighwayPosY2;
+	float mHighwayPosY3;
+	float mHighwaySpeed;
 
 public:
 	StartScreen();

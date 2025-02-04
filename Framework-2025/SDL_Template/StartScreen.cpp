@@ -6,8 +6,20 @@ StartScreen::StartScreen() {
 	 
 	// Title Screen Entities
 	mTitleScreen = new GLTexture("TitleScreen.png");
+	mTitleScreen2 = new GLTexture("TitleScreen.png");
+	mTitleScreen3 = new GLTexture("TitleScreen.png");
+
 	mTitleScreen->Parent(this);
+	mTitleScreen2->Parent(this);
+	mTitleScreen3->Parent(this);
+
 	mTitleScreen->Position(Graphics::SCREEN_WIDTH * 0.5f, Graphics::SCREEN_HEIGHT * 0.5f);
+	mTitleScreen2->Position(Graphics::SCREEN_WIDTH * 0.5f, Graphics::SCREEN_HEIGHT * 1.5f);
+	mTitleScreen3->Position(Graphics::SCREEN_WIDTH * 0.5f, Graphics::SCREEN_HEIGHT * 2.5f);
+
+	mTitleScreen->Scale(Vector2(1.0f, 2.0f));
+	mTitleScreen2->Scale(Vector2(1.0f, 2.0f));
+	mTitleScreen3->Scale(Vector2(1.0f, 2.0f));
 
 	// Player Car Entities
 	mPlayerCar = new GLTexture("PlayerCar1.png");
@@ -25,13 +37,6 @@ StartScreen::StartScreen() {
 
 	mPlayerScore->Position(Graphics::SCREEN_WIDTH * -0.12f, -48.0f);
 
-	
-
-	// Title Screen Entities
-	mTitleScreen = new GLTexture("TitleScreen.png");
-	mTitleScreen->Parent(this);
-	mTitleScreen->Position(Graphics::SCREEN_WIDTH * 0.5f, Graphics::SCREEN_HEIGHT * 0.5f);
-
 	// logo entities
 	mLogoRed = new GLTexture("Auto-bahnLogoRed.png", 0, 0, 500, 200);
 	mLogoYellow = new GLTexture("Auto-bahnLogoYellow.png", 0, 0, 500, 200);
@@ -45,6 +50,12 @@ StartScreen::StartScreen() {
 	// Initialize flicker variables
 	mFlickerTimer = 1.0f;
 	mFlickerRed = true;
+
+	// Highway Background
+	mHighwayPosY = 0.0f;
+	mHighwayPosY2 = Graphics::SCREEN_HEIGHT;
+	mHighwayPosY3 = Graphics::SCREEN_HEIGHT * 2;
+	mHighwaySpeed = 800.0f; // Speed
 
 	// Side Bar Entities
 	mSideBar = new GameEntity(Graphics::SCREEN_HEIGHT * 0.5f, Graphics::SCREEN_HEIGHT * 0.5f);
@@ -90,9 +101,14 @@ StartScreen::StartScreen() {
 
 
 StartScreen::~StartScreen() {
+	
 	// Title Screen Entities
 	delete mTitleScreen;  
+	delete mTitleScreen2;
+	delete mTitleScreen3;
 	mTitleScreen = nullptr;
+	mTitleScreen2 = nullptr;
+	mTitleScreen3 = nullptr;
 	
 	// top bar entities
 	delete mTopBar;
@@ -186,6 +202,25 @@ void StartScreen::Update() {
 			mFlickerTimer = 0.0f;
 		}
 
+		// Update highway background
+		mHighwayPosY += mHighwaySpeed * mTimer->DeltaTime();
+		mHighwayPosY2 += mHighwaySpeed * mTimer->DeltaTime();
+		mHighwayPosY3 += mHighwaySpeed * mTimer->DeltaTime();
+
+		if (mHighwayPosY >= Graphics::SCREEN_HEIGHT * 3) {
+			mHighwayPosY -= Graphics::SCREEN_HEIGHT * 3;
+		}
+		if (mHighwayPosY2 >= Graphics::SCREEN_HEIGHT * 3) {
+			mHighwayPosY2 -= Graphics::SCREEN_HEIGHT * 3;
+		}
+		if (mHighwayPosY3 >= Graphics::SCREEN_HEIGHT * 3) {
+			mHighwayPosY3 -= Graphics::SCREEN_HEIGHT * 3;
+		}
+
+		mTitleScreen->Position(Graphics::SCREEN_WIDTH * 0.5f, mHighwayPosY);
+		mTitleScreen2->Position(Graphics::SCREEN_WIDTH * 0.5f, mHighwayPosY2);
+		mTitleScreen3->Position(Graphics::SCREEN_WIDTH * 0.5f, mHighwayPosY3);
+
 		if (mInput->KeyPressed(SDL_SCANCODE_S) || mInput->KeyPressed(SDL_SCANCODE_DOWN)) {
 			ChangeSelectedMode(1);
 		}
@@ -196,7 +231,11 @@ void StartScreen::Update() {
 }
 
 void StartScreen::Render() {
+
+	// Render the moving highway background
 	mTitleScreen->Render();
+	mTitleScreen2->Render();
+	mTitleScreen3->Render();
 
 	mPlayerCar->Render();
 
