@@ -54,7 +54,7 @@ StartScreen::StartScreen() {
 	mStartGame->Position(0.0f, 105.0f);
 	mOptions->Position(0.0f, 175.0f);
 	mExit->Position(0.0f, 245.0f);
-	mCursor->Position(-185.0f, 105.0f);
+	mCursor->Position(-175.0f, 25.0f);
 
 	mCursorStartPos = mCursor->Position(Local);
 	mCursorOffset = Vector2(50.0f, 70.0f);
