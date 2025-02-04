@@ -28,8 +28,9 @@ private:
 	GLTexture* mPlayerCar;
 
 	// Logo Entities
-	Texture * mLogo;
-	AnimatedGLTexture * mAnimatedLogo;
+	Texture* mLogoRed;
+	Texture* mLogoYellow;
+	AnimatedGLTexture* mAnimatedLogo;
 
 	// Side Bar Entities
 	GameEntity* mSideBar;

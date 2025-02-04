@@ -33,14 +33,18 @@ StartScreen::StartScreen() {
 	mTitleScreen->Position(Graphics::SCREEN_WIDTH * 0.5f, Graphics::SCREEN_HEIGHT * 0.5f);
 
 	// logo entities
-	mLogo = new GLTexture("Auto-bahnLogo.png", 0, 0, 500, 200);
-	mAnimatedLogo = new AnimatedGLTexture("Auto-bahnLogoRed.png", 0, 0, 500, 200, 3, 0.0f, Animation::Layouts::Vertical);
+	mLogoRed = new GLTexture("Auto-bahnLogoRed.png", 0, 0, 500, 200);
+	mLogoYellow = new GLTexture("Auto-bahnLogoYellow.png", 0, 0, 500, 200);
 	
-	mLogo->Parent(this);
-	mAnimatedLogo->Parent(this);
+	mLogoRed->Parent(this);
+	mLogoYellow->Parent(this);
 
-	mLogo->Position(Graphics::SCREEN_WIDTH * 0.5f, Graphics::SCREEN_HEIGHT * 0.22f);
-	mAnimatedLogo->Position(Graphics::SCREEN_WIDTH * 0.5f, Graphics::SCREEN_HEIGHT * 0.2f);
+	mLogoRed->Position(Graphics::SCREEN_WIDTH * 0.5f, Graphics::SCREEN_HEIGHT * 0.22f);
+	mLogoYellow->Position(Graphics::SCREEN_WIDTH * 0.5f, Graphics::SCREEN_HEIGHT * 0.22f);
+
+	// Initialize flicker variables
+	mFlickerTimer = 1.0f;
+	mFlickerRed = true;
 
 	// Side Bar Entities
 	mSideBar = new GameEntity(Graphics::SCREEN_HEIGHT * 0.5f, Graphics::SCREEN_HEIGHT * 0.5f);
@@ -89,10 +93,6 @@ StartScreen::~StartScreen() {
 	// Title Screen Entities
 	delete mTitleScreen;  
 	mTitleScreen = nullptr;
-
-	// Player Car Entities
-	delete mPlayerCar;
-	mPlayerCar = nullptr;
 	
 	// top bar entities
 	delete mTopBar;
@@ -102,11 +102,15 @@ StartScreen::~StartScreen() {
 	delete mPlayerScoreNumber;
 	mPlayerScoreNumber = nullptr;
 
+	// Player Car Entities
+	delete mPlayerCar;
+	mPlayerCar = nullptr;
+
 	// logo entities
-	delete mLogo;
-	mLogo = nullptr;
-	delete mAnimatedLogo;
-	mAnimatedLogo = nullptr;
+	delete mLogoRed;
+	mLogoRed = nullptr;
+	delete mLogoYellow;
+	mLogoYellow = nullptr;
 
 	// Sidebar entities
 	delete mSideBar;
@@ -175,7 +179,12 @@ void StartScreen::Update() {
 		}
 	}
 	else {
-		mAnimatedLogo->Update();
+		// Update flicker timer
+		mFlickerTimer += mTimer->DeltaTime();
+		if (mFlickerTimer >= 0.5f) { // Switch every 0.5 seconds
+			mFlickerRed = !mFlickerRed;
+			mFlickerTimer = 0.0f;
+		}
 
 		if (mInput->KeyPressed(SDL_SCANCODE_S) || mInput->KeyPressed(SDL_SCANCODE_DOWN)) {
 			ChangeSelectedMode(1);
@@ -186,7 +195,6 @@ void StartScreen::Update() {
 	}
 }
 
-
 void StartScreen::Render() {
 	mTitleScreen->Render();
 
@@ -194,7 +202,13 @@ void StartScreen::Render() {
 
 	mPlayerScore->Render();
 
-	mAnimatedLogo->Render();
+	// Render the flickering logo
+	if (mFlickerRed) {
+		mLogoRed->Render();
+	}
+	else {
+		mLogoYellow->Render();
+	}
 
 	mStartGame->Render();
 	mOptions->Render();
