@@ -6,8 +6,7 @@
 
 namespace SDLFramework {
 
-	class GLTexture
-		: public Texture {
+	class GLTexture : public Texture {
 	public:
 		GLuint ID;
 		GLuint WrapS, WrapT;
