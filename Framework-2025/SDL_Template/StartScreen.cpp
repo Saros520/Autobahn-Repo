@@ -196,11 +196,11 @@ void StartScreen::Update() {
 
 			if (mFlickerRed) {
 				mAnimatedLogo->SetColor(255, 0, 0); // Red
-				std::cout << "Set color to Red" << std::endl;
+				/*std::cout << "Set color to Red" << std::endl;*/
 			}
 			else {
 				mAnimatedLogo->SetColor(255, 255, 0); // Yellow
-				std::cout << "Set color to Yellow" << std::endl;
+				/*std::cout << "Set color to Yellow" << std::endl;*/
 			}
 		}
 	}
