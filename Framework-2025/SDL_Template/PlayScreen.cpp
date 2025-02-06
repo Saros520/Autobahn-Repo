@@ -1,4 +1,5 @@
 #include "PlayScreen.h"
+#include "ScreenManager.h"
 
 PlayScreen::PlayScreen() {
 	mTimer = Timer::Instance();
@@ -7,6 +8,9 @@ PlayScreen::PlayScreen() {
 	mPlayer = new Player();
 	mPlayer->Parent(this);
 	mPlayer->Position(Graphics::SCREEN_WIDTH * 0.5f, Graphics::SCREEN_HEIGHT * 0.9f);
+
+	int selectedCar = ScreenManager::Instance()->GetSelectedCar();
+	mPlayer->SetCarTexture(selectedCar);
 
 	mEnemy = new Enemy();
 	mEnemy->Parent(this);
@@ -18,6 +22,10 @@ PlayScreen::PlayScreen() {
 	mLevelTimeText->Position(Graphics::SCREEN_WIDTH * 0.5f, 32.0f);
 
 	mLevelTimeText->Score(mLevelTime);
+}
+
+Player* PlayScreen::GetPlayer() {
+	return mPlayer;
 }
 
 PlayScreen::~PlayScreen() {

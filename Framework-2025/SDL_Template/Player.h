@@ -37,6 +37,8 @@ public:
 	Player();
 	~Player();
 
+	void SetCarTexture(int carIndex);
+
 	void Visible(bool visible);
 	bool IsAnimating();
 

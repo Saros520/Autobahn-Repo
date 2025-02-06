@@ -132,6 +132,9 @@
     <ClCompile Include="Enemy.cpp">
       <Filter>Source Files\AutoBahn Game</Filter>
     </ClCompile>
+    <ClCompile Include="CarSelectScreen.cpp">
+      <Filter>Source Files\AutoBahn Game</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameEntity.h">
@@ -222,6 +225,9 @@
       <Filter>Header Files\Utility</Filter>
     </ClInclude>
     <ClInclude Include="Enemy.h">
+      <Filter>Header Files\AutoBahn Game</Filter>
+    </ClInclude>
+    <ClInclude Include="CarSelectScreen.h">
       <Filter>Header Files\AutoBahn Game</Filter>
     </ClInclude>
   </ItemGroup>
