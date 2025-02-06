@@ -14,14 +14,14 @@ Player::Player() {
 	mScore = 0;
 	mLives = 2;
 	
-	mTexture = new GLTexture("Exit.png");
+	mTexture = new Texture("Exit.png");
 	mTexture->Parent(this);
 	mTexture->Position(Vec2_Zero);
 
 	mMoveSpeed = 300.0f;
 	mMoveBounds = Vector2(0.0f + mTexture->ScaledDimensions().x/2, Graphics::SCREEN_WIDTH - mTexture->ScaledDimensions().x/2);
 
-	mDeathAnimation = new AnimatedGLTexture("Exit.png", 0, 0, 128, 128, 4, 1.0f, Animation::Layouts::Horizontal);
+	mDeathAnimation = new AnimatedTexture("Exit.png", 0, 0, 128, 128, 4, 1.0f, Animation::Layouts::Horizontal);
 	mDeathAnimation->Parent(this);
 	mDeathAnimation->Position(Vec2_Zero);
 	mDeathAnimation->SetWrapMode(Animation::WrapModes::Once);

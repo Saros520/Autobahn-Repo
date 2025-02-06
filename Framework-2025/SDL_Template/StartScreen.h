@@ -14,9 +14,9 @@ private:
 	InputManager * mInput;
 
 	// Title Screen Entities
-	GLTexture* mTitleScreen;
-	GLTexture* mTitleScreen2;
-	GLTexture* mTitleScreen3;
+	Texture* mTitleScreen;
+	Texture* mTitleScreen2;
+	Texture* mTitleScreen3;
 
 	// Top Bar Entities
 	GameEntity * mTopBar;
@@ -25,17 +25,17 @@ private:
 	Scoreboard * mPlayerScoreNumber;
 
 	// Player Car Entities
-	GLTexture* mPlayerCar;
+	Texture* mPlayerCar;
 
 	// Logo Entities
 	Texture* mLogoRed;
 	Texture* mLogoYellow;
-	AnimatedGLTexture* mAnimatedLogo;
+	AnimatedTexture* mAnimatedLogo;
 
 	// Side Bar Entities
 	GameEntity* mSideBar;
-	GLTexture* mZoomingCarLeft;
-	GLTexture* mZoomingCarRight;
+	Texture* mZoomingCarLeft;
+	Texture* mZoomingCarRight;
 	float mZoomingCarLeftPosY;
 	float mZoomingCarRightPosY;
 	float mZoomingCarSpeed;

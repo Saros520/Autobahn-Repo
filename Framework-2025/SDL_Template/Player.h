@@ -21,7 +21,7 @@ private:
 	int mLives;
 
 	Texture * mTexture;
-	AnimatedGLTexture * mDeathAnimation;
+	AnimatedTexture * mDeathAnimation;
 
 	float mMoveSpeed;
 	Vector2 mMoveBounds;
