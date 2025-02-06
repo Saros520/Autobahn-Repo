@@ -34,8 +34,12 @@ private:
 
 	// Side Bar Entities
 	GameEntity* mSideBar;
-	
-	GLTexture* mCars;
+	GLTexture* mZoomingCarLeft;
+	GLTexture* mZoomingCarRight;
+	float mZoomingCarLeftPosY;
+	float mZoomingCarRightPosY;
+	float mZoomingCarSpeed;
+	float mZoomingCarTimer;
 
 	// Play Mode Entities
 	GameEntity * mPlayModes;

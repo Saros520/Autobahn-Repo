@@ -59,7 +59,19 @@ StartScreen::StartScreen() {
 
 	// Side Bar Entities
 	mSideBar = new GameEntity(Graphics::SCREEN_HEIGHT * 0.5f, Graphics::SCREEN_HEIGHT * 0.5f);
-	/*mCars = new AnimatedGLTexture("Cars.png", 0, 0, 100, 100, 4, 0.2f, Animation::Layouts::Vertical);*/
+	mZoomingCarLeft = new GLTexture("YellowCar.png");
+	mZoomingCarRight = new GLTexture("PoliceCar.png");
+
+	mZoomingCarLeft->Parent(this);
+	mZoomingCarRight->Parent(this);
+
+	mZoomingCarLeft->Scale(Vector2(8.0f, 8.0f));
+	mZoomingCarRight->Scale(Vector2(8.0f, 8.0f));
+
+	mZoomingCarLeftPosY = -500.0f; // Start off-screen
+	mZoomingCarRightPosY = -500.0f; // Start off-screen
+	mZoomingCarSpeed = 1000.0f; // Speed of the zooming cars
+	mZoomingCarTimer = 0.0f;
 
 	// play mode entities
 	mPlayModes = new GameEntity(Graphics::SCREEN_WIDTH * 0.5f, Graphics::SCREEN_HEIGHT * 0.55f);
@@ -131,8 +143,10 @@ StartScreen::~StartScreen() {
 	// Sidebar entities
 	delete mSideBar;
 	mSideBar = nullptr;
-	delete mCars;
-	mCars = nullptr;
+	delete mZoomingCarLeft;
+	delete mZoomingCarRight;
+	mZoomingCarLeft = nullptr;
+	mZoomingCarRight = nullptr;
 
 	// play mode entities
 	delete mPlayModes;
@@ -221,6 +235,20 @@ void StartScreen::Update() {
 		mTitleScreen2->Position(Graphics::SCREEN_WIDTH * 0.5f, mHighwayPosY2);
 		mTitleScreen3->Position(Graphics::SCREEN_WIDTH * 0.5f, mHighwayPosY3);
 
+		// Update Vehicles speeding by
+		mZoomingCarTimer += mTimer->DeltaTime();
+		if (mZoomingCarTimer >= 4.0f) { // Every 4 seconds
+			mZoomingCarLeftPosY = Graphics::SCREEN_HEIGHT; // Reset to start position
+			mZoomingCarRightPosY = Graphics::SCREEN_HEIGHT + 700.0f; // Start slightly behind the yellow car
+			mZoomingCarTimer = 0.0f;
+		}
+
+		mZoomingCarLeftPosY -= mZoomingCarSpeed * mTimer->DeltaTime();
+		mZoomingCarRightPosY -= mZoomingCarSpeed * mTimer->DeltaTime() * 1.2f; // Police car moves slightly faster
+
+		mZoomingCarLeft->Position(Graphics::SCREEN_WIDTH * 0.23f, mZoomingCarLeftPosY);
+		mZoomingCarRight->Position(Graphics::SCREEN_WIDTH * 0.96f, mZoomingCarRightPosY);
+
 		if (mInput->KeyPressed(SDL_SCANCODE_S) || mInput->KeyPressed(SDL_SCANCODE_DOWN)) {
 			ChangeSelectedMode(1);
 		}
@@ -238,6 +266,10 @@ void StartScreen::Render() {
 	mTitleScreen3->Render();
 
 	mPlayerCar->Render();
+
+	// Render Vehicles speeding by
+	mZoomingCarLeft->Render();
+	mZoomingCarRight->Render();
 
 	mPlayerScore->Render();
 
