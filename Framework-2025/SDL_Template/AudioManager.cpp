@@ -36,6 +36,10 @@ namespace SDLFramework {
 		}
 	}
 
+	void AudioManager::SetMusicVolume(int volume) {
+		Mix_VolumeMusic(volume);
+	}
+
 	void AudioManager::PlaySFX(std::string filename, int loops, int channel) {
 		Mix_PlayChannel(channel, mAssetManager->GetSFX(filename), loops);
 	}

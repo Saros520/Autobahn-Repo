@@ -3,12 +3,13 @@
 
 #include "StartScreen.h"
 #include "PlayScreen.h"
-#include "CarSelectScreen.h" 
+#include "CarSelectScreen.h"
+#include "OptionsScreen.h"
 #include "InputManager.h"
 
 class ScreenManager {
 public:
-    enum Screens { Start, CarSelect, Play };
+    enum Screens { Start, CarSelect, Options, Play };
 
 private:
     static ScreenManager* sInstance;
@@ -18,14 +19,15 @@ private:
     StartScreen* mStartScreen;
     PlayScreen* mPlayScreen;
     CarSelectScreen* mCarSelectScreen;
+    OptionsScreen* mOptionsScreen;
     int mSelectedCar;
+
+    ScreenManager();
+    ~ScreenManager();
 
 public:
     static ScreenManager* Instance();
     static void Release();
-
-    ScreenManager();
-    ~ScreenManager();
 
     void Update();
     void Render();

@@ -74,6 +74,16 @@ private:
 	float mHighwayPosY3;
 	float mHighwaySpeed;
 
+	// Options Screen Entities
+	Texture* mSliderBar;
+	Texture* mSliderKnob;
+	float mSliderMinValue;
+	float mSliderMaxValue;
+	float mSliderCurrentValue;
+	Vector2 mSliderKnobStartPos;
+	Vector2 mSliderKnobEndPos;
+	bool mInOptions;
+
 public:
 	StartScreen();
 	~StartScreen();

@@ -19,6 +19,7 @@ ScreenManager::ScreenManager() {
 
     mStartScreen = new StartScreen();
     mCarSelectScreen = new CarSelectScreen();
+    mOptionsScreen = new OptionsScreen();
     mPlayScreen = new PlayScreen();
 
     mCurrentScreen = Start;
@@ -28,6 +29,7 @@ ScreenManager::ScreenManager() {
 ScreenManager::~ScreenManager() {
     delete mStartScreen;
     delete mCarSelectScreen;
+    delete mOptionsScreen;
     delete mPlayScreen;
 }
 
@@ -40,8 +42,17 @@ void ScreenManager::Update() {
     case Start:
         mStartScreen->Update();
         if (mInput->KeyPressed(SDL_SCANCODE_RETURN)) {
-            mCurrentScreen = CarSelect;
-            mStartScreen->ResetAnimation();
+			if (mStartScreen->SelectedMode() == 0) {
+				mCurrentScreen = CarSelect;
+				mStartScreen->ResetAnimation();
+			}
+			else if (mStartScreen->SelectedMode() == 1) {
+				mCurrentScreen = Options;
+			}
+			else if (mStartScreen->SelectedMode() == 2) {
+				SDL_Quit();
+				exit(0);
+			}
         }
         break;
     case CarSelect:
@@ -49,6 +60,12 @@ void ScreenManager::Update() {
         if (mInput->KeyPressed(SDL_SCANCODE_RETURN)) {
             mCurrentScreen = Play;
             mPlayScreen->GetPlayer()->SetCarTexture(mSelectedCar);
+        }
+        break;
+    case Options:
+        mOptionsScreen->Update();
+        if (mInput->KeyPressed(SDL_SCANCODE_ESCAPE)) {
+            mCurrentScreen = Start;
         }
         break;
     case Play:
@@ -67,6 +84,9 @@ void ScreenManager::Render() {
         break;
     case CarSelect:
         mCarSelectScreen->Render();
+        break;
+    case Options:
+        mOptionsScreen->Render();
         break;
     case Play:
         mPlayScreen->Render();

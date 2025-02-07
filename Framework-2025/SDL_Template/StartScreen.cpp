@@ -1,5 +1,6 @@
 #include "StartScreen.h"
 #include "ScreenManager.h"
+#include "AudioManager.h"
 
 StartScreen::StartScreen() {
 	mTimer = Timer::Instance();
@@ -110,6 +111,7 @@ StartScreen::StartScreen() {
 	mDreamTeamStudios->Position(0.0f, 255.0f);
 	mDates->Position(-345.0f, 255.0f);
 	mRights->Position(0.0f, 275.0f);
+
 }
 
 
@@ -173,6 +175,7 @@ StartScreen::~StartScreen() {
 
 	mTimer = nullptr;
 	mInput = nullptr;
+
 }
 
 void StartScreen::ResetAnimation() {
@@ -260,21 +263,21 @@ void StartScreen::Update() {
 			ChangeSelectedMode(-1);
 		}
 
+		// Handle "Enter" key for selection
 		if (mInput->KeyPressed(SDL_SCANCODE_RETURN)) {
 			if (mSelectedMode == 0) { // Start Game
 				ScreenManager::Instance()->SetScreen(ScreenManager::CarSelect);
 			}
 			else if (mSelectedMode == 1) { // Options
-				// Add options screen logic
+				ScreenManager::Instance()->SetScreen(ScreenManager::Options);
 			}
 			else if (mSelectedMode == 2) { // Exit Game
 				SDL_Quit();
-				exit(0);  
+				exit(0);  // Ensure the game process closes
 			}
 		}
 	}
 }
-
 
 void StartScreen::Render() {
 
