@@ -9,6 +9,9 @@ private:
 	Timer * mTimer;
 	AudioManager * mAudio;
 
+	Texture* mNorthRoadCity;
+	Texture* mSouthRoadCity;
+
 	Player * mPlayer;
 	Enemy* mEnemy;
 

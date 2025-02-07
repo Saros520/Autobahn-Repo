@@ -5,6 +5,18 @@ PlayScreen::PlayScreen() {
 	mTimer = Timer::Instance();
 	mAudio = AudioManager::Instance();
 
+	mNorthRoadCity = new Texture("NorthRoadCity.png");
+	mSouthRoadCity = new Texture("SouthRoadCity.png");
+
+	mNorthRoadCity->Parent(this);
+	mSouthRoadCity->Parent(this);
+
+	mNorthRoadCity->Position(Graphics::SCREEN_WIDTH * 0.5f, Graphics::SCREEN_HEIGHT * 0.5f);
+	mSouthRoadCity->Position(Graphics::SCREEN_WIDTH * 0.5f, Graphics::SCREEN_HEIGHT * 1.5f);
+
+	mNorthRoadCity->Scale(Vector2(1.0f, 2.0f));
+	mSouthRoadCity->Scale(Vector2(1.0f, 2.0f));
+
 	mPlayer = new Player();
 	mPlayer->Parent(this);
 	mPlayer->Position(Graphics::SCREEN_WIDTH * 0.5f, Graphics::SCREEN_HEIGHT * 0.9f);
@@ -31,7 +43,10 @@ Player* PlayScreen::GetPlayer() {
 PlayScreen::~PlayScreen() {
 	mTimer = nullptr;
 	mAudio = nullptr;
-
+	delete mNorthRoadCity;
+	delete mSouthRoadCity;
+	mNorthRoadCity = nullptr;
+	mSouthRoadCity = nullptr;
 	delete mPlayer;
 	mPlayer = nullptr;
 
@@ -47,6 +62,9 @@ void PlayScreen::Update() {
 }
 
 void PlayScreen::Render() {
+	mNorthRoadCity->Render();
+	mSouthRoadCity->Render();
+
 	mPlayer->Render();
 	mEnemy->Render();
 	mLevelTimeText->Render();

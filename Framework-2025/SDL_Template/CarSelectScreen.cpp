@@ -8,21 +8,25 @@ CarSelectScreen::CarSelectScreen() {
     mBackground->Parent(this);
     mBackground->Position(Graphics::SCREEN_WIDTH * 0.5f, Graphics::SCREEN_HEIGHT * 0.5f);
 
-    mTitle = new Texture("Select Your Car", "emulogic.ttf", 32, { 255, 255, 255 });
+    mTitle = new Texture("Select Your Car", "emulogic.ttf", 33, { 255, 0, 0 });
     mTitle->Parent(this);
-    mTitle->Position(Graphics::SCREEN_WIDTH * 0.5f, 50);
+    mTitle->Position(Graphics::SCREEN_WIDTH * 0.5f, 400);
+
+    mTitle2 = new Texture("Select Your Car", "emulogic.ttf", 32, { 0, 0, 0 });
+    mTitle2->Parent(this);
+    mTitle2->Position(Graphics::SCREEN_WIDTH * 0.5f, 400);
 
     for (int i = 0; i < 6; i++) {
         std::string fileName = "PlayerCar" + std::to_string(i + 1) + ".png";
         mCars[i] = new Texture(fileName);
         mCars[i]->Parent(this);
-        mCars[i]->Position(200 + i * 150, Graphics::SCREEN_HEIGHT * 0.5f);
+        mCars[i]->Position(170 + i * 120, Graphics::SCREEN_HEIGHT * 0.5f);
     }
 
-    mCursor = new Texture("Cursor.png");
+    mCursor = new Texture("Cursor2.png");
     mCursor->Parent(this);
-    mCursorStartPos = Vector2(150, Graphics::SCREEN_HEIGHT * 0.5f);
-    mCursorOffset = Vector2(150, 0);
+    mCursorStartPos = Vector2(173, Graphics::SCREEN_HEIGHT * 0.49f);
+    mCursorOffset = Vector2(120, 0);
     mSelectedCar = 0;
     mCursor->Position(mCursorStartPos);
 }
@@ -30,6 +34,7 @@ CarSelectScreen::CarSelectScreen() {
 CarSelectScreen::~CarSelectScreen() {
     delete mBackground;
     delete mTitle;
+    delete mTitle2;
     delete mCursor;
 
     for (int i = 0; i < 6; i++) {
@@ -64,6 +69,7 @@ void CarSelectScreen::Update() {
 void CarSelectScreen::Render() {
     mBackground->Render();
     mTitle->Render();
+    mTitle2->Render();
 
     for (int i = 0; i < 6; i++) {
         mCars[i]->Render();

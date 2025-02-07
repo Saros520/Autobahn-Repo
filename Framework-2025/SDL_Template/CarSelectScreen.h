@@ -13,6 +13,7 @@ private:
 
     Texture* mBackground;
     Texture* mTitle;
+    Texture* mTitle2;
     Texture* mCars[6];
     Texture* mCursor;
     Vector2 mCursorStartPos;
