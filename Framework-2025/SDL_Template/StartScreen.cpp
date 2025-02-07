@@ -94,9 +94,9 @@ StartScreen::StartScreen() {
 	mDates->Parent(mBottomBar);
 	mRights->Parent(mBottomBar);
 
-	mDreamTeamStudios->Position(0.0f, 265.0f);
-	mDates->Position(-345.0f, 265.0f);
-	mRights->Position(0.0f, 285.0f);
+	mDreamTeamStudios->Position(0.0f, 255.0f);
+	mDates->Position(-345.0f, 255.0f);
+	mRights->Position(0.0f, 275.0f);
 }
 
 
@@ -181,6 +181,7 @@ void StartScreen::ChangeSelectedMode(int change) {
 	mCursor->Position(mCursorStartPos + mCursorOffset * (float)mSelectedMode);
 }
 
+
 void StartScreen::Update() {
 	if (!mAnimationDone) {
 		mAnimationTimer += mTimer->DeltaTime();
@@ -226,6 +227,8 @@ void StartScreen::Update() {
 		}
 		else if (mInput->KeyPressed(SDL_SCANCODE_W) || mInput->KeyPressed(SDL_SCANCODE_UP)) {
 			ChangeSelectedMode(-1);
+
+
 		}
 	}
 }
