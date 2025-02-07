@@ -76,21 +76,21 @@ void Player::HandleMovement() {
 	//	Translate(-Vec2_Right * mMoveSpeed * mTimer->DeltaTime(), World);
 	//}
 
+	 // Moving right when right arrow key is pressed
 	if (mInput->KeyDown(SDL_SCANCODE_RIGHT)) {
-		Rotate(5.0f);
+		Translate(Vec2_Right * mMoveSpeed * mTimer->DeltaTime(), World);
 	}
+	// Moving left when left arrow key is pressed
 	else if (mInput->KeyDown(SDL_SCANCODE_LEFT)) {
-		Rotate(-5.0f);
+		Translate(-Vec2_Right * mMoveSpeed * mTimer->DeltaTime(), World);
 	}
 
 	if (mInput->KeyDown(SDL_SCANCODE_UP)) {
 		Translate(-Vec2_Up * mMoveSpeed * mTimer->DeltaTime(), World);
-		mTexture->Flip(false, false);
 		mDeathAnimation->Flip(false, false);
 	}
 	else if (mInput->KeyDown(SDL_SCANCODE_DOWN)) {
 		Translate(Vec2_Up * mMoveSpeed * mTimer->DeltaTime(), World);
-		mTexture->Flip(false, true);
 		mDeathAnimation->Flip(false, true);
 	}
 
