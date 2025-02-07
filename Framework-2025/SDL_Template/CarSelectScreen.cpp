@@ -49,10 +49,10 @@ void CarSelectScreen::ChangeSelectedCar(int change) {
 }
 
 void CarSelectScreen::Update() {
-    if (mInput->KeyPressed(SDL_SCANCODE_LEFT)) {
+    if (mInput->KeyPressed(SDL_SCANCODE_LEFT) || mInput->KeyPressed(SDL_SCANCODE_A)) {
         ChangeSelectedCar(-1);
     }
-    if (mInput->KeyPressed(SDL_SCANCODE_RIGHT)) {
+    if (mInput->KeyPressed(SDL_SCANCODE_RIGHT) || mInput->KeyPressed(SDL_SCANCODE_D)) {
         ChangeSelectedCar(1);
     }
     if (mInput->KeyPressed(SDL_SCANCODE_RETURN)) {
