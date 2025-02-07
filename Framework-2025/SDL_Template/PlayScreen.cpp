@@ -11,18 +11,15 @@ PlayScreen::PlayScreen() {
 	mNorthRoadCity->Parent(this);
 	mSouthRoadCity->Parent(this);
 
-	mNorthRoadCity->Position(Graphics::SCREEN_WIDTH * 0.5f, Graphics::SCREEN_HEIGHT * 0.5f);
-	mSouthRoadCity->Position(Graphics::SCREEN_WIDTH * 0.5f, Graphics::SCREEN_HEIGHT * 1.5f);
+	mNorthRoadCity->Position(Graphics::SCREEN_WIDTH * 0.782f, Graphics::SCREEN_HEIGHT * 0.5f);
+	mSouthRoadCity->Position(Graphics::SCREEN_WIDTH * 0.219f, Graphics::SCREEN_HEIGHT * 0.5f);
 
-	mNorthRoadCity->Scale(Vector2(1.0f, 2.0f));
-	mSouthRoadCity->Scale(Vector2(1.0f, 2.0f));
+	mNorthRoadCity->Scale(Vector2(1.5f, 1.489f));
+	mSouthRoadCity->Scale(Vector2(1.5f, 1.489f));
 
 	mPlayer = new Player();
 	mPlayer->Parent(this);
 	mPlayer->Position(Graphics::SCREEN_WIDTH * 0.5f, Graphics::SCREEN_HEIGHT * 0.9f);
-
-	//int selectedCar = ScreenManager::Instance()->GetSelectedCar();
-	//mPlayer->SetCarTexture(selectedCar);
 
 	mEnemy = new Enemy();
 	mEnemy->Parent(this);

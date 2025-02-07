@@ -25,7 +25,7 @@ CarSelectScreen::CarSelectScreen() {
 
     mCursor = new Texture("Cursor2.png");
     mCursor->Parent(this);
-    mCursorStartPos = Vector2(173, Graphics::SCREEN_HEIGHT * 0.49f);
+    mCursorStartPos = Vector2(180, Graphics::SCREEN_HEIGHT * 0.45f);
     mCursorOffset = Vector2(120, 0);
     mSelectedCar = 0;
     mCursor->Position(mCursorStartPos);

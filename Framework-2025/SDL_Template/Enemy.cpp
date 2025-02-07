@@ -7,11 +7,11 @@ Enemy::Enemy() {
 
 	mAnimating = false;
 
-	mTexture = new Texture("Exit.png", 61, 0, 60, 64);
+	mTexture = new Texture("Deer.png", 61, 0, 60, 64);
 	mTexture->Parent(this);
 	mTexture->Position(Vec2_Zero);
 
-	mDeathAnimation = new AnimatedTexture("Exit.png", 0, 0, 128, 128, 4, 1.0f, Animation::Layouts::Horizontal);
+	mDeathAnimation = new AnimatedTexture("Deer.png", 0, 0, 128, 128, 4, 1.0f, Animation::Layouts::Horizontal);
 	mDeathAnimation->Parent(this);
 	mDeathAnimation->Position(Vec2_Zero);
 	mDeathAnimation->SetWrapMode(Animation::WrapModes::Once);
