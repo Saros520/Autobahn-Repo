@@ -1,4 +1,5 @@
 #include "StartScreen.h"
+#include "ScreenManager.h"
 
 StartScreen::StartScreen() {
 	mTimer = Timer::Instance();
@@ -205,7 +206,8 @@ void StartScreen::Update() {
 			mAnimationDone = true;
 		}
 
-		if (mInput->KeyPressed(SDL_SCANCODE_S) || mInput->KeyPressed(SDL_SCANCODE_W) || mInput->KeyPressed(SDL_SCANCODE_DOWN) || mInput->KeyPressed(SDL_SCANCODE_UP)) {
+		if (mInput->KeyPressed(SDL_SCANCODE_S) || mInput->KeyPressed(SDL_SCANCODE_W) ||
+			mInput->KeyPressed(SDL_SCANCODE_DOWN) || mInput->KeyPressed(SDL_SCANCODE_UP)) {
 			mAnimationTimer = mAnimationTotalTime;
 		}
 	}
@@ -250,16 +252,30 @@ void StartScreen::Update() {
 		mZoomingCarLeft->Position(Graphics::SCREEN_WIDTH * 0.23f, mZoomingCarLeftPosY);
 		mZoomingCarRight->Position(Graphics::SCREEN_WIDTH * 0.96f, mZoomingCarRightPosY);
 
+		// Handle menu selection
 		if (mInput->KeyPressed(SDL_SCANCODE_S) || mInput->KeyPressed(SDL_SCANCODE_DOWN)) {
 			ChangeSelectedMode(1);
 		}
 		else if (mInput->KeyPressed(SDL_SCANCODE_W) || mInput->KeyPressed(SDL_SCANCODE_UP)) {
 			ChangeSelectedMode(-1);
+		}
 
-
+		// Handle "Enter" key for selection
+		if (mInput->KeyPressed(SDL_SCANCODE_RETURN)) {
+			if (mSelectedMode == 0) { // Start Game
+				ScreenManager::Instance()->SetScreen(ScreenManager::CarSelect);
+			}
+			else if (mSelectedMode == 1) { // Options
+				// Add options screen logic if needed
+			}
+			else if (mSelectedMode == 2) { // Exit Game
+				SDL_Quit();
+				exit(0);  // Ensure the game process closes
+			}
 		}
 	}
 }
+
 
 void StartScreen::Render() {
 
