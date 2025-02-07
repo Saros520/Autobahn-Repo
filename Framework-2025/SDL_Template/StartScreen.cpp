@@ -5,9 +5,9 @@ StartScreen::StartScreen() {
 	mInput = InputManager::Instance();
 	 
 	// Title Screen Entities
-	mTitleScreen = new GLTexture("TitleScreen.png");
-	mTitleScreen2 = new GLTexture("TitleScreen.png");
-	mTitleScreen3 = new GLTexture("TitleScreen.png");
+	mTitleScreen = new Texture("TitleScreen.png");
+	mTitleScreen2 = new Texture("TitleScreen.png");
+	mTitleScreen3 = new Texture("TitleScreen.png");
 
 	mTitleScreen->Parent(this);
 	mTitleScreen2->Parent(this);
@@ -22,14 +22,14 @@ StartScreen::StartScreen() {
 	mTitleScreen3->Scale(Vector2(1.0f, 2.0f));
 
 	// Player Car Entities
-	mPlayerCar = new GLTexture("PlayerCar1.png");
+	mPlayerCar = new Texture("PlayerCar1.png");
 	mPlayerCar->Parent(this);
 	mPlayerCar->Position(Graphics::SCREEN_WIDTH * 0.5f + 43.0f, Graphics::SCREEN_HEIGHT * 0.5f - 105.0f);
 	mPlayerCar->Scale(Vector2(8.0f, 8.0f));
 
 	// top bar entities
 	mTopBar = new GameEntity(Graphics::SCREEN_WIDTH * 0.5f, 80.0f);
-	mPlayerScore = new GLTexture("High-Score", "emulogic.ttf", 32, { 200, 0, 0 });
+	mPlayerScore = new Texture("High-Score", "emulogic.ttf", 32, { 200, 0, 0 });
 	mPlayerScoreNumber = new Scoreboard();
 
 	mTopBar->Parent(this);
@@ -38,8 +38,8 @@ StartScreen::StartScreen() {
 	mPlayerScore->Position(Graphics::SCREEN_WIDTH * -0.12f, -48.0f);
 
 	// logo entities
-	mLogoRed = new GLTexture("Auto-bahnLogoRed.png", 0, 0, 500, 200);
-	mLogoYellow = new GLTexture("Auto-bahnLogoYellow.png", 0, 0, 500, 200);
+	mLogoRed = new Texture("Auto-bahnLogoRed.png", 0, 0, 500, 200);
+	mLogoYellow = new Texture("Auto-bahnLogoYellow.png", 0, 0, 500, 200);
 	
 	mLogoRed->Parent(this);
 	mLogoYellow->Parent(this);
@@ -59,14 +59,26 @@ StartScreen::StartScreen() {
 
 	// Side Bar Entities
 	mSideBar = new GameEntity(Graphics::SCREEN_HEIGHT * 0.5f, Graphics::SCREEN_HEIGHT * 0.5f);
-	/*mCars = new AnimatedGLTexture("Cars.png", 0, 0, 100, 100, 4, 0.2f, Animation::Layouts::Vertical);*/
+	mZoomingCarLeft = new Texture("YellowCar.png");
+	mZoomingCarRight = new Texture("PoliceCar.png");
+
+	mZoomingCarLeft->Parent(this);
+	mZoomingCarRight->Parent(this);
+
+	mZoomingCarLeft->Scale(Vector2(8.0f, 8.0f));
+	mZoomingCarRight->Scale(Vector2(8.0f, 8.0f));
+
+	mZoomingCarLeftPosY = -500.0f; // Start off-screen
+	mZoomingCarRightPosY = -500.0f; // Start off-screen
+	mZoomingCarSpeed = 1000.0f; // Speed of the zooming cars
+	mZoomingCarTimer = 0.0f;
 
 	// play mode entities
 	mPlayModes = new GameEntity(Graphics::SCREEN_WIDTH * 0.5f, Graphics::SCREEN_HEIGHT * 0.55f);
-	mStartGame = new GLTexture("Start Game", "emulogic.ttf", 32, { 200, 0, 0 });
-	mOptions = new GLTexture("Options", "emulogic.ttf", 32, { 200, 0, 0 });
-	mExit = new GLTexture("Exit", "emulogic.ttf", 32, { 200, 0, 0 });
-	mCursor = new GLTexture("Cursor.png");
+	mStartGame = new Texture("Start Game", "emulogic.ttf", 32, { 200, 0, 0 });
+	mOptions = new Texture("Options", "emulogic.ttf", 32, { 200, 0, 0 });
+	mExit = new Texture("Exit", "emulogic.ttf", 32, { 200, 0, 0 });
+	mCursor = new Texture("Cursor.png");
 
 	mPlayModes->Parent(this);
 	mStartGame->Parent(mPlayModes);
@@ -85,9 +97,9 @@ StartScreen::StartScreen() {
 
 	// bottom bar entities
 	mBottomBar = new GameEntity(Graphics::SCREEN_WIDTH * 0.5f, Graphics::SCREEN_HEIGHT * 0.7f);
-	mDreamTeamStudios = new GLTexture("dream team studios", "namco__.ttf", 20, { 200, 0, 0 });
-	mDates = new GLTexture("2025.", "emulogic.ttf", 20, { 200, 0, 0 });
-	mRights = new GLTexture("ALL RIGHTS RESERVED", "emulogic.ttf", 10, { 200, 0, 0 });
+	mDreamTeamStudios = new Texture("dream team studios", "namco__.ttf", 20, { 200, 0, 0 });
+	mDates = new Texture("2025.", "emulogic.ttf", 20, { 200, 0, 0 });
+	mRights = new Texture("ALL RIGHTS RESERVED", "emulogic.ttf", 10, { 200, 0, 0 });
 
 	mBottomBar->Parent(this);
 	mDreamTeamStudios->Parent(mBottomBar);
@@ -131,8 +143,10 @@ StartScreen::~StartScreen() {
 	// Sidebar entities
 	delete mSideBar;
 	mSideBar = nullptr;
-	delete mCars;
-	mCars = nullptr;
+	delete mZoomingCarLeft;
+	delete mZoomingCarRight;
+	mZoomingCarLeft = nullptr;
+	mZoomingCarRight = nullptr;
 
 	// play mode entities
 	delete mPlayModes;
@@ -222,6 +236,20 @@ void StartScreen::Update() {
 		mTitleScreen2->Position(Graphics::SCREEN_WIDTH * 0.5f, mHighwayPosY2);
 		mTitleScreen3->Position(Graphics::SCREEN_WIDTH * 0.5f, mHighwayPosY3);
 
+		// Update Vehicles speeding by
+		mZoomingCarTimer += mTimer->DeltaTime();
+		if (mZoomingCarTimer >= 4.0f) { // Every 4 seconds
+			mZoomingCarLeftPosY = Graphics::SCREEN_HEIGHT; // Reset to start position
+			mZoomingCarRightPosY = Graphics::SCREEN_HEIGHT + 700.0f; // Start slightly behind the yellow car
+			mZoomingCarTimer = 0.0f;
+		}
+
+		mZoomingCarLeftPosY -= mZoomingCarSpeed * mTimer->DeltaTime();
+		mZoomingCarRightPosY -= mZoomingCarSpeed * mTimer->DeltaTime() * 1.3f; // Police car moves slightly faster
+
+		mZoomingCarLeft->Position(Graphics::SCREEN_WIDTH * 0.23f, mZoomingCarLeftPosY);
+		mZoomingCarRight->Position(Graphics::SCREEN_WIDTH * 0.96f, mZoomingCarRightPosY);
+
 		if (mInput->KeyPressed(SDL_SCANCODE_S) || mInput->KeyPressed(SDL_SCANCODE_DOWN)) {
 			ChangeSelectedMode(1);
 		}
@@ -241,6 +269,10 @@ void StartScreen::Render() {
 	mTitleScreen3->Render();
 
 	mPlayerCar->Render();
+
+	// Render Vehicles speeding by
+	mZoomingCarLeft->Render();
+	mZoomingCarRight->Render();
 
 	mPlayerScore->Render();
 

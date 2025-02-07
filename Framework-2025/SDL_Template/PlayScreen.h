@@ -21,5 +21,7 @@ public:
 
 	void Update() override;
 	void Render() override;
+
+	Player* GetPlayer();
 };
 #endif

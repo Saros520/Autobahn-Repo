@@ -14,7 +14,7 @@ private:
 	bool mAnimating;
 
 	Texture* mTexture;
-	AnimatedGLTexture* mDeathAnimation;
+	AnimatedTexture* mDeathAnimation;
 
 public:
 	Enemy();

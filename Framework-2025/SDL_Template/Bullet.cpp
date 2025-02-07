@@ -9,7 +9,7 @@ bool Bullet::IgnoreCollisions() {
 Bullet::Bullet(bool friendly) {
 	mTimer = Timer::Instance();
 
-	mTexture = new GLTexture("Bullet.png");
+	mTexture = new Texture("Bullet.png");
 	mTexture->Parent(this);
 	mTexture->Position(Vec2_Zero);
 

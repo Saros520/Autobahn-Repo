@@ -21,7 +21,7 @@ private:
 	int mLives;
 
 	Texture * mTexture;
-	AnimatedGLTexture * mDeathAnimation;
+	AnimatedTexture * mDeathAnimation;
 
 	float mMoveSpeed;
 	Vector2 mMoveBounds;
@@ -36,6 +36,8 @@ private:
 public:
 	Player();
 	~Player();
+
+	void SetCarTexture(int carIndex);
 
 	void Visible(bool visible);
 	bool IsAnimating();

@@ -6,10 +6,10 @@ CircleCollider::CircleCollider(float radius, bool broadPhase)
 
 	if (DEBUG_COLLIDERS) {
 		if (broadPhase) {
-			SetDebugTexture(new GLTexture("Framework/BroadPhaseCollider.png"));
+			SetDebugTexture(new Texture("Framework/BroadPhaseCollider.png"));
 		}
 		else {
-			SetDebugTexture(new GLTexture("Framework/CircleCollider.png"));
+			SetDebugTexture(new Texture("Framework/CircleCollider.png"));
 		}
 		// circle collider file size is 50px
 		mDebugTexture->Scale(Vec2_One * (radius * 2 / 50.0f));
