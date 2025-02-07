@@ -260,17 +260,16 @@ void StartScreen::Update() {
 			ChangeSelectedMode(-1);
 		}
 
-		// Handle "Enter" key for selection
 		if (mInput->KeyPressed(SDL_SCANCODE_RETURN)) {
 			if (mSelectedMode == 0) { // Start Game
 				ScreenManager::Instance()->SetScreen(ScreenManager::CarSelect);
 			}
 			else if (mSelectedMode == 1) { // Options
-				// Add options screen logic if needed
+				// Add options screen logic
 			}
 			else if (mSelectedMode == 2) { // Exit Game
 				SDL_Quit();
-				exit(0);  // Ensure the game process closes
+				exit(0);  
 			}
 		}
 	}
