@@ -9,8 +9,8 @@ PlayScreen::PlayScreen() {
 	mPlayer->Parent(this);
 	mPlayer->Position(Graphics::SCREEN_WIDTH * 0.5f, Graphics::SCREEN_HEIGHT * 0.9f);
 
-	int selectedCar = ScreenManager::Instance()->GetSelectedCar();
-	mPlayer->SetCarTexture(selectedCar);
+	//int selectedCar = ScreenManager::Instance()->GetSelectedCar();
+	//mPlayer->SetCarTexture(selectedCar);
 
 	mEnemy = new Enemy();
 	mEnemy->Parent(this);
