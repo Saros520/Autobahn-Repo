@@ -68,28 +68,29 @@ Player::~Player() {
 
 void Player::HandleMovement() {
 
-	const float JUMP_DISTANCE = 75.0f; 
-	Vector2 pos = Position();
+	const float JUMP_DISTANCE = 77.0f;
+	Vector2 pos = Position(Local);
 
-	// Right
+	// Right Hop
 	if (mInput->KeyPressed(SDL_SCANCODE_RIGHT)) {
 		pos.x += JUMP_DISTANCE;	
 	}
 
-	// Left
+	// Left Hop
 	if (mInput->KeyPressed(SDL_SCANCODE_LEFT)) {
 		pos.x -= JUMP_DISTANCE;	
 	}
 
-	// Up 
+	// Up Hop
 	if (mInput->KeyPressed(SDL_SCANCODE_UP)) {
 		pos.y -= JUMP_DISTANCE;  
 	}
 
-	// Down 
+	// Down Hop
 	if (mInput->KeyPressed(SDL_SCANCODE_DOWN)) {
-		pos.y += JUMP_DISTANCE;  
+		pos.y += JUMP_DISTANCE;
 	}
+
 	/*if (mInput->KeyDown(SDL_SCANCODE_RIGHT)) {
 		Translate(Vec2_Right * mMoveSpeed * mTimer->DeltaTime(), World);
 	}
@@ -105,16 +106,16 @@ void Player::HandleMovement() {
 	else if (mInput->KeyDown(SDL_SCANCODE_DOWN)) {
 		Translate(Vec2_Up * mMoveSpeed * mTimer->DeltaTime(), World);
 		mDeathAnimation->Flip(false, true);
-	}*/
+	}
 
-	//if (mInput->KeyPressed(SDL_SCANCODE_X)) {
-	//	mAnimating = true;
-	//	mDeathAnimation->ResetAnimation();
-	//	//mAudio->PlaySFX("SFX/PlayerExplosion.wav");
-	//	mWasHit = true;
-	//}
+	if (mInput->KeyPressed(SDL_SCANCODE_X)) {
+		mAnimating = true;
+		mDeathAnimation->ResetAnimation();
+		//mAudio->PlaySFX("SFX/PlayerExplosion.wav");
+		mWasHit = true;
+	}
 
-	//Vector2 pos = Position(Local);
+	Vector2 pos = Position(Local);*/
 	if (pos.x < mMoveBounds.x) {
 		pos.x = mMoveBounds.x;
 	}
