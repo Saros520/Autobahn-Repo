@@ -5,17 +5,23 @@ PlayScreen::PlayScreen() {
 	mTimer = Timer::Instance();
 	mAudio = AudioManager::Instance();
 
-	mNorthRoadCity = new Texture("NorthRoadCity.png");
-	mSouthRoadCity = new Texture("SouthRoadCity.png");
+	mHighWaySpeed = 600.0f; // Speed of the highway movement
 
-	mNorthRoadCity->Parent(this);
-	mSouthRoadCity->Parent(this);
+	for (int i = 0; i < NUM_ROAD_CITY; ++i) {
+		mNorthRoadCity[i] = new Texture("NorthRoadCity" + std::to_string(i + 1) + ".png");
+		mSouthRoadCity[i] = new Texture("SouthRoadCity" + std::to_string(i + 1) + ".png");
 
-	mNorthRoadCity->Position(Graphics::SCREEN_WIDTH * 0.782f, Graphics::SCREEN_HEIGHT * 0.5f);
-	mSouthRoadCity->Position(Graphics::SCREEN_WIDTH * 0.219f, Graphics::SCREEN_HEIGHT * 0.5f);
+		mNorthRoadCity[i]->Parent(this);
+		mSouthRoadCity[i]->Parent(this);
 
-	mNorthRoadCity->Scale(Vector2(1.5f, 1.489f));
-	mSouthRoadCity->Scale(Vector2(1.5f, 1.489f));
+		mNorthRoadCity[i]->Position(Graphics::SCREEN_WIDTH * 0.782f, Graphics::SCREEN_HEIGHT * 0.5f + i * Graphics::SCREEN_HEIGHT);
+		mSouthRoadCity[i]->Position(Graphics::SCREEN_WIDTH * 0.219f, Graphics::SCREEN_HEIGHT * 0.5f + i * Graphics::SCREEN_HEIGHT);
+
+		mNorthRoadCity[i]->Scale(Vector2(1.5f, 1.489f));
+		mSouthRoadCity[i]->Scale(Vector2(1.5f, 1.489f));
+
+		mHighwayPosY[i] = mNorthRoadCity[i]->Position().y;
+	}
 
 	// top bar entities
 	mTopBar = new GameEntity(Graphics::SCREEN_WIDTH * 0.5f, 80.0f);
@@ -50,10 +56,14 @@ Player* PlayScreen::GetPlayer() {
 PlayScreen::~PlayScreen() {
 	mTimer = nullptr;
 	mAudio = nullptr;
-	delete mNorthRoadCity;
-	delete mSouthRoadCity;
-	mNorthRoadCity = nullptr;
-	mSouthRoadCity = nullptr;
+
+	for (int i = 0; i < NUM_ROAD_CITY; ++i) {
+		delete mNorthRoadCity[i];
+		delete mSouthRoadCity[i];
+		mNorthRoadCity[i] = nullptr;
+		mSouthRoadCity[i] = nullptr;
+	}
+
 	delete mPlayer;
 	mPlayer = nullptr;
 
@@ -73,8 +83,20 @@ PlayScreen::~PlayScreen() {
 	mTopBar = nullptr;
 }
 
+void PlayScreen::UpdateHighway() {
+	for (int i = 0; i < NUM_ROAD_CITY; ++i) {
+		mHighwayPosY[i] += mHighWaySpeed * mTimer->DeltaTime();
+		if (mHighwayPosY[i] >= Graphics::SCREEN_HEIGHT * 1.5f) {
+			mHighwayPosY[i] -= Graphics::SCREEN_HEIGHT * NUM_ROAD_CITY;
+		}
+		mNorthRoadCity[i]->Position(Graphics::SCREEN_WIDTH * 0.782f, mHighwayPosY[i]);
+		mSouthRoadCity[i]->Position(Graphics::SCREEN_WIDTH * 0.219f, mHighwayPosY[i]);
+	}
+}
+
 void PlayScreen::Update() {
 	mLevelTime += mTimer->DeltaTime();
+	UpdateHighway();
 	mPlayer->Update();
 	mEnemy->Update();
 	mLevelTimeText->Score(mLevelTime);
@@ -84,8 +106,10 @@ void PlayScreen::Update() {
 }
 
 void PlayScreen::Render() {
-	mNorthRoadCity->Render();
-	mSouthRoadCity->Render();
+	for (int i = 0; i < NUM_ROAD_CITY; ++i) {
+		mNorthRoadCity[i]->Render();
+		mSouthRoadCity[i]->Render();
+	}
 
 	mPlayer->Render();
 	mEnemy->Render();
