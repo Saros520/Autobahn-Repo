@@ -31,7 +31,7 @@ StartScreen::StartScreen() {
 
 	// top bar entities
 	mTopBar = new GameEntity(Graphics::SCREEN_WIDTH * 0.5f, 80.0f);
-	mPlayerScore = new Texture("High-Score", "emulogic.ttf", 32, { 200, 0, 0 });
+	mPlayerScore = new Texture("High-Score", "emulogic.ttf", 32, { 0, 0, 0 });
 	mPlayerScoreNumber = new Scoreboard();
 
 	mTopBar->Parent(this);
@@ -77,20 +77,29 @@ StartScreen::StartScreen() {
 
 	// play mode entities
 	mPlayModes = new GameEntity(Graphics::SCREEN_WIDTH * 0.5f, Graphics::SCREEN_HEIGHT * 0.55f);
-	mStartGame = new Texture("Start Game", "emulogic.ttf", 32, { 200, 0, 0 });
-	mOptions = new Texture("Options", "emulogic.ttf", 32, { 200, 0, 0 });
-	mExit = new Texture("Exit", "emulogic.ttf", 32, { 200, 0, 0 });
+	mStartGame = new Texture("Start Game", "emulogic.ttf", 32, { 0, 0, 0 });
+	mStartGame2 = new Texture("Start Game", "emulogic.ttf", 33, { 255, 0, 0 });
+	mOptions = new Texture("Options", "emulogic.ttf", 32, { 0, 0, 0 });
+	mOptions2 = new Texture("Options", "emulogic.ttf", 33, { 255, 0, 0 });
+	mExit = new Texture("Exit", "emulogic.ttf", 32, { 0, 0, 0 });
+	mExit2 = new Texture("Exit", "emulogic.ttf", 33, { 255, 0, 0 });
 	mCursor = new Texture("Cursor.png");
 
 	mPlayModes->Parent(this);
 	mStartGame->Parent(mPlayModes);
+	mStartGame2->Parent(mPlayModes);
 	mOptions->Parent(mPlayModes);
+	mOptions2->Parent(mPlayModes);
 	mExit->Parent(mPlayModes);
+	mExit2->Parent(mPlayModes);
 	mCursor->Parent(mPlayModes);
 
 	mStartGame->Position(0.0f, 105.0f);
+	mStartGame2->Position(0.0f, 105.0f);
 	mOptions->Position(0.0f, 175.0f);
+	mOptions2->Position(0.0f, 175.0f);
 	mExit->Position(0.0f, 245.0f);
+	mExit2->Position(0.0f, 245.0f);
 	mCursor->Position(-175.0f, 25.0f);
 
 	mCursorStartPos = mCursor->Position(Local);
@@ -99,9 +108,9 @@ StartScreen::StartScreen() {
 
 	// bottom bar entities
 	mBottomBar = new GameEntity(Graphics::SCREEN_WIDTH * 0.5f, Graphics::SCREEN_HEIGHT * 0.7f);
-	mDreamTeamStudios = new Texture("dream team studios", "namco__.ttf", 20, { 200, 0, 0 });
-	mDates = new Texture("2025.", "emulogic.ttf", 20, { 200, 0, 0 });
-	mRights = new Texture("ALL RIGHTS RESERVED", "emulogic.ttf", 10, { 200, 0, 0 });
+	mDreamTeamStudios = new Texture("dream team studios", "namco__.ttf", 20, { 0, 0, 0 });
+	mDates = new Texture("2025.", "emulogic.ttf", 20, { 0, 0, 0 });
+	mRights = new Texture("ALL RIGHTS RESERVED", "emulogic.ttf", 10, { 0, 0, 0 });
 
 	mBottomBar->Parent(this);
 	mDreamTeamStudios->Parent(mBottomBar);
@@ -156,10 +165,16 @@ StartScreen::~StartScreen() {
 	mPlayModes = nullptr;
 	delete mStartGame;
 	mStartGame = nullptr;
+	delete mStartGame2;
+	mStartGame2 = nullptr;
 	delete mOptions;
 	mOptions = nullptr;
+	delete mOptions2;
+	mOptions2 = nullptr;
 	delete mExit;
 	mExit = nullptr;
+	delete mExit2;
+	mExit2 = nullptr;
 	delete mCursor;
 	mCursor = nullptr;
 
@@ -303,8 +318,11 @@ void StartScreen::Render() {
 	}
 
 	mStartGame->Render();
+	mStartGame2->Render();
 	mOptions->Render();
+	mOptions2->Render();
 	mExit->Render();
+	mExit2->Render();
 	mCursor->Render();
 
 	mDreamTeamStudios->Render();

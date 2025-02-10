@@ -23,6 +23,14 @@ private:
 	float mSliderCurrentValue;
 	Vector2 mSliderKnobStartPos;
 	Vector2 mSliderKnobEndPos;
+	Texture* mBackground;
+	Texture* mTitle;
+	Texture* mTitle2;
+	Texture* mSave;
+	Texture* mCancel;
+	Texture* mCursor;
+	Vector2 mCursorStartPos;
+	Vector2 mCursorOffset;
 
 public:
 	OptionsScreen();
