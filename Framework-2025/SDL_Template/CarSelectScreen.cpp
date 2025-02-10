@@ -8,11 +8,11 @@ CarSelectScreen::CarSelectScreen() {
     mBackground->Parent(this);
     mBackground->Position(Graphics::SCREEN_WIDTH * 0.5f, Graphics::SCREEN_HEIGHT * 0.5f);
 
-    mTitle = new Texture("Select Your Car", "emulogic.ttf", 33, { 255, 0, 0 });
+    mTitle = new Texture("Pick Vehicle", "emulogic.ttf", 32, { 0, 0, 0 });
     mTitle->Parent(this);
     mTitle->Position(Graphics::SCREEN_WIDTH * 0.5f, 400);
 
-    mTitle2 = new Texture("Select Your Car", "emulogic.ttf", 32, { 0, 0, 0 });
+    mTitle2 = new Texture("Pick Vehicle", "emulogic.ttf", 33, { 255, 0, 0 });
     mTitle2->Parent(this);
     mTitle2->Position(Graphics::SCREEN_WIDTH * 0.5f, 400);
 
@@ -70,7 +70,7 @@ void CarSelectScreen::Render() {
     mBackground->Render();
     mTitle->Render();
     mTitle2->Render();
-
+    
     for (int i = 0; i < 6; i++) {
         mCars[i]->Render();
     }

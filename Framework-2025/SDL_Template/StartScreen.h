@@ -44,8 +44,11 @@ private:
 	// Play Mode Entities
 	GameEntity * mPlayModes;
 	Texture * mStartGame;
+	Texture* mStartGame2;
 	Texture * mOptions;
+	Texture* mOptions2;
 	Texture * mExit;
+	Texture* mExit2;
 	Texture * mCursor;
 	Vector2 mCursorStartPos;
 	Vector2 mCursorOffset;
