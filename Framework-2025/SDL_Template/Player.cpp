@@ -24,6 +24,8 @@ Player::Player() {
 	mMoveSpeed = 300.0f;
 	mMoveBounds = Vector2(0.0f + mTexture->ScaledDimensions().x/2, Graphics::SCREEN_WIDTH - mTexture->ScaledDimensions().x/2);
 
+	Position(Vector2(Graphics::SCREEN_WIDTH * 0.75f, Graphics::SCREEN_HEIGHT * 0.9f));
+
 	mDeathAnimation = new AnimatedTexture("EnemyExplosion.png", 0, 0, 128, 128, 5, 1.0f, Animation::Layouts::Horizontal);
 	mDeathAnimation->Parent(this);
 	mDeathAnimation->Position(Vec2_Zero);
@@ -33,9 +35,9 @@ Player::Player() {
 		mBullets[i] = new Bullet(true);
 	}
 
-	AddCollider(new BoxCollider(Vector2(16.0f, 67.0f)));
+	/*AddCollider(new BoxCollider(Vector2(16.0f, 67.0f)));
 	AddCollider(new BoxCollider(Vector2(20.0f, 37.0f)), Vector2( 18.0f, 10.0f));
-	AddCollider(new BoxCollider(Vector2(20.0f, 37.0f)), Vector2(-18.0f, 10.0f));
+	AddCollider(new BoxCollider(Vector2(20.0f, 37.0f)), Vector2(-18.0f, 10.0f));*/
 
 	mId = PhysicsManager::Instance()->RegisterEntity(this, PhysicsManager::CollisionLayers::Friendly);
 }
@@ -66,11 +68,33 @@ Player::~Player() {
 
 void Player::HandleMovement() {
 
-	 // Moving right when right arrow key is pressed
-	if (mInput->KeyDown(SDL_SCANCODE_RIGHT)) {
+	const float JUMP_DISTANCE = 77.0f;
+	Vector2 pos = Position(Local);
+
+	// Right Hop
+	if (mInput->KeyPressed(SDL_SCANCODE_RIGHT)) {
+		pos.x += JUMP_DISTANCE;	
+	}
+
+	// Left Hop
+	if (mInput->KeyPressed(SDL_SCANCODE_LEFT)) {
+		pos.x -= JUMP_DISTANCE;	
+	}
+
+	// Up Hop
+	if (mInput->KeyPressed(SDL_SCANCODE_UP)) {
+		pos.y -= JUMP_DISTANCE;  
+	}
+
+	// Down Hop
+	if (mInput->KeyPressed(SDL_SCANCODE_DOWN)) {
+		pos.y += JUMP_DISTANCE;
+	}
+
+	/*if (mInput->KeyDown(SDL_SCANCODE_RIGHT)) {
 		Translate(Vec2_Right * mMoveSpeed * mTimer->DeltaTime(), World);
 	}
-	// Moving left when left arrow key is pressed
+	
 	else if (mInput->KeyDown(SDL_SCANCODE_LEFT)) {
 		Translate(-Vec2_Right * mMoveSpeed * mTimer->DeltaTime(), World);
 	}
@@ -91,7 +115,7 @@ void Player::HandleMovement() {
 		mWasHit = true;
 	}
 
-	Vector2 pos = Position(Local);
+	Vector2 pos = Position(Local);*/
 	if (pos.x < mMoveBounds.x) {
 		pos.x = mMoveBounds.x;
 	}

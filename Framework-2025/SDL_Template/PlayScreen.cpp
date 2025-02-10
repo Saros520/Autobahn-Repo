@@ -19,7 +19,7 @@ PlayScreen::PlayScreen() {
 
 	mPlayer = new Player();
 	mPlayer->Parent(this);
-	mPlayer->Position(Graphics::SCREEN_WIDTH * 0.5f, Graphics::SCREEN_HEIGHT * 0.9f);
+	mPlayer->Position(Graphics::SCREEN_WIDTH * 0.642f, Graphics::SCREEN_HEIGHT * 0.9f); // offset to fit lanes centered
 
 	mEnemy = new Enemy();
 	mEnemy->Parent(this);
