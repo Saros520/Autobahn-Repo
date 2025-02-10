@@ -15,8 +15,13 @@ private:
 	Player * mPlayer;
 	Enemy* mEnemy;
 
+	// Top Bar Entities
+	GameEntity* mTopBar;
 	float mLevelTime;
 	Scoreboard * mLevelTimeText;
+
+	Texture* mPlayerScore;
+	Scoreboard* mPlayerScoreNumber;
 
 public:
 	PlayScreen();

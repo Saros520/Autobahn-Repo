@@ -17,6 +17,16 @@ PlayScreen::PlayScreen() {
 	mNorthRoadCity->Scale(Vector2(1.5f, 1.489f));
 	mSouthRoadCity->Scale(Vector2(1.5f, 1.489f));
 
+	// top bar entities
+	mTopBar = new GameEntity(Graphics::SCREEN_WIDTH * 0.5f, 80.0f);
+	mPlayerScore = new Texture("High-Score", "emulogic.ttf", 32, { 200, 0, 0 });
+	mPlayerScoreNumber = new Scoreboard();
+
+	mTopBar->Parent(this);
+	mPlayerScore->Parent(mTopBar);
+
+	mPlayerScore->Position(Graphics::SCREEN_WIDTH * -0.12f, -10.0f);
+
 	mPlayer = new Player();
 	mPlayer->Parent(this);
 	mPlayer->Position(Graphics::SCREEN_WIDTH * 0.642f, Graphics::SCREEN_HEIGHT * 0.9f); // offset to fit lanes centered
@@ -49,6 +59,18 @@ PlayScreen::~PlayScreen() {
 
 	delete mEnemy;
 	mEnemy = nullptr;
+
+	delete mLevelTimeText;
+	mLevelTimeText = nullptr;
+
+	delete mPlayerScore;
+	mPlayerScore = nullptr;
+
+	delete mPlayerScoreNumber;
+	mPlayerScoreNumber = nullptr;
+
+	delete mTopBar;
+	mTopBar = nullptr;
 }
 
 void PlayScreen::Update() {
@@ -56,6 +78,9 @@ void PlayScreen::Update() {
 	mPlayer->Update();
 	mEnemy->Update();
 	mLevelTimeText->Score(mLevelTime);
+	mLevelTimeText->Update();
+	mPlayerScoreNumber->Score(mPlayer->Score());
+	mPlayerScoreNumber->Update();
 }
 
 void PlayScreen::Render() {
@@ -65,4 +90,7 @@ void PlayScreen::Render() {
 	mPlayer->Render();
 	mEnemy->Render();
 	mLevelTimeText->Render();
+	mPlayerScore->Render();
+	mPlayerScoreNumber->Render();
+	
 }
