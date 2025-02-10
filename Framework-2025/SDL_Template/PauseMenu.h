@@ -1,4 +1,4 @@
-#ifndef __PAUSEMENU_H
+/*#ifndef __PAUSEMENU_H
 #define __PAUSEMENU_H
 
 #include "GameEntity.h"
@@ -30,4 +30,6 @@ public:
     void Render();
 };
 
-#endif
+#endif*/
+
+//commit
