@@ -1,6 +1,7 @@
 #include "Player.h"
 #include "BoxCollider.h"
 #include "PhysicsManager.h"
+#include "ScreenManager.h"
 
 Player::Player() {
 	mTimer = Timer::Instance();
@@ -18,11 +19,9 @@ Player::Player() {
 
 	SetCarTexture(0);
 
-	mMoveSpeed = 300.0f;
-	mMoveBounds = Vector2(0.0f + mTexture->ScaledDimensions().x / 2, Graphics::SCREEN_WIDTH - mTexture->ScaledDimensions().x / 2);
-
-	mMoveSpeed = 300.0f;
-	mMoveBounds = Vector2(0.0f + mTexture->ScaledDimensions().x/2, Graphics::SCREEN_WIDTH - mTexture->ScaledDimensions().x/2);
+	mMoveSpeed = 400.0f;
+	mMoveBoundsX = Vector2(20.0f + mTexture->ScaledDimensions().x / 2, Graphics::SCREEN_WIDTH - mTexture->ScaledDimensions().x / 2);
+	mMoveBoundsY = Vector2(110.0f, Graphics::SCREEN_HEIGHT); // Assuming the player score texture is positioned at y = 80
 
 	Position(Vector2(Graphics::SCREEN_WIDTH * 0.75f, Graphics::SCREEN_HEIGHT * 0.9f));
 
@@ -67,34 +66,54 @@ Player::~Player() {
 }
 
 void Player::HandleMovement() {
+	Vector2 moveDir = Vec2_Zero;
 
-	const float JUMP_DISTANCE = 77.0f;
+	if (mInput->KeyDown(SDL_SCANCODE_W) || mInput->KeyDown(SDL_SCANCODE_UP)) {
+		moveDir.y -= 1;
+	}
+	if (mInput->KeyDown(SDL_SCANCODE_S) || mInput->KeyDown(SDL_SCANCODE_DOWN)) {
+		moveDir.y += 1;
+	}
+	if (mInput->KeyDown(SDL_SCANCODE_A) || mInput->KeyDown(SDL_SCANCODE_LEFT)) {
+		moveDir.x -= 1;
+	}
+	if (mInput->KeyDown(SDL_SCANCODE_D) || mInput->KeyDown(SDL_SCANCODE_RIGHT)) {
+		moveDir.x += 1;
+	}
+
+	if (moveDir.MagnitudeSqr() > 0.0f) {
+		moveDir = moveDir.Normalized() * mMoveSpeed * mTimer->DeltaTime();
+		Translate(moveDir, World);
+	}
+
 	Vector2 pos = Position(Local);
-
-	// Right Hop
-	if (mInput->KeyPressed(SDL_SCANCODE_RIGHT)) {
-		pos.x += JUMP_DISTANCE;	
+	if (pos.x < mMoveBoundsX.x) {
+		pos.x = mMoveBoundsX.x;
+	}
+	else if (pos.x > mMoveBoundsX.y) {
+		pos.x = mMoveBoundsX.y;
 	}
 
-	// Left Hop
-	if (mInput->KeyPressed(SDL_SCANCODE_LEFT)) {
-		pos.x -= JUMP_DISTANCE;	
+	if (pos.y < mMoveBoundsY.x) {
+		pos.y = mMoveBoundsY.x;
+	}
+	else if (pos.y > mMoveBoundsY.y) {
+		pos.y = mMoveBoundsY.y;
 	}
 
-	// Up Hop
-	if (mInput->KeyPressed(SDL_SCANCODE_UP)) {
-		pos.y -= JUMP_DISTANCE;  
-	}
+	Position(pos);
 
-	// Down Hop
-	if (mInput->KeyPressed(SDL_SCANCODE_DOWN)) {
-		pos.y += JUMP_DISTANCE;
+	if (IsOffHighway()) {
+		mAnimating = true;
+		mDeathAnimation->ResetAnimation();
+		mAudio->PlaySFX("SFX/PlayerExplosion.wav");
+		mWasHit = true;
 	}
 
 	/*if (mInput->KeyDown(SDL_SCANCODE_RIGHT)) {
 		Translate(Vec2_Right * mMoveSpeed * mTimer->DeltaTime(), World);
 	}
-	
+
 	else if (mInput->KeyDown(SDL_SCANCODE_LEFT)) {
 		Translate(-Vec2_Right * mMoveSpeed * mTimer->DeltaTime(), World);
 	}
@@ -116,14 +135,11 @@ void Player::HandleMovement() {
 	}
 
 	Vector2 pos = Position(Local);*/
-	if (pos.x < mMoveBounds.x) {
-		pos.x = mMoveBounds.x;
-	}
-	else if (pos.x > mMoveBounds.y) {
-		pos.x = mMoveBounds.y;
-	}
+}
 
-	Position(pos);
+bool Player::IsOffHighway() {
+	Vector2 pos = Position(Local);
+	return (pos.x < mMoveBoundsX.x || pos.x > mMoveBoundsX.y);
 }
 
 void Player::HandleFiring() {
@@ -184,6 +200,10 @@ void Player::Update() {
 
 		mDeathAnimation->Update();
 		mAnimating = mDeathAnimation->IsAnimating();
+
+		if (!mAnimating) {
+			ScreenManager::Instance()->SetScreen(ScreenManager::Start);
+		}
 	}
 	else {
 		if (Active()) {

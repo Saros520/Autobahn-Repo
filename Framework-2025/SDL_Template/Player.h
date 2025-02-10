@@ -1,6 +1,6 @@
 #ifndef __PLAYER_H
 #define __PLAYER_H
-#include "AnimatedGLTexture.h"
+#include "AnimatedTexture.h"
 #include "AudioManager.h"
 #include "InputManager.h"
 #include "Bullet.h"
@@ -24,14 +24,16 @@ private:
 	AnimatedTexture * mDeathAnimation;
 
 	float mMoveSpeed;
-	Vector2 mMoveBounds;
+	Vector2 mMoveBoundsX;
+	Vector2 mMoveBoundsY;
 
 	static const int MAX_BULLETS = 2;
 	Bullet * mBullets[MAX_BULLETS];
 
-private:
 	void HandleMovement();
 	void HandleFiring();
+
+	bool IsOffHighway();
 
 public:
 	Player();
@@ -52,6 +54,8 @@ public:
 	void Hit(PhysEntity * other) override;
 	
 	bool WasHit();
+
+	void SetMoveBounds(float top, float bottom, float left, float right);
 
 	void Update() override;
 	void Render() override;
