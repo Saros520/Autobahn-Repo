@@ -135,6 +135,12 @@
     <ClCompile Include="CarSelectScreen.cpp">
       <Filter>Source Files\AutoBahn Game</Filter>
     </ClCompile>
+    <ClCompile Include="OptionsScreen.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PauseGame.cpp">
+      <Filter>Source Files\AutoBahn Game</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameEntity.h">
@@ -228,6 +234,12 @@
       <Filter>Header Files\AutoBahn Game</Filter>
     </ClInclude>
     <ClInclude Include="CarSelectScreen.h">
+      <Filter>Header Files\AutoBahn Game</Filter>
+    </ClInclude>
+    <ClInclude Include="OptionsScreen.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PauseGame.h">
       <Filter>Header Files\AutoBahn Game</Filter>
     </ClInclude>
   </ItemGroup>

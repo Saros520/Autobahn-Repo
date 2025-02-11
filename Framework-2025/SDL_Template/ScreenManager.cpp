@@ -34,7 +34,11 @@ ScreenManager::~ScreenManager() {
 }
 
 void ScreenManager::SetScreen(Screens newScreen) {
-	mCurrentScreen = newScreen;
+    mCurrentScreen = newScreen;
+
+    if (mCurrentScreen == Play) {
+        mPlayScreen->ResetPauseState();  // Reset pause state when loading back into game
+    }
 }
 
 void ScreenManager::Update() {
@@ -70,10 +74,8 @@ void ScreenManager::Update() {
         break;
     case Play:
         mPlayScreen->Update();
-        if (mInput->KeyPressed(SDL_SCANCODE_ESCAPE)) {
-            mCurrentScreen = Start;
-        }
         break;
+
     }
 }
 

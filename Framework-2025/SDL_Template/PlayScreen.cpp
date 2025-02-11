@@ -1,9 +1,11 @@
 #include "PlayScreen.h"
 #include "ScreenManager.h"
+#include "InputManager.h"
 
 PlayScreen::PlayScreen() {
 	mTimer = Timer::Instance();
 	mAudio = AudioManager::Instance();
+	mInput = InputManager::Instance();
 
 	mHighWaySpeed = 600.0f; // Speed of the highway movement
 
@@ -22,7 +24,7 @@ PlayScreen::PlayScreen() {
 
 		mHighwayPosY[i] = mNorthRoadCity[i]->Position().y;
 	}
-
+	
 	// top bar entities
 	mTopBar = new GameEntity(Graphics::SCREEN_WIDTH * 0.5f, 80.0f);
 	mPlayerScore = new Texture("High-Score", "emulogic.ttf", 32, { 200, 0, 0 });
@@ -47,11 +49,20 @@ PlayScreen::PlayScreen() {
 	mLevelTimeText->Position(Graphics::SCREEN_WIDTH * 0.5f, 32.0f);
 
 	mLevelTimeText->Score(mLevelTime);
+
+	mPauseGame = new PauseGame();
+	mPauseGame->Parent(this);
+	mIsPaused = false;
 }
 
 Player* PlayScreen::GetPlayer() {
 	return mPlayer;
 }
+
+void PlayScreen::ResetPauseState() {
+	mIsPaused = false;
+}
+
 
 PlayScreen::~PlayScreen() {
 	mTimer = nullptr;
@@ -95,14 +106,33 @@ void PlayScreen::UpdateHighway() {
 }
 
 void PlayScreen::Update() {
-	mLevelTime += mTimer->DeltaTime();
-	UpdateHighway();
-	mPlayer->Update();
-	mEnemy->Update();
-	mLevelTimeText->Score(mLevelTime);
-	mLevelTimeText->Update();
-	mPlayerScoreNumber->Score(mPlayer->Score());
-	mPlayerScoreNumber->Update();
+	if (mInput->KeyPressed(SDL_SCANCODE_ESCAPE)) {
+		mIsPaused = !mIsPaused;
+	}
+
+	if (mIsPaused) {
+		mPauseGame->Update();
+
+		// Check if player selected an option
+		if (mPauseGame->SelectedOption() == 0 && mInput->KeyPressed(SDL_SCANCODE_RETURN)) {
+			// Resume game
+			mIsPaused = false;
+		}
+		else if (mPauseGame->SelectedOption() == 1 && mInput->KeyPressed(SDL_SCANCODE_RETURN)) {
+			// Exit to main menu
+			ScreenManager::Instance()->SetScreen(ScreenManager::Start);
+		}
+	}
+	else {
+		mLevelTime += mTimer->DeltaTime();
+		UpdateHighway();
+		mPlayer->Update();
+		mEnemy->Update();
+		mLevelTimeText->Score(mLevelTime);
+		mLevelTimeText->Update();
+		mPlayerScoreNumber->Score(mPlayer->Score());
+		mPlayerScoreNumber->Update();
+	}
 }
 
 void PlayScreen::Render() {
@@ -117,4 +147,7 @@ void PlayScreen::Render() {
 	mPlayerScore->Render();
 	mPlayerScoreNumber->Render();
 	
+	if (mIsPaused) {
+		mPauseGame->Render();
+	}
 }

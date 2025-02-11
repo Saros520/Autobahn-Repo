@@ -5,11 +5,13 @@
 #include "Player.h"
 #include "Scoreboard.h"
 #include "Enemy.h"
+#include "PauseGame.h"
 
 class PlayScreen : public GameEntity {
 private:
 	Timer * mTimer;
 	AudioManager * mAudio;
+	InputManager* mInput;
 
 	static const int NUM_ROAD_CITY = 5;
 	Texture* mNorthRoadCity[NUM_ROAD_CITY];
@@ -32,6 +34,9 @@ private:
 	void UpdatePlayer();
 	void UpdateEnemy();
 
+	PauseGame* mPauseGame;
+	bool mIsPaused;
+
 public:
 	PlayScreen();
 	~PlayScreen();
@@ -40,5 +45,7 @@ public:
 	void Render() override;
 
 	Player* GetPlayer();
+	
+	void ResetPauseState();
 };
 #endif
