@@ -20,7 +20,7 @@ Player::Player() {
 	SetCarTexture(0);
 
 	mMoveSpeed = 300.0f;
-	mHorizontalMoveSpeed = 200.0f;
+	mHorizontalMoveSpeed = 225.0f;
 	mMoveBoundsX = Vector2(20.0f + mTexture->ScaledDimensions().x / 2, Graphics::SCREEN_WIDTH - mTexture->ScaledDimensions().x / 2);
 	mMoveBoundsY = Vector2(110.0f, Graphics::SCREEN_HEIGHT); // Assuming the player score texture is positioned at y = 80
 
