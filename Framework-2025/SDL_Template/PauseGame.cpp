@@ -45,10 +45,10 @@ int PauseGame::SelectedOption() {
 }
 
 void PauseGame::Update() {
-    if (mInput->KeyPressed(SDL_SCANCODE_UP)) {
+    if (mInput->KeyPressed(SDL_SCANCODE_UP) || mInput->KeyPressed(SDL_SCANCODE_W)) {
         ChangeOption(-1);
     }
-    else if (mInput->KeyPressed(SDL_SCANCODE_DOWN)) {
+    else if (mInput->KeyPressed(SDL_SCANCODE_DOWN) || mInput->KeyPressed(SDL_SCANCODE_S)) {
         ChangeOption(1);
     }
 
@@ -59,7 +59,6 @@ void PauseGame::Update() {
             ScreenManager::Instance()->SetScreen(ScreenManager::Start);
         }
     }
-
 }
 
 void PauseGame::Render() {
