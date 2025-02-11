@@ -26,6 +26,7 @@ namespace SDLFramework {
 		Texture(std::string text, std::string fontPath, int size, SDL_Color color, bool managed = true);
 		virtual ~Texture();
 
+		void Alpha(Uint8 alpha);
 		Vector2 ScaledDimensions();
 
 		void SetSourceRect(SDL_Rect * sourceRect);

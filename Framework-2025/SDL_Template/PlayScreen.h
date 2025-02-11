@@ -6,6 +6,7 @@
 #include "Scoreboard.h"
 #include "Enemy.h"
 #include "PauseGame.h"
+#include <vector>
 
 class PlayScreen : public GameEntity {
 private:
@@ -13,11 +14,19 @@ private:
 	AudioManager * mAudio;
 	InputManager* mInput;
 
-	static const int NUM_ROAD_CITY = 5;
-	Texture* mNorthRoadCity[NUM_ROAD_CITY];
-	Texture* mSouthRoadCity[NUM_ROAD_CITY];
+	static const int NUM_ROAD_SPRITES = 5;
+	static const int NUM_ENVIRONMENTS = 4;
+	std::vector<Texture*> mNorthRoadSprites[NUM_ENVIRONMENTS];
+	std::vector<Texture*> mSouthRoadSprites[NUM_ENVIRONMENTS];
 	float mHighWaySpeed;
-	float mHighwayPosY[NUM_ROAD_CITY];
+	float mHighwayPosY[NUM_ROAD_SPRITES];
+
+	int mCurrentEnvironment;
+	int mNextEnvironment;
+	float mEnvironmentChangeTimer;
+	bool mTransitioning;
+	float mTransitionAlpha;
+	float mTransitionDuration;
 
 	// Top Bar Entities
 	GameEntity* mTopBar;
@@ -31,6 +40,8 @@ private:
 	Scoreboard* mLevelTimeText;
 
 	void UpdateHighway();
+	void StartEnvironmentTransition();
+    void UpdateEnvironmentTransition();
 	void UpdatePlayer();
 	void UpdateEnemy();
 
