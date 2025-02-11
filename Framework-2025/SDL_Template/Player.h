@@ -24,6 +24,7 @@ private:
 	AnimatedTexture * mDeathAnimation;
 
 	float mMoveSpeed;
+	float mHorizontalMoveSpeed;
 	Vector2 mMoveBoundsX;
 	Vector2 mMoveBoundsY;
 
