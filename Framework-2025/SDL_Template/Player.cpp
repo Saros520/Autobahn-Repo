@@ -66,6 +66,7 @@ Player::~Player() {
 }
 
 void Player::HandleMovement() {
+	const float Gravity = 150.0f;
 	Vector2 moveDir = Vec2_Zero;
 
 	if (mInput->KeyDown(SDL_SCANCODE_W) || mInput->KeyDown(SDL_SCANCODE_UP)) {
@@ -86,6 +87,18 @@ void Player::HandleMovement() {
 		Translate(moveDir, World);
 	}
 
+	if (moveDir.MagnitudeSqr() > 0.0f) {
+		moveDir = moveDir.Normalized() * mMoveSpeed * mTimer->DeltaTime();
+		Translate(moveDir, World);
+	}
+
+	if (!(mInput->KeyDown(SDL_SCANCODE_W) || mInput->KeyDown(SDL_SCANCODE_UP))) {
+		Vector2 pos = Position();
+		pos.y += Gravity * mTimer->DeltaTime(); // Move down constantly
+		Position(pos);
+	}
+
+	// Keep player within movement bounds
 	Vector2 pos = Position(Local);
 	if (pos.x < mMoveBoundsX.x) {
 		pos.x = mMoveBoundsX.x;
@@ -103,38 +116,13 @@ void Player::HandleMovement() {
 
 	Position(pos);
 
+	// Check if the player is off the highway
 	if (IsOffHighway()) {
 		mAnimating = true;
 		mDeathAnimation->ResetAnimation();
 		mAudio->PlaySFX("SFX/PlayerExplosion.wav");
 		mWasHit = true;
 	}
-
-	/*if (mInput->KeyDown(SDL_SCANCODE_RIGHT)) {
-		Translate(Vec2_Right * mMoveSpeed * mTimer->DeltaTime(), World);
-	}
-
-	else if (mInput->KeyDown(SDL_SCANCODE_LEFT)) {
-		Translate(-Vec2_Right * mMoveSpeed * mTimer->DeltaTime(), World);
-	}
-
-	if (mInput->KeyDown(SDL_SCANCODE_UP)) {
-		Translate(-Vec2_Up * mMoveSpeed * mTimer->DeltaTime(), World);
-		mDeathAnimation->Flip(false, false);
-	}
-	else if (mInput->KeyDown(SDL_SCANCODE_DOWN)) {
-		Translate(Vec2_Up * mMoveSpeed * mTimer->DeltaTime(), World);
-		mDeathAnimation->Flip(false, true);
-	}
-
-	if (mInput->KeyPressed(SDL_SCANCODE_X)) {
-		mAnimating = true;
-		mDeathAnimation->ResetAnimation();
-		//mAudio->PlaySFX("SFX/PlayerExplosion.wav");
-		mWasHit = true;
-	}
-
-	Vector2 pos = Position(Local);*/
 }
 
 bool Player::IsOffHighway() {
