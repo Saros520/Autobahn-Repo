@@ -13,13 +13,14 @@ Player::Player() {
 	mWasHit = false;
 
 	mScore = 0;
-	mLives = 2;
+	mLives = 3;
 
 	mTexture = nullptr;
 
 	SetCarTexture(0);
 
-	mMoveSpeed = 400.0f;
+	mMoveSpeed = 300.0f;
+	mHorizontalMoveSpeed = 200.0f;
 	mMoveBoundsX = Vector2(20.0f + mTexture->ScaledDimensions().x / 2, Graphics::SCREEN_WIDTH - mTexture->ScaledDimensions().x / 2);
 	mMoveBoundsY = Vector2(110.0f, Graphics::SCREEN_HEIGHT); // Assuming the player score texture is positioned at y = 80
 
@@ -83,13 +84,12 @@ void Player::HandleMovement() {
 	}
 
 	if (moveDir.MagnitudeSqr() > 0.0f) {
-		moveDir = moveDir.Normalized() * mMoveSpeed * mTimer->DeltaTime();
-		Translate(moveDir, World);
-	}
-
-	if (moveDir.MagnitudeSqr() > 0.0f) {
-		moveDir = moveDir.Normalized() * mMoveSpeed * mTimer->DeltaTime();
-		Translate(moveDir, World);
+		moveDir = moveDir.Normalized();
+		Vector2 moveAmount = moveDir * mMoveSpeed * mTimer->DeltaTime();
+		if (moveDir.x != 0) {
+			moveAmount.x = moveDir.x * mHorizontalMoveSpeed * mTimer->DeltaTime();
+		}
+		Translate(moveAmount, World);
 	}
 
 	if (!(mInput->KeyDown(SDL_SCANCODE_W) || mInput->KeyDown(SDL_SCANCODE_UP))) {
