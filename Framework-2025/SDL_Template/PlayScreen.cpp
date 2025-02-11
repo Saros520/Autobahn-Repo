@@ -1,6 +1,8 @@
 #include "PlayScreen.h"
 #include "ScreenManager.h"
 #include "InputManager.h"
+#include <cstdlib>
+#include <ctime>
 
 PlayScreen::PlayScreen() {
 	mTimer = Timer::Instance();
@@ -8,21 +10,56 @@ PlayScreen::PlayScreen() {
 	mInput = InputManager::Instance();
 
 	mHighWaySpeed = 600.0f; // Speed of the highway movement
+	mCurrentEnvironment = 2;
+	mNextEnvironment = 1;
+	mEnvironmentChangeTimer = 0.0f;
+	mTransitioning = false;
+	mTransitionAlpha = 0.0f;
+	mTransitionDuration = 2.0f; // Duration of the transition effect in seconds
 
-	for (int i = 0; i < NUM_ROAD_CITY; ++i) {
-		mNorthRoadCity[i] = new Texture("NorthRoadCity" + std::to_string(i + 1) + ".png");
-		mSouthRoadCity[i] = new Texture("SouthRoadCity" + std::to_string(i + 1) + ".png");
+	// Initialize random seed for the highway backgrounds
+	std::srand(static_cast<unsigned int>(std::time(nullptr)));
 
-		mNorthRoadCity[i]->Parent(this);
-		mSouthRoadCity[i]->Parent(this);
+	// Load highway sprites for different environments
+	for (int i = 0; i < NUM_ROAD_SPRITES; ++i) {
+		mNorthRoadSprites[0].push_back(new Texture("NorthRoadCity" + std::to_string(i + 1) + ".png"));
+		mSouthRoadSprites[0].push_back(new Texture("SouthRoadCity" + std::to_string(i + 1) + ".png"));
 
-		mNorthRoadCity[i]->Position(Graphics::SCREEN_WIDTH * 0.782f, Graphics::SCREEN_HEIGHT * 0.5f + i * Graphics::SCREEN_HEIGHT);
-		mSouthRoadCity[i]->Position(Graphics::SCREEN_WIDTH * 0.219f, Graphics::SCREEN_HEIGHT * 0.5f + i * Graphics::SCREEN_HEIGHT);
+		mNorthRoadSprites[1].push_back(new Texture("NorthRoadBridge" + std::to_string(i + 1) + ".png"));
+		mSouthRoadSprites[1].push_back(new Texture("SouthRoadBridge" + std::to_string(i + 1) + ".png"));
 
-		mNorthRoadCity[i]->Scale(Vector2(1.5f, 1.489f));
-		mSouthRoadCity[i]->Scale(Vector2(1.5f, 1.489f));
+		mNorthRoadSprites[2].push_back(new Texture("NorthRoadForest" + std::to_string(i + 1) + ".png"));
+		mSouthRoadSprites[2].push_back(new Texture("SouthRoadForest" + std::to_string(i + 1) + ".png"));
 
-		mHighwayPosY[i] = mNorthRoadCity[i]->Position().y;
+		mNorthRoadSprites[3].push_back(new Texture("NorthRoadPlain" + std::to_string(i + 1) + ".png"));
+		mSouthRoadSprites[3].push_back(new Texture("SouthRoadPlain" + std::to_string(i + 1) + ".png"));
+	}
+
+	// Calculate the scale factor to cover the whole play screen
+	float scaleX = static_cast<float>(Graphics::SCREEN_WIDTH) / mNorthRoadSprites[0][0]->ScaledDimensions().x;
+	float scaleY = static_cast<float>(Graphics::SCREEN_HEIGHT) / mNorthRoadSprites[0][0]->ScaledDimensions().y;
+	Vector2 scaleFactor = Vector2(3.36f, 3.45f);
+
+	// Define separate scale factors for NorthRoadCity and SouthRoadCity
+	Vector2 cityScaleFactor = Vector2(1.5f, 1.489f);
+
+	for (int i = 0; i < NUM_ROAD_SPRITES; ++i) {
+		mNorthRoadSprites[mCurrentEnvironment][i]->Parent(this);
+		mSouthRoadSprites[mCurrentEnvironment][i]->Parent(this);
+
+		mNorthRoadSprites[mCurrentEnvironment][i]->Position(Graphics::SCREEN_WIDTH * 0.782f, Graphics::SCREEN_HEIGHT * 0.5f + i * Graphics::SCREEN_HEIGHT);
+		mSouthRoadSprites[mCurrentEnvironment][i]->Position(Graphics::SCREEN_WIDTH * 0.219f, Graphics::SCREEN_HEIGHT * 0.5f + i * Graphics::SCREEN_HEIGHT);
+
+		if (mCurrentEnvironment == 0) {
+			mNorthRoadSprites[mCurrentEnvironment][i]->Scale(cityScaleFactor);
+			mSouthRoadSprites[mCurrentEnvironment][i]->Scale(cityScaleFactor);
+		}
+		else {
+			mNorthRoadSprites[mCurrentEnvironment][i]->Scale(scaleFactor);
+			mSouthRoadSprites[mCurrentEnvironment][i]->Scale(scaleFactor);
+		}
+
+		mHighwayPosY[i] = mNorthRoadSprites[mCurrentEnvironment][i]->Position().y;
 	}
 	
 	// top bar entities
@@ -63,16 +100,15 @@ void PlayScreen::ResetPauseState() {
 	mIsPaused = false;
 }
 
-
 PlayScreen::~PlayScreen() {
 	mTimer = nullptr;
 	mAudio = nullptr;
 
-	for (int i = 0; i < NUM_ROAD_CITY; ++i) {
-		delete mNorthRoadCity[i];
-		delete mSouthRoadCity[i];
-		mNorthRoadCity[i] = nullptr;
-		mSouthRoadCity[i] = nullptr;
+	for (int env = 0; env < NUM_ENVIRONMENTS; ++env) {
+		for (int i = 0; i < NUM_ROAD_SPRITES; ++i) {
+			delete mNorthRoadSprites[env][i];
+			delete mSouthRoadSprites[env][i];
+		}
 	}
 
 	delete mPlayer;
@@ -95,13 +131,60 @@ PlayScreen::~PlayScreen() {
 }
 
 void PlayScreen::UpdateHighway() {
-	for (int i = 0; i < NUM_ROAD_CITY; ++i) {
+	for (int i = 0; i < NUM_ROAD_SPRITES; ++i) {
 		mHighwayPosY[i] += mHighWaySpeed * mTimer->DeltaTime();
 		if (mHighwayPosY[i] >= Graphics::SCREEN_HEIGHT * 1.5f) {
-			mHighwayPosY[i] -= Graphics::SCREEN_HEIGHT * NUM_ROAD_CITY;
+			mHighwayPosY[i] -= Graphics::SCREEN_HEIGHT * NUM_ROAD_SPRITES;
 		}
-		mNorthRoadCity[i]->Position(Graphics::SCREEN_WIDTH * 0.782f, mHighwayPosY[i]);
-		mSouthRoadCity[i]->Position(Graphics::SCREEN_WIDTH * 0.219f, mHighwayPosY[i]);
+		mNorthRoadSprites[mCurrentEnvironment][i]->Position(Graphics::SCREEN_WIDTH * 0.782f, mHighwayPosY[i]);
+		mSouthRoadSprites[mCurrentEnvironment][i]->Position(Graphics::SCREEN_WIDTH * 0.219f, mHighwayPosY[i]);
+	}
+}
+
+void PlayScreen::StartEnvironmentTransition() {
+	mNextEnvironment = std::rand() % NUM_ENVIRONMENTS;
+	mTransitioning = true;
+	mTransitionAlpha = 0.0f;
+
+	// Calculate the scale factor to cover the whole play screen
+	float scaleX = static_cast<float>(Graphics::SCREEN_WIDTH) / mNorthRoadSprites[mNextEnvironment][0]->ScaledDimensions().x;
+	float scaleY = static_cast<float>(Graphics::SCREEN_HEIGHT) / mNorthRoadSprites[mNextEnvironment][0]->ScaledDimensions().y;
+	Vector2 scaleFactor = Vector2(3.36f, 3.45f);
+
+	// Define separate scale factors for NorthRoadCity and SouthRoadCity
+	Vector2 cityScaleFactor = Vector2(1.5f, 1.489f);
+
+	for (int i = 0; i < NUM_ROAD_SPRITES; ++i) {
+		mNorthRoadSprites[mNextEnvironment][i]->Parent(this);
+		mSouthRoadSprites[mNextEnvironment][i]->Parent(this);
+
+		mNorthRoadSprites[mNextEnvironment][i]->Position(Graphics::SCREEN_WIDTH * 0.782f, mHighwayPosY[i]);
+		mSouthRoadSprites[mNextEnvironment][i]->Position(Graphics::SCREEN_WIDTH * 0.219f, mHighwayPosY[i]);
+
+		if (mNextEnvironment == 0) {
+			mNorthRoadSprites[mNextEnvironment][i]->Scale(cityScaleFactor);
+			mSouthRoadSprites[mNextEnvironment][i]->Scale(cityScaleFactor);
+		}
+		else {
+			mNorthRoadSprites[mNextEnvironment][i]->Scale(scaleFactor);
+			mSouthRoadSprites[mNextEnvironment][i]->Scale(scaleFactor);
+		}
+	}
+}
+
+void PlayScreen::UpdateEnvironmentTransition() {
+	mTransitionAlpha += mTimer->DeltaTime() / mTransitionDuration;
+	if (mTransitionAlpha >= 1.0f) {
+		mTransitionAlpha = 1.0f;
+		mCurrentEnvironment = mNextEnvironment;
+		mTransitioning = false;
+	}
+
+	for (int i = 0; i < NUM_ROAD_SPRITES; ++i) {
+		mNorthRoadSprites[mCurrentEnvironment][i]->Alpha(255 * (1.0f - mTransitionAlpha));
+		mSouthRoadSprites[mCurrentEnvironment][i]->Alpha(255 * (1.0f - mTransitionAlpha));
+		mNorthRoadSprites[mNextEnvironment][i]->Alpha(255 * mTransitionAlpha);
+		mSouthRoadSprites[mNextEnvironment][i]->Alpha(255 * mTransitionAlpha);
 	}
 }
 
@@ -125,6 +208,17 @@ void PlayScreen::Update() {
 	}
 	else {
 		mLevelTime += mTimer->DeltaTime();
+		mEnvironmentChangeTimer += mTimer->DeltaTime();
+
+		if (mEnvironmentChangeTimer >= 60.0f && !mTransitioning) {
+			StartEnvironmentTransition();
+			mEnvironmentChangeTimer = 0.0f;
+		}
+
+		if (mTransitioning) {
+			UpdateEnvironmentTransition();
+		}
+
 		UpdateHighway();
 		mPlayer->Update();
 		mEnemy->Update();
@@ -136,9 +230,13 @@ void PlayScreen::Update() {
 }
 
 void PlayScreen::Render() {
-	for (int i = 0; i < NUM_ROAD_CITY; ++i) {
-		mNorthRoadCity[i]->Render();
-		mSouthRoadCity[i]->Render();
+	for (int i = 0; i < NUM_ROAD_SPRITES; ++i) {
+		mNorthRoadSprites[mCurrentEnvironment][i]->Render();
+		mSouthRoadSprites[mCurrentEnvironment][i]->Render();
+		if (mTransitioning) {
+			mNorthRoadSprites[mNextEnvironment][i]->Render();
+			mSouthRoadSprites[mNextEnvironment][i]->Render();
+		}
 	}
 
 	mPlayer->Render();

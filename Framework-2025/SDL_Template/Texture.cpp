@@ -66,7 +66,7 @@ namespace SDLFramework {
 		return scaledDimensions;
 	}
 
-	void Texture::SetSourceRect(SDL_Rect * sourceRect) {
+	void Texture::SetSourceRect(SDL_Rect* sourceRect) {
 		mSourceRect = *sourceRect;
 	}
 
@@ -102,5 +102,9 @@ namespace SDLFramework {
 
 	void Texture::SetColor(Uint8 red, Uint8 green, Uint8 blue) {
 		SDL_SetTextureColorMod(mTex, red, green, blue);
+	}
+
+	void Texture::Alpha(Uint8 alpha) {
+		SDL_SetTextureAlphaMod(mTex, alpha);
 	}
 }
