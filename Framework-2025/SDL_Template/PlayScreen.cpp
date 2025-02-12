@@ -92,6 +92,19 @@ PlayScreen::PlayScreen() {
 	mPauseGame = new PauseGame();
 	mPauseGame->Parent(this);
 	mIsPaused = false;
+
+	// bottom bar entities
+	mBottomBar = new GameEntity(Graphics::SCREEN_WIDTH * 0.5f, Graphics::SCREEN_HEIGHT - 80.0f);
+	mSpeedLabel = new Texture("Speed", "emulogic.ttf", 32, { 200, 0, 0 });
+	mSpeedScoreboard = new Scoreboard();
+
+	mBottomBar->Parent(this);
+	mSpeedLabel->Parent(mBottomBar);
+	mSpeedScoreboard->Parent(mBottomBar);
+
+	mSpeedLabel->Position(Graphics::SCREEN_WIDTH * -0.12f, -10.0f);
+	mSpeedScoreboard->Position(Graphics::SCREEN_WIDTH * 0.35f, -10.0f);
+
 }
 
 Player* PlayScreen::GetPlayer() {
@@ -130,6 +143,16 @@ PlayScreen::~PlayScreen() {
 
 	delete mTopBar;
 	mTopBar = nullptr;
+
+	delete mSpeedLabel;
+	mSpeedLabel = nullptr;
+
+	delete mSpeedScoreboard;
+	mSpeedScoreboard = nullptr;
+
+	delete mBottomBar;
+	mBottomBar = nullptr;
+
 }
 
 void PlayScreen::UpdateHighway() {
@@ -231,6 +254,10 @@ void PlayScreen::Update() {
 
 		mPlayerScoreNumber->Distance(mPlayer->DistanceTraveled());
 		mPlayerScoreNumber->Update();
+
+		float speed = mPlayer->GetSpeed(); 
+		mSpeedScoreboard->Score(static_cast<int>(speed));
+		mSpeedScoreboard->Update();
 	}
 }
 
@@ -249,6 +276,8 @@ void PlayScreen::Render() {
 	/*mLevelTimeText->Render();*/
 	mPlayerScore->Render();
 	mPlayerScoreNumber->Render();
+	mSpeedLabel->Render();
+	mSpeedScoreboard->Render();
 	
 	if (mIsPaused) {
 		mPauseGame->Render();

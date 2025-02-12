@@ -53,6 +53,7 @@ public:
 	void AddScore(int change);
 
 	float DistanceTraveled();
+	float GetSpeed();
 
 	// Inherited from PhysEntity
 	bool IgnoreCollisions() override;

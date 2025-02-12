@@ -168,6 +168,20 @@ float Player::DistanceTraveled() {
 	return mDistanceTraveled;
 }
 
+float Player::GetSpeed() {
+	
+	// Calculate Speed based on movement conditions
+	float speed = 50.0f; // Default speed in meters per second
+	if (mInput->KeyDown(SDL_SCANCODE_W) || mInput->KeyDown(SDL_SCANCODE_UP)) {
+		speed = 62.0f; // Speed when moving up
+	}
+	else if (mInput->KeyDown(SDL_SCANCODE_S) || mInput->KeyDown(SDL_SCANCODE_DOWN)) {
+		speed = 42.0f; // Speed when moving down
+	}
+	return speed;
+
+}
+
 bool Player::IgnoreCollisions()
 {
 	return !mVisible || mAnimating;
@@ -206,14 +220,8 @@ void Player::Update() {
 		}
 
 		// Update distance traveled based on movement conditions
-		float speed = 50.0f; // Default speed in meters per second
-		if (mInput->KeyDown(SDL_SCANCODE_W) || mInput->KeyDown(SDL_SCANCODE_UP)) {
-			speed = 62.0f; // Speed when moving up
-		}
-		else if (mInput->KeyDown(SDL_SCANCODE_S) || mInput->KeyDown(SDL_SCANCODE_DOWN)) {
-			speed = 42.0f; // Speed when moving down
-		}
-		mDistanceTraveled += speed * mTimer->DeltaTime() / 1000.0f; 
+		float speed = GetSpeed();
+		mDistanceTraveled += speed * mTimer->DeltaTime() / 1000.0f; // Convert to kilometers
 	}
 
 	for (int i = 0; i < MAX_BULLETS; ++i) {

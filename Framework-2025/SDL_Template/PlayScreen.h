@@ -39,6 +39,11 @@ private:
 	float mLevelTime;
 	/*Scoreboard* mLevelTimeText;*/
 
+	// Bottom Bar Entities
+	GameEntity* mBottomBar;
+	Texture* mSpeedLabel;
+	Scoreboard* mSpeedScoreboard;
+
 	void UpdateHighway();
 	void StartEnvironmentTransition();
     void UpdateEnvironmentTransition();
