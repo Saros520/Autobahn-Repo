@@ -1,4 +1,7 @@
 #include "Scoreboard.h"
+#include "Graphics.h"
+#include <iomanip>
+#include <sstream>
 
 Scoreboard::Scoreboard() 
 	: Scoreboard({230, 230, 230}) {
@@ -6,7 +9,6 @@ Scoreboard::Scoreboard()
 
 Scoreboard::Scoreboard(SDL_Color color) {
 	mColor = color;
-	Score(0);
 }
 
 Scoreboard::~Scoreboard() {
@@ -16,34 +18,39 @@ Scoreboard::~Scoreboard() {
 void Scoreboard::Score(int score) {
 	ClearBoard();
 
-	if (score == 0) {
-		for (int i = 0; i < 2; i++) {
-			mScore.push_back(new Texture("0", "emulogic.ttf", 32, mColor));
-			mScore[i]->Parent(this);
-			mScore[i]->Position(Vector2(-32.0f * i, 0.0f));
-		}
-	}
-	else {
-		std::string str = std::to_string(score);
-		unsigned lastIndex = (unsigned)str.length() - 1;
+	std::string str = std::to_string(score);
 
-		for (unsigned i = 0; i <= lastIndex; i++) {
-			mScore.push_back(new Texture(str.substr(i, 1), "emulogic.ttf", 32, mColor));
-			mScore[i]->Parent(this);
-			mScore[i]->Position(Vector2(-32.0f * (lastIndex - i), 0.0f));
-		}
+	for (int i = 0; i < str.length(); ++i) {
+		mScore.push_back(new Texture(str.substr(i, 1), "emulogic.ttf", 32, mColor));
+		mScore[i]->Parent(this);
+		mScore[i]->Position(Vector2(-32.0f * (str.length() - i), 0.0f));
+	}
+}
+
+void Scoreboard::Distance(float distance) {
+	ClearBoard();
+
+	std::ostringstream oss;
+	oss << std::fixed << std::setprecision(2) << distance << " km";
+	std::string str = oss.str();
+
+	for (int i = 0; i < str.length(); ++i) {
+		mScore.push_back(new Texture(str.substr(i, 1), "emulogic.ttf", 32, mColor));
+		mScore[i]->Parent(this);
+		mScore[i]->Position(Vector2(-32.0f * (str.length() - i), 0.0f));
 	}
 }
 
 void Scoreboard::Render() {
-	for (auto digit : mScore) {
-		digit->Render();
+	for (int i = 0; i < mScore.size(); ++i) {
+		mScore[i]->Render();
 	}
 }
 
 void Scoreboard::ClearBoard() {
-	for (auto s : mScore) {
-		delete s;
+	for (int i = 0; i < mScore.size(); ++i) {
+		delete mScore[i];
+		mScore[i] = nullptr;
 	}
 
 	mScore.clear();

@@ -28,6 +28,8 @@ private:
 	Vector2 mMoveBoundsX;
 	Vector2 mMoveBoundsY;
 
+	float mDistanceTraveled;
+
 	static const int MAX_BULLETS = 2;
 	Bullet * mBullets[MAX_BULLETS];
 
@@ -49,6 +51,8 @@ public:
 	int Lives();
 
 	void AddScore(int change);
+
+	float DistanceTraveled();
 
 	// Inherited from PhysEntity
 	bool IgnoreCollisions() override;

@@ -17,6 +17,7 @@ public:
 	~Scoreboard();
 
 	void Score(int score);
+	void Distance(float distance);
 
 	void Render() override;
 

@@ -22,7 +22,9 @@ Player::Player() {
 	mMoveSpeed = 300.0f;
 	mHorizontalMoveSpeed = 225.0f;
 	mMoveBoundsX = Vector2(20.0f + mTexture->ScaledDimensions().x / 2, Graphics::SCREEN_WIDTH - mTexture->ScaledDimensions().x / 2);
-	mMoveBoundsY = Vector2(110.0f, Graphics::SCREEN_HEIGHT); // Assuming the player score texture is positioned at y = 80
+	mMoveBoundsY = Vector2(110.0f, Graphics::SCREEN_HEIGHT); 
+
+	mDistanceTraveled = 0.0f;
 
 	Position(Vector2(Graphics::SCREEN_WIDTH * 0.75f, Graphics::SCREEN_HEIGHT * 0.9f));
 
@@ -162,6 +164,10 @@ void Player::AddScore(int change) {
 	mScore += change;
 }
 
+float Player::DistanceTraveled() {
+	return mDistanceTraveled;
+}
+
 bool Player::IgnoreCollisions()
 {
 	return !mVisible || mAnimating;
@@ -198,6 +204,16 @@ void Player::Update() {
 			HandleMovement();
 			HandleFiring();
 		}
+
+		// Update distance traveled based on movement conditions
+		float speed = 50.0f; // Default speed in meters per second
+		if (mInput->KeyDown(SDL_SCANCODE_W) || mInput->KeyDown(SDL_SCANCODE_UP)) {
+			speed = 62.0f; // Speed when moving up
+		}
+		else if (mInput->KeyDown(SDL_SCANCODE_S) || mInput->KeyDown(SDL_SCANCODE_DOWN)) {
+			speed = 42.0f; // Speed when moving down
+		}
+		mDistanceTraveled += speed * mTimer->DeltaTime() / 1000.0f; 
 	}
 
 	for (int i = 0; i < MAX_BULLETS; ++i) {

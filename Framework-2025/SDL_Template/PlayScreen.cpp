@@ -69,8 +69,10 @@ PlayScreen::PlayScreen() {
 
 	mTopBar->Parent(this);
 	mPlayerScore->Parent(mTopBar);
+	mPlayerScoreNumber->Parent(mTopBar);
 
 	mPlayerScore->Position(Graphics::SCREEN_WIDTH * -0.12f, -10.0f);
+	mPlayerScoreNumber->Position(Graphics::SCREEN_WIDTH * 0.35f, -10.0f);
 
 	mPlayer = new Player();
 	mPlayer->Parent(this);
@@ -80,12 +82,12 @@ PlayScreen::PlayScreen() {
 	mEnemy->Parent(this);
 	mEnemy->Position(Graphics::SCREEN_WIDTH * 0.5f, Graphics::SCREEN_HEIGHT * 0.5f);
 
-	mLevelTime = 0.0f;
+	/*mLevelTime = 0.0f;
 	mLevelTimeText = new Scoreboard();
 	mLevelTimeText->Parent(this);
-	mLevelTimeText->Position(Graphics::SCREEN_WIDTH * 0.5f, 32.0f);
+	mLevelTimeText->Position(Graphics::SCREEN_WIDTH * 0.5f, 32.0f);*/
 
-	mLevelTimeText->Score(mLevelTime);
+	/*mLevelTimeText->Score(mLevelTime);*/
 
 	mPauseGame = new PauseGame();
 	mPauseGame->Parent(this);
@@ -117,8 +119,8 @@ PlayScreen::~PlayScreen() {
 	delete mEnemy;
 	mEnemy = nullptr;
 
-	delete mLevelTimeText;
-	mLevelTimeText = nullptr;
+	/*delete mLevelTimeText;
+	mLevelTimeText = nullptr;*/
 
 	delete mPlayerScore;
 	mPlayerScore = nullptr;
@@ -222,9 +224,12 @@ void PlayScreen::Update() {
 		UpdateHighway();
 		mPlayer->Update();
 		mEnemy->Update();
-		mLevelTimeText->Score(mLevelTime);
-		mLevelTimeText->Update();
+		/*mLevelTimeText->Score(mLevelTime);
+		mLevelTimeText->Update();*/
 		mPlayerScoreNumber->Score(mPlayer->Score());
+		mPlayerScoreNumber->Update();
+
+		mPlayerScoreNumber->Distance(mPlayer->DistanceTraveled());
 		mPlayerScoreNumber->Update();
 	}
 }
@@ -241,7 +246,7 @@ void PlayScreen::Render() {
 
 	mPlayer->Render();
 	mEnemy->Render();
-	mLevelTimeText->Render();
+	/*mLevelTimeText->Render();*/
 	mPlayerScore->Render();
 	mPlayerScoreNumber->Render();
 	

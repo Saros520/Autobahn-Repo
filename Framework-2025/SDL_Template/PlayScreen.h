@@ -37,7 +37,7 @@ private:
 	Enemy* mEnemy;
 
 	float mLevelTime;
-	Scoreboard* mLevelTimeText;
+	/*Scoreboard* mLevelTimeText;*/
 
 	void UpdateHighway();
 	void StartEnvironmentTransition();
