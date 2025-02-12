@@ -5,6 +5,7 @@
 StartScreen::StartScreen() {
 	mTimer = Timer::Instance();
 	mInput = InputManager::Instance();
+
 	 
 	// Title Screen Entities
 	mTitleScreen = new Texture("TitleScreen.png");
@@ -125,6 +126,7 @@ StartScreen::StartScreen() {
 
 
 StartScreen::~StartScreen() {
+
 	
 	// Title Screen Entities
 	delete mTitleScreen;  

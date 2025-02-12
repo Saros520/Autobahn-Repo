@@ -12,8 +12,11 @@ private:
     InputManager* mInput;
 
     Texture* mBackgroundBox;  // The TransparentBox texture
+    Texture* mPauseTitle;
     Texture* mResumeText;
+    Texture* mResumeText2;
     Texture* mExitText;
+    Texture* mExitText2;
     Texture* mCursor;
 
     Vector2 mCursorStartPos;
