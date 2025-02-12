@@ -17,8 +17,8 @@ OptionsScreen::OptionsScreen() {
 
 	mSliderKnob = new Texture("SliderKnob.png");
 	mSliderKnob->Parent(this);
-	mSliderKnobStartPos = Vector2(mSliderBar->Position().x - 200.0f, mSliderBar->Position().y);
-	mSliderKnobEndPos = Vector2(mSliderBar->Position().x + 200.0f, mSliderBar->Position().y);
+	mSliderKnobStartPos = Vector2(mSliderBar->Position().x - 120.0f, mSliderBar->Position().y + -453.0f);
+	mSliderKnobEndPos = Vector2(mSliderBar->Position().x + 152.0f, mSliderBar->Position().y + -453.0f);
 	mSliderKnob->Position(mSliderKnobStartPos);
 	mSliderKnob->Position(Graphics::SCREEN_HEIGHT * 0.319f, Graphics::SCREEN_WIDTH * 0.445f);
 
