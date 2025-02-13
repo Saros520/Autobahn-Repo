@@ -9,7 +9,7 @@ PlayScreen::PlayScreen() {
 	mAudio = AudioManager::Instance();
 	mInput = InputManager::Instance();
 
-	mHighWaySpeed = 600.0f; // Speed of the highway movement
+	mHighWaySpeed = 550.0f; // Speed of the highway movement
 	mCurrentEnvironment = 2;
 	mNextEnvironment = 1;
 	mEnvironmentChangeTimer = 0.0f;

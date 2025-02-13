@@ -19,10 +19,13 @@ Player::Player() {
 
 	SetCarTexture(0);
 
-	mMoveSpeed = 300.0f;
-	mHorizontalMoveSpeed = 225.0f;
+	mMoveSpeed = 223.0f;
+	mHorizontalMoveSpeed = 186.0f;
+	mAcceleration = 40.0f;
+	mDeceleration = 25.0f;
+	mCurrentSpeed = 186.0f;
 	mMoveBoundsX = Vector2(20.0f + mTexture->ScaledDimensions().x / 2, Graphics::SCREEN_WIDTH - mTexture->ScaledDimensions().x / 2);
-	mMoveBoundsY = Vector2(110.0f, Graphics::SCREEN_HEIGHT); 
+	mMoveBoundsY = Vector2(110.0f, Graphics::SCREEN_HEIGHT);
 
 	mDistanceTraveled = 0.0f;
 
@@ -69,7 +72,7 @@ Player::~Player() {
 }
 
 void Player::HandleMovement() {
-	const float Gravity = 150.0f;
+	const float Gravity = 100.0f;
 	Vector2 moveDir = Vec2_Zero;
 
 	if (mInput->KeyDown(SDL_SCANCODE_W) || mInput->KeyDown(SDL_SCANCODE_UP)) {
@@ -87,12 +90,39 @@ void Player::HandleMovement() {
 
 	if (moveDir.MagnitudeSqr() > 0.0f) {
 		moveDir = moveDir.Normalized();
-		Vector2 moveAmount = moveDir * mMoveSpeed * mTimer->DeltaTime();
-		if (moveDir.x != 0) {
-			moveAmount.x = moveDir.x * mHorizontalMoveSpeed * mTimer->DeltaTime();
+		if (moveDir.y > 0) { // Decelerating
+			mCurrentSpeed -= mDeceleration * mTimer->DeltaTime();
+			if (mCurrentSpeed < 150.0f) { // Minimum speed in km/h
+				mCurrentSpeed = 150.0f;
+			}
 		}
-		Translate(moveAmount, World);
+		else if (moveDir.y < 0) { // Accelerating
+			mCurrentSpeed += mAcceleration * mTimer->DeltaTime();
+			if (mCurrentSpeed > mMoveSpeed) {
+				mCurrentSpeed = mMoveSpeed;
+			}
+		}
 	}
+	else {
+		if (mCurrentSpeed > 186.0f) { // Decelerate to 186 km/h
+			mCurrentSpeed -= mDeceleration * mTimer->DeltaTime();
+			if (mCurrentSpeed < 186.0f) {
+				mCurrentSpeed = 186.0f;
+			}
+		}
+		else if (mCurrentSpeed < 186.0f) { // Accelerate to 186 km/h
+			mCurrentSpeed += mAcceleration * mTimer->DeltaTime();
+			if (mCurrentSpeed > 186.0f) {
+				mCurrentSpeed = 186.0f;
+			}
+		}
+	}
+
+	Vector2 moveAmount = moveDir * mCurrentSpeed * mTimer->DeltaTime(); // Convert km/h to m/s
+	if (moveDir.x != 0) {
+		moveAmount.x = moveDir.x * mHorizontalMoveSpeed * mTimer->DeltaTime(); // Convert km/h to m/s
+	}
+	Translate(moveAmount, World);
 
 	if (!(mInput->KeyDown(SDL_SCANCODE_W) || mInput->KeyDown(SDL_SCANCODE_UP))) {
 		Vector2 pos = Position();
@@ -171,14 +201,14 @@ float Player::DistanceTraveled() {
 float Player::GetSpeed() {
 	
 	// Calculate Speed based on movement conditions
-	float speed = 50.0f; // Default speed in meters per second
+	float speed = 50.0f; // Default speed in kilometers per hour
 	if (mInput->KeyDown(SDL_SCANCODE_W) || mInput->KeyDown(SDL_SCANCODE_UP)) {
 		speed = 62.0f; // Speed when moving up
 	}
 	else if (mInput->KeyDown(SDL_SCANCODE_S) || mInput->KeyDown(SDL_SCANCODE_DOWN)) {
 		speed = 42.0f; // Speed when moving down
 	}
-	return speed;
+	return mCurrentSpeed; 
 
 }
 
@@ -220,7 +250,7 @@ void Player::Update() {
 		}
 
 		// Update distance traveled based on movement conditions
-		float speed = GetSpeed();
+		float speed = mCurrentSpeed * (1000.0f / 3600.0f); // Convert km/h to m/s
 		mDistanceTraveled += speed * mTimer->DeltaTime() / 1000.0f; // Convert to kilometers
 	}
 
