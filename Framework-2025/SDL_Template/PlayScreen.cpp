@@ -4,6 +4,7 @@
 #include <cstdlib>
 #include <ctime>
 
+
 PlayScreen::PlayScreen() {
 	mTimer = Timer::Instance();
 	mAudio = AudioManager::Instance();
@@ -15,7 +16,7 @@ PlayScreen::PlayScreen() {
 	mEnvironmentChangeTimer = 0.0f;
 	mTransitioning = false;
 	mTransitionAlpha = 0.0f;
-	mTransitionDuration = 2.0f; // Duration of the transition effect in seconds
+	mTransitionDuration = 1.0f; // Duration of the transition effect in seconds
 
 	// Initialize random seed for the highway backgrounds
 	std::srand(static_cast<unsigned int>(std::time(nullptr)));
@@ -102,8 +103,8 @@ PlayScreen::PlayScreen() {
 	mSpeedLabel->Parent(mBottomBar);
 	mSpeedScoreboard->Parent(mBottomBar);
 
-	mSpeedLabel->Position(Graphics::SCREEN_WIDTH * -0.12f, -10.0f);
-	mSpeedScoreboard->Position(Graphics::SCREEN_WIDTH * 0.35f, -10.0f);
+	mSpeedLabel->Position(Graphics::SCREEN_WIDTH * 0.10f, 30.0f);
+	mSpeedScoreboard->Position(Graphics::SCREEN_WIDTH * 0.30f, 30.0f);
 
 }
 
@@ -235,7 +236,7 @@ void PlayScreen::Update() {
 		mLevelTime += mTimer->DeltaTime();
 		mEnvironmentChangeTimer += mTimer->DeltaTime();
 
-		if (mEnvironmentChangeTimer >= 60.0f && !mTransitioning) {
+		if (mEnvironmentChangeTimer >= 40.0f && !mTransitioning) {
 			StartEnvironmentTransition();
 			mEnvironmentChangeTimer = 0.0f;
 		}
