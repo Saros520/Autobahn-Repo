@@ -223,11 +223,9 @@ bool musicPlaying = false;
 
 void StartScreen::Update() {
 	if (!musicPlaying) {
-		mAudio->PlayMusic("TokyoDrift.mp3", -1);
+		mAudio->PlayMusic("TokyoDrift.mp3", -1); // play music
 		musicPlaying = true; // Ensure it only plays once
 	}
-
-	
 
 	if (!mAnimationDone) {
 		mAnimationTimer += mTimer->DeltaTime();
