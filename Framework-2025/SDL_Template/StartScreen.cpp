@@ -6,6 +6,8 @@ StartScreen::StartScreen() {
 	mTimer = Timer::Instance();
 	mInput = InputManager::Instance();
 
+	mAudio = AudioManager::Instance();
+
 	 
 	// Title Screen Entities
 	mTitleScreen = new Texture("TitleScreen.png");
@@ -127,6 +129,7 @@ StartScreen::StartScreen() {
 
 StartScreen::~StartScreen() {
 
+	mAudio = nullptr;
 	
 	// Title Screen Entities
 	delete mTitleScreen;  
@@ -200,6 +203,7 @@ void StartScreen::ResetAnimation() {
 }
 
 int StartScreen::SelectedMode() {
+
 	return mSelectedMode;
 }
 
@@ -215,9 +219,16 @@ void StartScreen::ChangeSelectedMode(int change) {
 
 	mCursor->Position(mCursorStartPos + mCursorOffset * (float)mSelectedMode);
 }
-
+bool musicPlaying = false;
 
 void StartScreen::Update() {
+	if (!musicPlaying) {
+		mAudio->PlayMusic("TokyoDrift.mp3", -1);
+		musicPlaying = true; // Ensure it only plays once
+	}
+
+	
+
 	if (!mAnimationDone) {
 		mAnimationTimer += mTimer->DeltaTime();
 		Position(Lerp(mAnimationStartPos, mAnimationEndPos, mAnimationTimer / mAnimationTotalTime));
@@ -308,7 +319,7 @@ void StartScreen::Render() {
 	// Render Vehicles speeding by
 	mZoomingCarLeft->Render();
 	mZoomingCarRight->Render();
-
+	
 	mPlayerScore->Render();
 
 	// Render the flickering logo
@@ -330,4 +341,5 @@ void StartScreen::Render() {
 	mDreamTeamStudios->Render();
 	mDates->Render();
 	mRights->Render();
+
 }
