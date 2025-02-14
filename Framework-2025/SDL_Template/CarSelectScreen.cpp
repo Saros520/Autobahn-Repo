@@ -62,6 +62,7 @@ void CarSelectScreen::Update() {
     }
     if (mInput->KeyPressed(SDL_SCANCODE_RETURN)) {
         ScreenManager::Instance()->SetSelectedCar(mSelectedCar);
+        Mix_PauseMusic();  // Stop the current music
         ScreenManager::Instance()->SetScreen(ScreenManager::Play);
     }
 }

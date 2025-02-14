@@ -223,9 +223,10 @@ bool musicPlaying = false;
 
 void StartScreen::Update() {
 	if (!musicPlaying) {
-		mAudio->PlayMusic("TokyoDrift.mp3", -1); // play music
+		mAudio->PlayMusic("GetLow.mp3", -1); // play music
 		musicPlaying = true; // Ensure it only plays once
 	}
+
 
 	if (!mAnimationDone) {
 		mAnimationTimer += mTimer->DeltaTime();
@@ -289,10 +290,9 @@ void StartScreen::Update() {
 			ChangeSelectedMode(-1);
 		}
 
-		// Handle "Enter" key for selection
 		if (mInput->KeyPressed(SDL_SCANCODE_RETURN)) {
 			if (mSelectedMode == 0) { // Start Game
-				ScreenManager::Instance()->SetScreen(ScreenManager::CarSelect);
+				ScreenManager::Instance()->SetScreen(ScreenManager::Play);  // Switch to the play screen
 			}
 			else if (mSelectedMode == 1) { // Options
 				ScreenManager::Instance()->SetScreen(ScreenManager::Options);

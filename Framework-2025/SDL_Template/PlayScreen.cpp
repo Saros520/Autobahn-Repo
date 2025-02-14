@@ -18,6 +18,17 @@ PlayScreen::PlayScreen() {
 	mTransitionAlpha = 0.0f;
 	mTransitionDuration = 1.0f; // Duration of the transition effect in seconds
 
+
+	mSpeedBox = new Texture("SpeedBox.png");
+	mSpeedBox->Parent(this);
+	mSpeedBox->Position(Graphics::SCREEN_WIDTH * 1.21f, Graphics::SCREEN_HEIGHT * 0.53f);
+	mSpeedBox->Scale(Vector2(1.0f, 2.0f));
+
+	mLivesBox = new Texture("LivesBox.png");
+	mLivesBox->Parent(this);
+	mLivesBox->Position(Graphics::SCREEN_WIDTH * 0.35f, Graphics::SCREEN_HEIGHT * 0.53f);
+	mLivesBox->Scale(Vector2(1.0f, 2.0f));
+
 	// Initialize random seed for the highway backgrounds
 	std::srand(static_cast<unsigned int>(std::time(nullptr)));
 
@@ -62,7 +73,7 @@ PlayScreen::PlayScreen() {
 
 		mHighwayPosY[i] = mNorthRoadSprites[mCurrentEnvironment][i]->Position().y;
 	}
-	
+
 	// top bar entities
 	mTopBar = new GameEntity(Graphics::SCREEN_WIDTH * 0.5f, 80.0f);
 	mPlayerScore = new Texture("High-Score", "emulogic.ttf", 32, { 200, 0, 0 });
@@ -72,8 +83,8 @@ PlayScreen::PlayScreen() {
 	mPlayerScore->Parent(mTopBar);
 	mPlayerScoreNumber->Parent(mTopBar);
 
-	mPlayerScore->Position(Graphics::SCREEN_WIDTH * -0.12f, -10.0f);
-	mPlayerScoreNumber->Position(Graphics::SCREEN_WIDTH * 0.35f, -10.0f);
+	mPlayerScore->Position(Graphics::SCREEN_WIDTH * -0.12f, -63.0f);
+	mPlayerScoreNumber->Position(Graphics::SCREEN_WIDTH * 0.35f, -63.0f);
 
 	mPlayer = new Player();
 	mPlayer->Parent(this);
@@ -95,16 +106,20 @@ PlayScreen::PlayScreen() {
 	mIsPaused = false;
 
 	// bottom bar entities
-	mBottomBar = new GameEntity(Graphics::SCREEN_WIDTH * 0.5f, Graphics::SCREEN_HEIGHT - 80.0f);
-	mSpeedLabel = new Texture("Speed", "emulogic.ttf", 32, { 200, 0, 0 });
+	mBottomBar = new GameEntity(Graphics::SCREEN_WIDTH * 0.83f, Graphics::SCREEN_HEIGHT - 163.0f);
+	mSpeedLabel = new Texture("Speed", "emulogic.ttf", 20, { 255, 0, 0 });
 	mSpeedScoreboard = new Scoreboard();
+
+	mLivesLabel = new Texture("Lives", "emulogic.ttf", 20, { 255, 0, 0 });
 
 	mBottomBar->Parent(this);
 	mSpeedLabel->Parent(mBottomBar);
+	mLivesLabel->Parent(mBottomBar);
 	mSpeedScoreboard->Parent(mBottomBar);
 
 	mSpeedLabel->Position(Graphics::SCREEN_WIDTH * 0.10f, 30.0f);
-	mSpeedScoreboard->Position(Graphics::SCREEN_WIDTH * 0.30f, 30.0f);
+	mSpeedScoreboard->Position(Graphics::SCREEN_WIDTH * 0.15f, 85.0f);
+	mLivesLabel->Position(Graphics::SCREEN_WIDTH * -0.7579f, 30.0f);
 
 }
 
@@ -126,6 +141,12 @@ PlayScreen::~PlayScreen() {
 			delete mSouthRoadSprites[env][i];
 		}
 	}
+
+	delete mSpeedBox;
+	mSpeedBox = nullptr;
+
+	delete mLivesBox;
+	mLivesBox = nullptr;
 
 	delete mPlayer;
 	mPlayer = nullptr;
@@ -150,6 +171,9 @@ PlayScreen::~PlayScreen() {
 
 	delete mSpeedScoreboard;
 	mSpeedScoreboard = nullptr;
+
+	delete mLivesLabel;
+	mLivesLabel = nullptr;
 
 	delete mBottomBar;
 	mBottomBar = nullptr;
@@ -214,7 +238,9 @@ void PlayScreen::UpdateEnvironmentTransition() {
 	}
 }
 
+
 void PlayScreen::Update() {
+
 	if (mInput->KeyPressed(SDL_SCANCODE_ESCAPE)) {
 		mIsPaused = !mIsPaused;
 	}
@@ -248,6 +274,31 @@ void PlayScreen::Update() {
 		UpdateHighway();
 		mPlayer->Update();
 		mEnemy->Update();
+
+		// Switch music based on key press (1-9)
+		for (int i = 0; i < 9; ++i) {
+			if (mInput->KeyPressed(static_cast<SDL_Scancode>(SDL_SCANCODE_1 + i))) {
+				if (mCurrentSongIndex != i) {
+					mCurrentSongIndex = i;
+					void PauseMusic();  // Stop the current music
+					mAudio->PlayMusic(mSongs[mCurrentSongIndex].c_str(), -1);  // Play the new song
+				}
+				break;  // Only process the first matching key
+			}
+		}
+
+		// Pause or resume music when the 0 key is pressed
+		if (mInput->KeyPressed(SDL_SCANCODE_0)) {
+			static bool musicPaused = false;
+			if (musicPaused) {
+				mAudio->ResumeMusic();  // Resume the music
+			}
+			else {
+				mAudio->PauseMusic();  // Pause the music
+			}
+			musicPaused = !musicPaused;  // Toggle the pause state
+		}
+
 		/*mLevelTimeText->Score(mLevelTime);
 		mLevelTimeText->Update();*/
 		mPlayerScoreNumber->Score(mPlayer->Score());
@@ -262,6 +313,7 @@ void PlayScreen::Update() {
 	}
 }
 
+
 void PlayScreen::Render() {
 	for (int i = 0; i < NUM_ROAD_SPRITES; ++i) {
 		mNorthRoadSprites[mCurrentEnvironment][i]->Render();
@@ -271,7 +323,8 @@ void PlayScreen::Render() {
 			mSouthRoadSprites[mNextEnvironment][i]->Render();
 		}
 	}
-
+	mSpeedBox->Render();
+	mLivesBox->Render();
 	mPlayer->Render();
 	mEnemy->Render();
 	/*mLevelTimeText->Render();*/
@@ -279,6 +332,7 @@ void PlayScreen::Render() {
 	mPlayerScoreNumber->Render();
 	mSpeedLabel->Render();
 	mSpeedScoreboard->Render();
+	mLivesLabel->Render();
 	
 	if (mIsPaused) {
 		mPauseGame->Render();
