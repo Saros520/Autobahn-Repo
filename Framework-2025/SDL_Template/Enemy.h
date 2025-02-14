@@ -1,32 +1,43 @@
 #ifndef __ENEMY_H
 #define __ENEMY_H
+
+#include "Texture.h"
 #include "AnimatedGLTexture.h"
 #include "AudioManager.h"
 #include "PhysEntity.h"
+#include "Timer.h"
+#include <vector>
 
 using namespace SDLFramework;
 
 class Enemy : public PhysEntity {
 private:
+    Timer* mTimer;
+    AnimatedTexture* mDeathAnimation;
+    AudioManager* mAudio;
+    bool mAnimating;
+    float mMoveSpeed;
 
-	AudioManager* mAudio;
-
-	bool mAnimating;
-
-	Texture* mTexture;
-	AnimatedTexture* mDeathAnimation;
+    static std::vector<float> mLeftLanes;
+    static std::vector<float> mRightLanes;
 
 public:
-	Enemy();
-	~Enemy();
+    Enemy();
+    ~Enemy();
 
-	bool IsAnimating();
+    Texture* mTexture;
 
-	// Inherited from PhysEntity
-	bool IgnoreCollisions() override;
-	void Hit(PhysEntity* other) override;
+    static void InitializeLanes();
+    static const std::vector<float>& GetLeftLanes();
+    static const std::vector<float>& GetRightLanes();
 
-	void Update() override;
-	void Render() override;
+    bool IsAnimating();
+    bool IgnoreCollisions() override;
+    void Hit(PhysEntity* other) override;
+    void Update() override;
+    void Render() override;
+
+    Vector2 GetTextureDimensions() const;
+
 };
 #endif
