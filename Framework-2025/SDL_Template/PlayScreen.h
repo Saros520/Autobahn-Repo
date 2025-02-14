@@ -10,6 +10,7 @@
 
 class PlayScreen : public GameEntity {
 private:
+
 	Timer * mTimer;
 	AudioManager * mAudio;
 	InputManager* mInput;
@@ -28,6 +29,19 @@ private:
 	float mTransitionAlpha;
 	float mTransitionDuration;
 
+	const std::vector<std::string> mSongs = {
+		"TokyoDrift.mp3", // Key 1
+		"GoodOldBoys.mp3", // Key 2
+		"EastBoundAndDown.mp3", // Key 3
+		"KickstartMyHeart.mp3", // Key 4
+		"Panama.mp3", // Key 5
+		"LaGrange.mp3", // Key 6
+		"Rollin.mp3", // Key 7
+		"Ridin.mp3", // Key 8
+		"GetLow.mp3"  // Key 9
+	};
+	int mCurrentSongIndex = -1;
+
 	// Top Bar Entities
 	GameEntity* mTopBar;
 	Texture* mPlayerScore;
@@ -43,6 +57,9 @@ private:
 	GameEntity* mBottomBar;
 	Texture* mSpeedLabel;
 	Scoreboard* mSpeedScoreboard;
+	Texture* mLivesLabel;
+	Texture* mSpeedBox;
+	Texture* mLivesBox;
 
 	void UpdateHighway();
 	void StartEnvironmentTransition();
@@ -52,6 +69,7 @@ private:
 
 	PauseGame* mPauseGame;
 	bool mIsPaused;
+
 
 public:
 	PlayScreen();

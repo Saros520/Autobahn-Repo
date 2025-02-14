@@ -17,7 +17,7 @@ OptionsScreen::OptionsScreen() {
 
 	mSliderKnob = new Texture("SliderKnob.png");
 	mSliderKnob->Parent(this);
-	mSliderKnobStartPos = Vector2(mSliderBar->Position().x - 120.0f, mSliderBar->Position().y + -453.0f);
+	mSliderKnobStartPos = Vector2(mSliderBar->Position().x -120.0f, mSliderBar->Position().y + -453.0f);
 	mSliderKnobEndPos = Vector2(mSliderBar->Position().x + 152.0f, mSliderBar->Position().y + -453.0f);
 	mSliderKnob->Position(mSliderKnobStartPos);
 	mSliderKnob->Position(Graphics::SCREEN_HEIGHT * 0.319f, Graphics::SCREEN_WIDTH * 0.445f);
@@ -31,11 +31,11 @@ OptionsScreen::OptionsScreen() {
 	mTitle2->Position(Graphics::SCREEN_WIDTH * 0.5f, 400);
 
 
-	mSave = new Texture("Save", "emulogic.ttf", 22, { 0, 0, 0 });
+	mSave = new Texture("Press ESC", "emulogic.ttf", 22, { 0, 0, 0 });
 	mSave->Parent(this);
 	mSave->Position(Graphics::SCREEN_WIDTH * 0.37f, 580);
 
-	mCancel = new Texture("Cancel", "emulogic.ttf", 22, { 0, 0, 0 });
+	mCancel = new Texture("Too Return", "emulogic.ttf", 22, { 0, 0, 0 });
 	mCancel->Parent(this);
 	mCancel->Position(Graphics::SCREEN_WIDTH * 0.61f, 580);
 
