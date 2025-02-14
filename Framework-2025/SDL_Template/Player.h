@@ -25,6 +25,9 @@ private:
 
 	float mMoveSpeed;
 	float mHorizontalMoveSpeed;
+	float mAcceleration;
+	float mDeceleration;
+	float mCurrentSpeed;
 	Vector2 mMoveBoundsX;
 	Vector2 mMoveBoundsY;
 
