@@ -40,8 +40,8 @@ Player::Player() {
 		mBullets[i] = new Bullet(true);
 	}
 
-	/*AddCollider(new BoxCollider(Vector2(16.0f, 67.0f)));
-	AddCollider(new BoxCollider(Vector2(20.0f, 37.0f)), Vector2( 18.0f, 10.0f));
+	AddCollider(new BoxCollider(Vector2(56.0f, 63.0f)), Vector2(-10.0f, 20.0f));
+	/*AddCollider(new BoxCollider(Vector2(20.0f, 37.0f)), Vector2( 18.0f, 10.0f));
 	AddCollider(new BoxCollider(Vector2(20.0f, 37.0f)), Vector2(-18.0f, 10.0f));*/
 
 	mId = PhysicsManager::Instance()->RegisterEntity(this, PhysicsManager::CollisionLayers::Friendly);

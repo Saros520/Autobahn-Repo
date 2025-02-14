@@ -16,7 +16,7 @@ Enemy::Enemy() {
 	mDeathAnimation->Position(Vec2_Zero);
 	mDeathAnimation->SetWrapMode(Animation::WrapModes::Once);
 
-	//AddCollider(new BoxCollider(mTexture->ScaledDimensions()));
+	AddCollider(new BoxCollider(mTexture->ScaledDimensions()));
 
 	mId = PhysicsManager::Instance()->RegisterEntity(this, PhysicsManager::CollisionLayers::Hostile);
 }
