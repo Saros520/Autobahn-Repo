@@ -40,9 +40,10 @@ Player::Player() {
 		mBullets[i] = new Bullet(true);
 	}
 
-	AddCollider(new BoxCollider(Vector2(56.0f, 63.0f)), Vector2(-10.0f, 20.0f));
 	/*AddCollider(new BoxCollider(Vector2(20.0f, 37.0f)), Vector2( 18.0f, 10.0f));
 	AddCollider(new BoxCollider(Vector2(20.0f, 37.0f)), Vector2(-18.0f, 10.0f));*/
+
+	SetColliderForCar(0);
 
 	mId = PhysicsManager::Instance()->RegisterEntity(this, PhysicsManager::CollisionLayers::Friendly);
 }
@@ -53,6 +54,54 @@ void Player::SetCarTexture(int carIndex) {
 	mTexture = new Texture(fileName);
 	mTexture->Parent(this);
 	mTexture->Position(Vec2_Zero);
+
+	SetColliderForCar(carIndex);
+}
+
+void Player::SetColliderForCar(int carIndex) {
+	int* collider = 0;
+	// Clear existing colliders 
+	for (auto c : mColliders) {
+		delete collider;
+	}
+	mColliders.clear();
+
+	// Set collider size and position based on what vehicle has been selected 
+	Vector2 colliderSize;
+	Vector2 colliderOffset;
+
+	switch (carIndex) {
+	case 0:
+		colliderSize = Vector2(48.0f, 63.0f);
+		colliderOffset = Vector2(-12.0f, 20.0f);
+		break;
+	case 1:
+		colliderSize = Vector2(40.0f, 90.0f);
+		colliderOffset = Vector2(-12.0f, 20.0f);
+		break;
+	case 2:
+		colliderSize = Vector2(48.0f, 85.0f);
+		colliderOffset = Vector2(-12.0f, 10.0f);
+		break;
+	case 3:
+		colliderSize = Vector2(48.0f, 85.0f);
+		colliderOffset = Vector2(-12.0f, 10.0f);
+		break;
+	case 4:
+		colliderSize = Vector2(48.0f, 85.0f);
+		colliderOffset = Vector2(-12.0f, 10.0f);
+		break;
+	case 5:
+		colliderSize = Vector2(48.0f, 85.0f);
+		colliderOffset = Vector2(-12.0f, 10.0f);
+		break;
+	default:
+		colliderSize = Vector2(48.0f, 85.0f);
+		colliderOffset = Vector2(-12.0f, 10.0f);
+		break;
+	}
+
+	AddCollider(new BoxCollider(colliderSize), colliderOffset);
 }
 
 Player::~Player() {
