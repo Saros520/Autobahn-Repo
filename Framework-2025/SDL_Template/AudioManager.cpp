@@ -37,6 +37,9 @@ namespace SDLFramework {
 	}
 
 	void AudioManager::SetMusicVolume(int volume) {
+
+		std::cout << volume << std::endl;
+
 		Mix_VolumeMusic(volume);
 	}
 
