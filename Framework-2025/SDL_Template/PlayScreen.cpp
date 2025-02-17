@@ -90,9 +90,7 @@ PlayScreen::PlayScreen() {
 	mPlayer->Parent(this);
 	mPlayer->Position(Graphics::SCREEN_WIDTH * 0.642f, Graphics::SCREEN_HEIGHT * 0.9f); // offset to fit lanes centered
 
-	mEnemy = new Enemy();
-	mEnemy->Parent(this);
-	mEnemy->Position(Graphics::SCREEN_WIDTH * 0.5f, Graphics::SCREEN_HEIGHT * 0.5f);
+	mEnemySpawner = new EnemySpawner(2.0f); // Spawn an enemy every 2 seconds
 
 	/*mLevelTime = 0.0f;
 	mLevelTimeText = new Scoreboard();
@@ -151,8 +149,8 @@ PlayScreen::~PlayScreen() {
 	delete mPlayer;
 	mPlayer = nullptr;
 
-	delete mEnemy;
-	mEnemy = nullptr;
+	delete mEnemySpawner;
+	mEnemySpawner = nullptr;
 
 	/*delete mLevelTimeText;
 	mLevelTimeText = nullptr;*/
@@ -273,7 +271,7 @@ void PlayScreen::Update() {
 
 		UpdateHighway();
 		mPlayer->Update();
-		mEnemy->Update();
+		mEnemySpawner->Update();
 
 		// Switch music based on key press (1-9)
 		for (int i = 0; i < 9; ++i) {
@@ -326,7 +324,7 @@ void PlayScreen::Render() {
 	mSpeedBox->Render();
 	mLivesBox->Render();
 	mPlayer->Render();
-	mEnemy->Render();
+	mEnemySpawner->Render();
 	/*mLevelTimeText->Render();*/
 	mPlayerScore->Render();
 	mPlayerScoreNumber->Render();

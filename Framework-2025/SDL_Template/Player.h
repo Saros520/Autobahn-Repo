@@ -9,64 +9,66 @@ using namespace SDLFramework;
 
 class Player : public PhysEntity {
 private:
-	Timer * mTimer;
-	InputManager * mInput;
-	AudioManager * mAudio;
+    Timer* mTimer;
+    InputManager* mInput;
+    AudioManager* mAudio;
 
-	bool mVisible;
-	bool mAnimating;
-	bool mWasHit;
+    bool mVisible;
+    bool mAnimating;
+    bool mWasHit;
 
-	int mScore;
-	int mLives;
+    int mScore;
+    int mLives;
 
-	Texture * mTexture;
-	AnimatedTexture * mDeathAnimation;
+    Texture* mTexture;
+    AnimatedTexture* mDeathAnimation;
 
-	float mMoveSpeed;
-	float mHorizontalMoveSpeed;
-	float mAcceleration;
-	float mDeceleration;
-	float mCurrentSpeed;
-	Vector2 mMoveBoundsX;
-	Vector2 mMoveBoundsY;
+    float mMoveSpeed; 
+    float mHorizontalMoveSpeed; 
+    float mAcceleration; 
+    float mDeceleration; 
+    float mCurrentSpeed; 
+    Vector2 mMoveBoundsX;
+    Vector2 mMoveBoundsY;
 
-	float mDistanceTraveled;
+    float mDistanceTraveled;
 
-	static const int MAX_BULLETS = 2;
-	Bullet * mBullets[MAX_BULLETS];
+    static const int MAX_BULLETS = 2;
+    Bullet* mBullets[MAX_BULLETS];
 
-	void HandleMovement();
-	void HandleFiring();
+    void HandleMovement();
+    void HandleFiring();
 
-	bool IsOffHighway();
+    bool IsOffHighway();
+
+    void SetColliderForCar(int carIndex); // New method to set collider based on car index
 
 public:
-	Player();
-	~Player();
+    Player();
+    ~Player();
 
-	void SetCarTexture(int carIndex);
+    void SetCarTexture(int carIndex);
 
-	void Visible(bool visible);
-	bool IsAnimating();
+    void Visible(bool visible);
+    bool IsAnimating();
 
-	int Score();
-	int Lives();
+    int Score();
+    int Lives();
 
-	void AddScore(int change);
+    void AddScore(int change);
 
-	float DistanceTraveled();
-	float GetSpeed();
+    float DistanceTraveled();
+    float GetSpeed(); // New method to get the current speed
 
-	// Inherited from PhysEntity
-	bool IgnoreCollisions() override;
-	void Hit(PhysEntity * other) override;
-	
-	bool WasHit();
+    // Inherited from PhysEntity
+    bool IgnoreCollisions() override;
+    void Hit(PhysEntity* other) override;
 
-	void SetMoveBounds(float top, float bottom, float left, float right);
+    bool WasHit();
 
-	void Update() override;
-	void Render() override;
+    void SetMoveBounds(float top, float bottom, float left, float right);
+
+    void Update() override;
+    void Render() override;
 };
 #endif

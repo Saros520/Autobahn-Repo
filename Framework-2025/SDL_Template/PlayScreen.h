@@ -4,8 +4,9 @@
 #include "GameEntity.h"
 #include "Player.h"
 #include "Scoreboard.h"
-#include "Enemy.h"
+#include "EnemySpawner.h"
 #include "PauseGame.h"
+#include "Texture.h"
 #include <vector>
 
 class PlayScreen : public GameEntity {
@@ -48,7 +49,8 @@ private:
 	Scoreboard* mPlayerScoreNumber;
 
 	Player * mPlayer;
-	Enemy* mEnemy;
+	EnemySpawner* mEnemySpawner;
+	PauseGame* mPauseGame;
 
 	float mLevelTime;
 	/*Scoreboard* mLevelTimeText;*/
@@ -67,7 +69,6 @@ private:
 	void UpdatePlayer();
 	void UpdateEnemy();
 
-	PauseGame* mPauseGame;
 	bool mIsPaused;
 
 
