@@ -20,6 +20,12 @@ EnemySpawner::EnemySpawner(float spawnInterval) {
 
 EnemySpawner::~EnemySpawner() {
     mTimer = nullptr;
+
+    // Clean up active enemies
+    for (auto enemy : mEnemies) {
+        delete enemy;
+    }
+    mEnemies.clear();
 }
 
 void EnemySpawner::Update() {
@@ -29,6 +35,17 @@ void EnemySpawner::Update() {
         SpawnEnemy();
         mTimeSinceLastSpawn = 0.0f;
     }
+
+    // Update active enemies
+    for (auto enemy : mEnemies) {
+        enemy->Update();
+    }
+
+    // Remove enemies that are off the screen
+    mEnemies.erase(std::remove_if(mEnemies.begin(), mEnemies.end(), [](Enemy* enemy) {
+        Vector2 pos = enemy->Position();
+        return (pos.y > Graphics::SCREEN_HEIGHT || pos.y < -enemy->GetTextureDimensions().y);
+        }), mEnemies.end());
 }
 
 void EnemySpawner::SpawnEnemy() {
@@ -44,9 +61,8 @@ void EnemySpawner::SpawnEnemy() {
 
         // Create a new enemy vehicle
         Enemy* enemy = new Enemy();
-        enemy->Position(Vector2(laneX, -enemy->mTexture->ScaledDimensions().y));
-        // Add enemy to the game
-        // ...
+        enemy->Position(Vector2(laneX, -enemy->GetTextureDimensions().y)); // Spawn just above the top of the play screen
+        mEnemies.push_back(enemy);
     }
     else { // 50% chance to spawn an enemy on the right side
         // Choose a random lane
@@ -55,12 +71,14 @@ void EnemySpawner::SpawnEnemy() {
 
         // Create a new enemy vehicle
         Enemy* enemy = new Enemy();
-        enemy->Position(Vector2(laneX, Graphics::SCREEN_HEIGHT + enemy->mTexture->ScaledDimensions().y));
-        // Add enemy to the game
-        // ...
+        enemy->Position(Vector2(laneX, Graphics::SCREEN_HEIGHT + enemy->GetTextureDimensions().y)); // Spawn just below the bottom of the play screen
+        mEnemies.push_back(enemy);
     }
 }
 
 void EnemySpawner::Render() {
-    
+    // Render active enemies
+    for (auto enemy : mEnemies) {
+        enemy->Render();
+    }
 }
