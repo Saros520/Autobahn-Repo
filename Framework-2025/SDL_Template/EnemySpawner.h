@@ -10,9 +10,10 @@ private:
 	float mSpawnInterval;
 	float mTimeSinceLastSpawn;
 	std::vector<Enemy*> mEnemies;
+	int mVehicleIndex; 
 
 public:
-	EnemySpawner(float spawnInteval);
+	EnemySpawner(float spawnInteval, int vehicleIndex);
 	~EnemySpawner();
 
 	void SpawnEnemy();
