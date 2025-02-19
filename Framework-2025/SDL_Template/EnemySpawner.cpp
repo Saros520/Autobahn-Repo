@@ -64,6 +64,7 @@ bool EnemySpawner::IsPositionOccupied(Vector2 position, float buffer) {
 }
 
 void EnemySpawner::SpawnEnemy() {
+    
     // Get lanes from enemy class
     const std::vector<float>& leftLanes = Enemy::GetLeftLanes();
     const std::vector<float>& rightLanes = Enemy::GetRightLanes();
@@ -72,7 +73,8 @@ void EnemySpawner::SpawnEnemy() {
     std::vector<int> transportTrucks = { 7, 8, 13, 14 };
 
     // Function to spawn an enemy in a given lane
-    auto spawnInLane = [&](const std::vector<float>& lanes, bool moveDownward) {
+    auto spawnInLane = [&](const std::vector<float>& lanes, bool moveDownward, bool flipTexture) {
+
         // Weighted random selection to reduce the probability of transport trucks
         int vehicleIndex;
         if (std::rand() % 10 < 2) { // 20% chance to select a transport truck
@@ -98,13 +100,18 @@ void EnemySpawner::SpawnEnemy() {
         if (!positionOccupied) {
             Enemy* enemy = new Enemy(moveDownward, vehicleIndex); // Move downward if spawned above the screen, otherwise move upward
             enemy->Position(spawnPosition);
+
+            if (flipTexture) {
+                enemy->Rotation(180.0f); // Flip vehicle textures on the left 180 degrees
+            }
+
             mEnemies.push_back(enemy);
         }
-        };
+    };
 
     // Spawn enemies in both left and right lanes
-    spawnInLane(leftLanes, true);  // Spawn enemy in the left lane
-    spawnInLane(rightLanes, false); // Spawn enemy in the right lane
+    spawnInLane(leftLanes, true, true);  // Spawn enemy in the left lane
+    spawnInLane(rightLanes, false, false); // Spawn enemy in the right lane
 }
 
 void EnemySpawner::Render() {
