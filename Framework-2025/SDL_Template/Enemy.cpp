@@ -129,76 +129,76 @@ void Enemy::SetColliderForVehicle(int vehicleIndex) {
 
     switch (vehicleIndex) {
     case 1:
-        colliderSize = Vector2(48.0f, 63.0f);
-        colliderOffset = Vector2(-12.0f, 20.0f);
+        colliderSize = Vector2(48.0f, 70.0f);
+        colliderOffset = Vector2(-19.0f, -10.0f);
         break;
     case 2:
-        colliderSize = Vector2(48.0f, 63.0f);
-        colliderOffset = Vector2(-12.0f, 20.0f);
+        colliderSize = Vector2(48.0f, 120.0f);
+        colliderOffset = Vector2(-19.0f, -40.0f);
         break;
     case 3:
-        colliderSize = Vector2(48.0f, 63.0f);
-        colliderOffset = Vector2(-12.0f, 20.0f);
+        colliderSize = Vector2(48.0f, 170.0f);
+        colliderOffset = Vector2(-13.0f, -60.0f);
         break;
     case 4:
-        colliderSize = Vector2(48.0f, 63.0f);
-        colliderOffset = Vector2(-12.0f, 20.0f);
+        colliderSize = Vector2(48.0f, 120.0f);
+        colliderOffset = Vector2(-19.0f, -40.0f);
         break;
     case 5:
-        colliderSize = Vector2(48.0f, 63.0f);
-        colliderOffset = Vector2(-12.0f, 20.0f);
+        colliderSize = Vector2(48.0f, 70.0f);
+        colliderOffset = Vector2(-19.0f, -10.0f);
         break;
     case 6:
-        colliderSize = Vector2(48.0f, 63.0f);
-        colliderOffset = Vector2(-12.0f, 20.0f);
+        colliderSize = Vector2(48.0f, 70.0f);
+        colliderOffset = Vector2(-19.0f, -10.0f);
         break;
     case 7:
-        colliderSize = Vector2(48.0f, 63.0f);
-        colliderOffset = Vector2(-12.0f, 20.0f);
+        colliderSize = Vector2(66.0f, 375.0f);
+        colliderOffset = Vector2(-17.0f, 7.0f);
         break;
     case 8:
-        colliderSize = Vector2(48.0f, 63.0f);
-        colliderOffset = Vector2(-12.0f, 20.0f);
+        colliderSize = Vector2(66.0f, 375.0f);
+        colliderOffset = Vector2(-17.0f, 7.0f);
         break;
     case 9:
-        colliderSize = Vector2(48.0f, 63.0f);
-        colliderOffset = Vector2(-12.0f, 20.0f);
+        colliderSize = Vector2(48.0f, 170.0f);
+        colliderOffset = Vector2(-13.0f, -60.0f);
         break;
     case 10:
-        colliderSize = Vector2(48.0f, 63.0f);
-        colliderOffset = Vector2(-12.0f, 20.0f);
+        colliderSize = Vector2(48.0f, 70.0f);
+        colliderOffset = Vector2(-19.0f, -10.0f);
         break;
     case 11:
-        colliderSize = Vector2(48.0f, 63.0f);
-        colliderOffset = Vector2(-12.0f, 20.0f);
+        colliderSize = Vector2(48.0f, 170.0f);
+        colliderOffset = Vector2(-13.0f, -60.0f);
         break;
     case 12:
-        colliderSize = Vector2(48.0f, 63.0f);
-        colliderOffset = Vector2(-12.0f, 20.0f);
+        colliderSize = Vector2(48.0f, 70.0f);
+        colliderOffset = Vector2(-19.0f, -10.0f);
         break;
     case 13:
-        colliderSize = Vector2(48.0f, 63.0f);
-        colliderOffset = Vector2(-12.0f, 20.0f);
+        colliderSize = Vector2(66.0f, 375.0f);
+        colliderOffset = Vector2(-17.0f, 7.0f);
         break;
     case 14:
-        colliderSize = Vector2(48.0f, 63.0f);
-        colliderOffset = Vector2(-12.0f, 20.0f);
+        colliderSize = Vector2(66.0f, 375.0f);
+        colliderOffset = Vector2(-17.0f, 7.0f);
         break;
     case 15:
-        colliderSize = Vector2(48.0f, 63.0f);
-        colliderOffset = Vector2(-12.0f, 20.0f);
+        colliderSize = Vector2(48.0f, 120.0f);
+        colliderOffset = Vector2(-19.0f, -40.0f);
         break;
     case 16:
-        colliderSize = Vector2(48.0f, 63.0f);
-        colliderOffset = Vector2(-12.0f, 20.0f);
+        colliderSize = Vector2(48.0f, 70.0f);
+        colliderOffset = Vector2(-19.0f, -10.0f);
         break;
     case 17:
-        colliderSize = Vector2(48.0f, 63.0f);
-        colliderOffset = Vector2(-12.0f, 20.0f);
+        colliderSize = Vector2(48.0f, 170.0f);
+        colliderOffset = Vector2(-13.0f, -60.0f);
         break;
     default:
         colliderSize = Vector2(48.0f, 63.0f);
-        colliderOffset = Vector2(-12.0f, 20.0f);
+        colliderOffset = Vector2(-19.0f, 20.0f);
         break;
     }
 
@@ -211,58 +211,58 @@ void Enemy::SetScaleForVehicle(int vehicleIndex) {
 
     switch (vehicleIndex) {
     case 1:
-        scale = Vector2(1.0f, 1.0f);
+        scale = Vector2(2.0f, 2.0f);
         break;
     case 2:
-        scale = Vector2(1.0f, 1.0f);
+        scale = Vector2(2.0f, 2.0f);
         break;
     case 3:
-        scale = Vector2(1.0f, 1.0f);
+        scale = Vector2(3.0f, 3.0f);
         break;
     case 4:
-        scale = Vector2(1.0f, 1.0f);
+        scale = Vector2(2.0f, 2.0f);
         break;
     case 5:
-        scale = Vector2(1.0f, 1.0f);
+        scale = Vector2(2.0f, 2.0f);
         break;
     case 6:
-        scale = Vector2(1.0f, 1.0f);
+        scale = Vector2(2.0f, 2.0f);
         break;
     case 7:
-        scale = Vector2(1.0f, 1.0f);
+        scale = Vector2(4.0f, 3.8f);
         break;
     case 8:
-        scale = Vector2(1.0f, 1.0f);
+        scale = Vector2(4.0, 3.8f);
         break;
     case 9:
-        scale = Vector2(1.0f, 1.0f);
+        scale = Vector2(3.0f, 3.0f);
         break;
     case 10:
-        scale = Vector2(1.0f, 1.0f);
+        scale = Vector2(2.0f, 2.0f);
         break;
     case 11:
-        scale = Vector2(1.0f, 1.0f);
+        scale = Vector2(3.0f, 3.0f);
         break;
     case 12:
-        scale = Vector2(1.0f, 1.0f);
+        scale = Vector2(2.0f, 2.0f);
         break;
     case 13:
-        scale = Vector2(1.0f, 1.0f);
+        scale = Vector2(4.0f, 3.8f);
         break;
     case 14:
-        scale = Vector2(1.0f, 1.0f);
+        scale = Vector2(4.0f, 3.8f);
         break;
     case 15:
-        scale = Vector2(1.0f, 1.0f);
+        scale = Vector2(2.0f, 2.0f);
         break;
     case 16:
-        scale = Vector2(1.0f, 1.0f);
+        scale = Vector2(2.0f, 2.0f);
         break;
     case 17:
-        scale = Vector2(1.0f, 1.0f);
+        scale = Vector2(3.0f, 3.0f);
         break;
     default:
-        scale = Vector2(1.0f, 1.0f);
+        scale = Vector2(2.0f, 2.0f);
         break;
     }
 

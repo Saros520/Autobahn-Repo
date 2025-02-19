@@ -6,7 +6,7 @@
 
 EnemySpawner::EnemySpawner(float spawnInterval, int vehicleIndex) {
     mTimer = Timer::Instance();
-    mSpawnInterval = 1.8f; // Spawns a vehicle every 1.8 seconds
+    mSpawnInterval = 2.0f; // Spawns a vehicle every 2 seconds
     mTimeSinceLastSpawn = 0.0f;
     mVehicleIndex = vehicleIndex;
 
@@ -33,7 +33,7 @@ void EnemySpawner::Update() {
     mTimeSinceLastSpawn += mTimer->DeltaTime();
 
     if (mTimeSinceLastSpawn >= mSpawnInterval) {
-        SpawnEnemy();
+        SpawnEnemy(); // Spawn enemies in both lanes
         mTimeSinceLastSpawn = 0.0f;
     }
 
@@ -71,52 +71,40 @@ void EnemySpawner::SpawnEnemy() {
     // Define the vehicle indices for transport trucks
     std::vector<int> transportTrucks = { 7, 8, 13, 14 };
 
-    // Weighted random selection to reduce the probability of transport trucks
-    int vehicleIndex;
-    if (std::rand() % 10 < 2) { // 20% chance to select a transport truck
-        vehicleIndex = transportTrucks[std::rand() % transportTrucks.size()];
-    }
-    else { // 80% chance to select a regular vehicle
-        do {
-            vehicleIndex = std::rand() % 17 + 1;
-        } while (std::find(transportTrucks.begin(), transportTrucks.end(), vehicleIndex) != transportTrucks.end());
-    }
+    // Function to spawn an enemy in a given lane
+    auto spawnInLane = [&](const std::vector<float>& lanes, bool moveDownward) {
+        // Weighted random selection to reduce the probability of transport trucks
+        int vehicleIndex;
+        if (std::rand() % 10 < 2) { // 20% chance to select a transport truck
+            vehicleIndex = transportTrucks[std::rand() % transportTrucks.size()];
+        }
+        else { // 80% chance to select a regular vehicle
+            do {
+                vehicleIndex = std::rand() % 17 + 1;
+            } while (std::find(transportTrucks.begin(), transportTrucks.end(), vehicleIndex) != transportTrucks.end());
+        }
 
-    Vector2 spawnPosition;
-    bool positionOccupied;
-
-    if (std::rand() % 2 == 0) { // 50% chance to spawn an enemy on the left side
         // Choose a random lane
-        int laneIndex = std::rand() % leftLanes.size();
-        float laneX = leftLanes[laneIndex];
+        int laneIndex = std::rand() % lanes.size();
+        float laneX = lanes[laneIndex];
 
-        std::cout << "Spawning vehicle on the left." << std::endl;
         // Set spawn position
-        spawnPosition = Vector2(laneX, -100.0f); // Spawn just above the top of the play screen
+        Vector2 spawnPosition = moveDownward ? Vector2(laneX, -100.0f) : Vector2(laneX, Graphics::SCREEN_HEIGHT + 100.0f);
 
         // Check if the position is occupied
-        positionOccupied = IsPositionOccupied(spawnPosition, 100.0f);
-    }
-    else { // 50% chance to spawn an enemy on the right side
-        // Choose a random lane
-        int laneIndex = std::rand() % rightLanes.size();
-        float laneX = rightLanes[laneIndex];
+        bool positionOccupied = IsPositionOccupied(spawnPosition, 100.0f);
 
-        std::cout << "Spawning vehicle on the right." << std::endl;
-        // Set spawn position
-        spawnPosition = Vector2(laneX, Graphics::SCREEN_HEIGHT + 100.0f); // Spawn just below the bottom of the play screen
+        // If the position is not occupied, spawn the enemy
+        if (!positionOccupied) {
+            Enemy* enemy = new Enemy(moveDownward, vehicleIndex); // Move downward if spawned above the screen, otherwise move upward
+            enemy->Position(spawnPosition);
+            mEnemies.push_back(enemy);
+        }
+        };
 
-        // Check if the position is occupied
-        positionOccupied = IsPositionOccupied(spawnPosition, 100.0f);
-    }
-
-    // If the position is not occupied, spawn the enemy
-    if (!positionOccupied) {
-        bool moveDownward = spawnPosition.y < Graphics::SCREEN_HEIGHT / 2;
-        Enemy* enemy = new Enemy(moveDownward, vehicleIndex); // Move downward if spawned above the screen, otherwise move upward
-        enemy->Position(spawnPosition);
-        mEnemies.push_back(enemy);
-    }
+    // Spawn enemies in both left and right lanes
+    spawnInLane(leftLanes, true);  // Spawn enemy in the left lane
+    spawnInLane(rightLanes, false); // Spawn enemy in the right lane
 }
 
 void EnemySpawner::Render() {
