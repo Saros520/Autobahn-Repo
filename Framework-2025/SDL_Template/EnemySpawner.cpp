@@ -1,4 +1,3 @@
-
 #include "EnemySpawner.h"
 #include "Graphics.h"
 #include <cstdlib>
@@ -7,7 +6,7 @@
 
 EnemySpawner::EnemySpawner(float spawnInterval, int vehicleIndex) {
     mTimer = Timer::Instance();
-    mSpawnInterval = spawnInterval;
+    mSpawnInterval = 1.8f; // Spawns a vehicle every 1.8 seconds
     mTimeSinceLastSpawn = 0.0f;
     mVehicleIndex = vehicleIndex;
 
@@ -46,8 +45,22 @@ void EnemySpawner::Update() {
     // Remove enemies that are off the screen
     mEnemies.erase(std::remove_if(mEnemies.begin(), mEnemies.end(), [](Enemy* enemy) {
         Vector2 pos = enemy->Position();
-        return (pos.y > Graphics::SCREEN_HEIGHT || pos.y < -enemy->GetTextureDimensions().y);
+        bool offScreen = (pos.y > Graphics::SCREEN_HEIGHT + 140.0f || pos.y < -enemy->GetTextureDimensions().y);
+        if (offScreen) {
+            delete enemy;
+        }
+        return offScreen;
         }), mEnemies.end());
+}
+
+bool EnemySpawner::IsPositionOccupied(Vector2 position, float buffer) {
+    for (auto enemy : mEnemies) {
+        Vector2 enemyPos = enemy->Position();
+        if (abs(enemyPos.y - position.y) < buffer) {
+            return true;
+        }
+    }
+    return false;
 }
 
 void EnemySpawner::SpawnEnemy() {
@@ -69,24 +82,39 @@ void EnemySpawner::SpawnEnemy() {
         } while (std::find(transportTrucks.begin(), transportTrucks.end(), vehicleIndex) != transportTrucks.end());
     }
 
+    Vector2 spawnPosition;
+    bool positionOccupied;
+
     if (std::rand() % 2 == 0) { // 50% chance to spawn an enemy on the left side
         // Choose a random lane
         int laneIndex = std::rand() % leftLanes.size();
         float laneX = leftLanes[laneIndex];
 
-        // Create a new enemy vehicle
-        Enemy* enemy = new Enemy(true, vehicleIndex); // Move downward
-        enemy->Position(Vector2(laneX, -enemy->GetTextureDimensions().y)); // Spawn just above the top of the play screen
-        mEnemies.push_back(enemy);
+        std::cout << "Spawning vehicle on the left." << std::endl;
+        // Set spawn position
+        spawnPosition = Vector2(laneX, -100.0f); // Spawn just above the top of the play screen
+
+        // Check if the position is occupied
+        positionOccupied = IsPositionOccupied(spawnPosition, 100.0f);
     }
     else { // 50% chance to spawn an enemy on the right side
         // Choose a random lane
         int laneIndex = std::rand() % rightLanes.size();
         float laneX = rightLanes[laneIndex];
 
-        // Create a new enemy vehicle
-        Enemy* enemy = new Enemy(true, vehicleIndex); // Move upward
-        enemy->Position(Vector2(laneX, Graphics::SCREEN_HEIGHT + enemy->GetTextureDimensions().y)); // Spawn just below the bottom of the play screen
+        std::cout << "Spawning vehicle on the right." << std::endl;
+        // Set spawn position
+        spawnPosition = Vector2(laneX, Graphics::SCREEN_HEIGHT + 100.0f); // Spawn just below the bottom of the play screen
+
+        // Check if the position is occupied
+        positionOccupied = IsPositionOccupied(spawnPosition, 100.0f);
+    }
+
+    // If the position is not occupied, spawn the enemy
+    if (!positionOccupied) {
+        bool moveDownward = spawnPosition.y < Graphics::SCREEN_HEIGHT / 2;
+        Enemy* enemy = new Enemy(moveDownward, vehicleIndex); // Move downward if spawned above the screen, otherwise move upward
+        enemy->Position(spawnPosition);
         mEnemies.push_back(enemy);
     }
 }

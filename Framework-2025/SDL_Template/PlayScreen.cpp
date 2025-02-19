@@ -19,7 +19,6 @@ PlayScreen::PlayScreen() {
 	mTransitionAlpha = 0.0f;
 	mTransitionDuration = 1.0f; // Duration of the transition effect in seconds
 
-
 	mSpeedBox = new Texture("SpeedBox.png");
 	mSpeedBox->Parent(this);
 	mSpeedBox->Position(Graphics::SCREEN_WIDTH * 1.21f, Graphics::SCREEN_HEIGHT * 0.53f);
