@@ -6,7 +6,7 @@
 
 EnemySpawner::EnemySpawner(float spawnInterval, int vehicleIndex) {
     mTimer = Timer::Instance();
-    mSpawnInterval = 2.0f; // Spawns a vehicle every 2 seconds
+    mSpawnInterval = 3.0f; // Spawns a vehicle every 3 seconds
     mTimeSinceLastSpawn = 0.0f;
     mVehicleIndex = vehicleIndex;
 
