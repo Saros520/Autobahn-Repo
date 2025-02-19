@@ -33,11 +33,11 @@ private:
 
     float mDistanceTraveled;
 
-    static const int MAX_BULLETS = 2;
-    Bullet* mBullets[MAX_BULLETS];
+    //static const int MAX_BULLETS = 2;
+    //Bullet* mBullets[MAX_BULLETS];
 
     void HandleMovement();
-    void HandleFiring();
+  //  void HandleFiring();
 
     bool IsOffHighway();
 

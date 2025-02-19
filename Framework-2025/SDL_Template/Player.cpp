@@ -13,7 +13,7 @@ Player::Player() {
 	mWasHit = false;
 
 	mScore = 0;
-	mLives = 2;
+	mLives = 3;
 
 	mTexture = nullptr;
 
@@ -36,12 +36,9 @@ Player::Player() {
 	mDeathAnimation->Position(Vec2_Zero);
 	mDeathAnimation->SetWrapMode(Animation::WrapModes::Once);
 
-	for (int i = 0; i < MAX_BULLETS; ++i) {
+	/*for (int i = 0; i < MAX_BULLETS; ++i) {
 		mBullets[i] = new Bullet(true);
-	}
-
-	/*AddCollider(new BoxCollider(Vector2(20.0f, 37.0f)), Vector2( 18.0f, 10.0f));
-	AddCollider(new BoxCollider(Vector2(20.0f, 37.0f)), Vector2(-18.0f, 10.0f));*/
+	}*/
 
 	SetColliderForCar(0);
 
@@ -115,9 +112,9 @@ Player::~Player() {
 	delete mDeathAnimation;
 	mDeathAnimation = nullptr;
 
-	for (auto b : mBullets) {
+	/*for (auto b : mBullets) {
 		delete b;
-	}
+	}*/
 }
 
 void Player::HandleMovement() {
@@ -141,7 +138,7 @@ void Player::HandleMovement() {
 		moveDir = moveDir.Normalized();
 		if (moveDir.y > 0) { // Decelerating
 			mCurrentSpeed -= mDeceleration * mTimer->DeltaTime();
-			if (mCurrentSpeed < 150.0f) { // Minimum speed in km/h
+			if (mCurrentSpeed < 150.0f) { 
 				mCurrentSpeed = 150.0f;
 			}
 		}
@@ -211,17 +208,17 @@ bool Player::IsOffHighway() {
 	return (pos.x < mMoveBoundsX.x || pos.x > mMoveBoundsX.y);
 }
 
-void Player::HandleFiring() {
-	if (mInput->KeyPressed(SDL_SCANCODE_SPACE)) {
-		for (int i = 0; i < MAX_BULLETS; ++i) {
-			if (!mBullets[i]->Active()) {
-				mBullets[i]->Fire(Position());
-				mAudio->PlaySFX("SFX/Fire.wav");
-				break;
-			}
-		}
-	}
-}
+//void Player::HandleFiring() {
+//	if (mInput->KeyPressed(SDL_SCANCODE_SPACE)) {
+//		for (int i = 0; i < MAX_BULLETS; ++i) {
+//			if (!mBullets[i]->Active()) {
+//				mBullets[i]->Fire(Position());
+//				mAudio->PlaySFX("SFX/Fire.wav");
+//				break;
+//			}
+//		}
+//	}
+//}
 
 void Player::Visible(bool visible) {
 	mVisible = visible;
@@ -250,7 +247,7 @@ float Player::DistanceTraveled() {
 float Player::GetSpeed() {
 	
 	// Calculate Speed based on movement conditions
-	float speed = 50.0f; // Default speed in kilometers per hour
+	float speed = 50.0f; 
 	if (mInput->KeyDown(SDL_SCANCODE_W) || mInput->KeyDown(SDL_SCANCODE_UP)) {
 		speed = 62.0f; // Speed when moving up
 	}
@@ -295,7 +292,7 @@ void Player::Update() {
 	else {
 		if (Active()) {
 			HandleMovement();
-			HandleFiring();
+	//		HandleFiring();
 		}
 
 		// Update distance traveled based on movement conditions
@@ -303,9 +300,9 @@ void Player::Update() {
 		mDistanceTraveled += speed * mTimer->DeltaTime() / 1000.0f; // Convert to kilometers
 	}
 
-	for (int i = 0; i < MAX_BULLETS; ++i) {
+	/*for (int i = 0; i < MAX_BULLETS; ++i) {
 		mBullets[i]->Update();
-	}
+	}*/
 }
 
 void Player::Render() {
@@ -318,9 +315,9 @@ void Player::Render() {
 		}
 	}
 
-	for (int i = 0; i < MAX_BULLETS; ++i) {
+	/*for (int i = 0; i < MAX_BULLETS; ++i) {
 		mBullets[i]->Render();
-	}
+	}*/
 
 	PhysEntity::Render();
 }
