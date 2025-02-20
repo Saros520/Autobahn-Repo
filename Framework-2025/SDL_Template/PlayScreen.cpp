@@ -302,6 +302,10 @@ void PlayScreen::Update() {
 		mPlayerScoreNumber->Score(mPlayer->Score());
 		mPlayerScoreNumber->Update();
 
+		int playerLives = mPlayer->Lives();
+		mSpeedScoreboard->Score(playerLives); // Display remaining lives
+		mSpeedScoreboard->Update();
+
 		mPlayerScoreNumber->Distance(mPlayer->DistanceTraveled());
 		mPlayerScoreNumber->Update();
 
