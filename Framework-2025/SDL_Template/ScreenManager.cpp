@@ -38,6 +38,7 @@ void ScreenManager::SetScreen(Screens newScreen) {
 
     if (mCurrentScreen == Play) {
         mPlayScreen->ResetPauseState();  // Reset pause state when loading back into game
+		mPlayScreen->GetPlayer()->ResetLives();  // Reset lives when loading new game
     }
 }
 

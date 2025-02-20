@@ -232,10 +232,6 @@ int Player::Score() {
 	return mScore;
 }
 
-int Player::Lives() {
-	return mLives;
-}
-
 void Player::AddScore(int change) {
 	mScore += change;
 }
@@ -265,10 +261,19 @@ bool Player::IgnoreCollisions()
 
 void Player::Hit(PhysEntity * other) {
 	mLives -= 1;
-	mAnimating = true;
-	mDeathAnimation->ResetAnimation();
-	mAudio->PlaySFX("SFX/PlayerExplosion.wav");
-	mWasHit = true;
+
+	if (mLives <= 0) {
+		mAnimating = true;
+		//mDeathAnimation->ResetAnimation();
+		mAudio->PlaySFX("SFX/PlayerExplosion.wav");
+		ScreenManager::Instance()->SetScreen(ScreenManager::Start);
+	}
+	else {
+		mAnimating = true;
+		mDeathAnimation->ResetAnimation();
+		mAudio->PlaySFX("SFX/PlayerExplosion.wav");
+		mWasHit = true;
+	}
 }
 
 bool Player::WasHit() {
@@ -282,12 +287,14 @@ void Player::Update() {
 			mWasHit = false;
 		}
 
-		mDeathAnimation->Update();
-		mAnimating = mDeathAnimation->IsAnimating();
+		//mDeathAnimation->Update();
+		//mAnimating = mDeathAnimation->IsAnimating();
 
-		if (!mAnimating) {
+		if (!mAnimating && mLives <= 0) {
 			ScreenManager::Instance()->SetScreen(ScreenManager::Start);
 		}
+		mDeathAnimation->Update();
+		mAnimating = mDeathAnimation->IsAnimating();
 	}
 	else {
 		if (Active()) {
@@ -320,4 +327,12 @@ void Player::Render() {
 	}*/
 
 	PhysEntity::Render();
+}
+
+int Player::Lives() {
+	return mLives;
+}
+
+void Player::ResetLives() {
+	mLives = 3;  // Reset lives when starting a new game
 }
