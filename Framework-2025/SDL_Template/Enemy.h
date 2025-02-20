@@ -22,6 +22,7 @@ private:
     float mTurnSpeedFactor;
     float mCurrentRotation;
     float mTargetRotation;
+    float mSpeedMultiplier;
     Vector2 mMoveDirection;
     Vector2 mTargetDirection;
 
@@ -51,6 +52,7 @@ public:
     Vector2 GetTextureDimensions() const;
     void SetMoveDirection(const Vector2& direction);
     void StartTurning(float targetRotation, const Vector2& targetDirection, float turnSpeedFactor);
+    void SetSpeedMultiplier(float multiplier);
 
 };
 #endif

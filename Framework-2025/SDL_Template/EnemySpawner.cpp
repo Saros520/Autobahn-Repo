@@ -2,11 +2,12 @@
 #include "Graphics.h"
 #include <cstdlib>
 #include <ctime>
+#include <iostream> // For debug output
 
 
 EnemySpawner::EnemySpawner(float spawnInterval, int vehicleIndex) {
     mTimer = Timer::Instance();
-    mSpawnInterval = 3.0f; // Spawns a vehicle every 3 seconds
+    mSpawnInterval = 2.0f; // Spawns a vehicle every 2 seconds
     mTimeSinceLastSpawn = 0.0f;
     mVehicleIndex = vehicleIndex;
 
@@ -47,24 +48,19 @@ void EnemySpawner::Update() {
         Vector2 pos = enemy->Position();
         bool offScreen = (pos.y > Graphics::SCREEN_HEIGHT + 140.0f || pos.y < -enemy->GetTextureDimensions().y);
         if (offScreen) {
+            std::cout << "Removing enemy at position: " << pos.x << ", " << pos.y << std::endl; // Debug output
             delete enemy;
         }
         return offScreen;
         }), mEnemies.end());
 }
 
-bool EnemySpawner::IsPositionOccupied(Vector2 position, float buffer) {
-    for (auto enemy : mEnemies) {
-        Vector2 enemyPos = enemy->Position();
-        if (abs(enemyPos.y - position.y) < buffer) {
-            return true;
-        }
-    }
-    return false;
+const std::vector<Enemy*>& EnemySpawner::GetEnemies() const {
+    return mEnemies; // Return the list of currently spawned enemies
 }
 
 void EnemySpawner::SpawnEnemy() {
-  
+   
     // Get lanes from enemy class
     const std::vector<float>& leftLanes = Enemy::GetLeftLanes();
     const std::vector<float>& rightLanes = Enemy::GetRightLanes();
@@ -73,8 +69,7 @@ void EnemySpawner::SpawnEnemy() {
     std::vector<int> transportTrucks = { 7, 8, 13, 14 };
 
     // Function to spawn an enemy in a given lane
-    auto spawnInLane = [&](const std::vector<float>& lanes, bool moveDownward, bool flipTexture) {
-      
+    auto spawnInLane = [&](const std::vector<float>& lanes, bool moveDownward, bool flipTexture, float speedMultiplier) {
         // Weighted random selection to reduce the probability of transport trucks
         int vehicleIndex;
         if (std::rand() % 10 < 2) { // 20% chance to select a transport truck
@@ -90,28 +85,25 @@ void EnemySpawner::SpawnEnemy() {
         int laneIndex = std::rand() % lanes.size();
         float laneX = lanes[laneIndex];
 
-        // Set spawn position
-        Vector2 spawnPosition = moveDownward ? Vector2(laneX, -100.0f) : Vector2(laneX, Graphics::SCREEN_HEIGHT + 100.0f);
+        // Set spawn position above the screen
+        Vector2 spawnPosition = Vector2(laneX, -100.0f);
 
-        // Check if the position is occupied
-        bool positionOccupied = IsPositionOccupied(spawnPosition, 100.0f);
+        // Create the enemy and add it to the list
+        Enemy* enemy = new Enemy(moveDownward, vehicleIndex); // Move downward
+        enemy->Position(spawnPosition);
+        enemy->SetSpeedMultiplier(speedMultiplier); // Set speed multiplier
 
-        // If the position is not occupied, spawn the enemy
-        if (!positionOccupied) {
-            Enemy* enemy = new Enemy(moveDownward, vehicleIndex); // Move downward if spawned above the screen, otherwise move upward
-            enemy->Position(spawnPosition);
-
-            if (flipTexture) {
-                enemy->Rotation(180.0f); // Flip vehicle textures on the left 180 degrees
-            }
-
-            mEnemies.push_back(enemy);
+        if (flipTexture) {
+            enemy->Rotation(180.0f); // Flip vehicle textures on the left 180 degrees
         }
-    };
+
+        mEnemies.push_back(enemy);
+        std::cout << "Spawned enemy at laneX: " << laneX << " with speedMultiplier: " << speedMultiplier << std::endl; // Debug output
+        };
 
     // Spawn enemies in both left and right lanes
-    spawnInLane(leftLanes, true, true);  // Spawn enemy in the left lane
-    spawnInLane(rightLanes, false, false); // Spawn enemy in the right lane
+    spawnInLane(leftLanes, true, true, 2.3f);  // Spawn enemy in the left lane with faster speed
+    spawnInLane(rightLanes, true, false, 1.0f); // Spawn enemy in the right lane with normal speed
 }
 
 void EnemySpawner::Render() {

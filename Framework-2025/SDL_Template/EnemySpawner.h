@@ -18,11 +18,12 @@ public:
 	~EnemySpawner();
 
 	void SpawnEnemy();
-	bool IsPositionOccupied(Vector2 position, float buffer);
-
+	bool IsPositionOccupied(Vector2 position, float buffer, Enemy* excludeEnemy);
 
 	void Update();
 	void Render();
+
+	const std::vector<Enemy*>& GetEnemies() const;
 
 };
 

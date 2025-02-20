@@ -5,6 +5,7 @@
 #include "Player.h"
 #include "Scoreboard.h"
 #include "EnemySpawner.h"
+#include "EnemyPolice.h"
 #include "PauseGame.h"
 #include "Texture.h"
 #include <vector>
@@ -50,6 +51,9 @@ private:
 
 	Player * mPlayer;
 	EnemySpawner* mEnemySpawner;
+	EnemyPolice* mEnemyPolice;
+	bool mPoliceChaseActive;
+	float mPoliceChaseTimer;
 	PauseGame* mPauseGame;
 
 	float mLevelTime;
@@ -66,6 +70,8 @@ private:
 	void UpdateHighway();
 	void StartEnvironmentTransition();
     void UpdateEnvironmentTransition();
+	void StartPoliceChase();
+	void EndPoliceChase();
 	void UpdatePlayer();
 	void UpdateEnemy();
 

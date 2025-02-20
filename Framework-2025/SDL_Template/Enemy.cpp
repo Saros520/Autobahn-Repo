@@ -89,7 +89,7 @@ void Enemy::Update() {
     
     // Move enemy vehicle
     float currentSpeed = mTurning ? mMoveSpeed * mTurnSpeedFactor : mMoveSpeed;
-    Vector2 moveAmount = mMoveDirection * currentSpeed * (1000.0f / 3600.0f) * mTimer->DeltaTime(); // Convert km/h to m/s
+    Vector2 moveAmount = mMoveDirection * currentSpeed * mSpeedMultiplier * (1000.0f / 3600.0f) * mTimer->DeltaTime(); // Convert km/h to m/s
     Translate(moveAmount, World);
 
     // Handle turning
@@ -143,6 +143,10 @@ void Enemy::StartTurning(float targetRotation, const Vector2& targetDirection, f
     mTargetDirection = targetDirection;
     mTurnSpeedFactor = turnSpeedFactor;
     mTurning = true;
+}
+
+void Enemy::SetSpeedMultiplier(float multiplier) {
+    mSpeedMultiplier = multiplier;
 }
 
 void Enemy::SetColliderForVehicle(int vehicleIndex) {

@@ -92,6 +92,10 @@ PlayScreen::PlayScreen() {
 
 	mEnemySpawner = new EnemySpawner(4.0f, vehicleIndex); // Spawn an enemy every 4 seconds
 
+	mEnemyPolice = nullptr;
+	mPoliceChaseActive = false;
+	mPoliceChaseTimer = 0.0f;
+
 	/*mLevelTime = 0.0f;
 	mLevelTimeText = new Scoreboard();
 	mLevelTimeText->Parent(this);
@@ -151,6 +155,9 @@ PlayScreen::~PlayScreen() {
 
 	delete mEnemySpawner;
 	mEnemySpawner = nullptr;
+
+	delete mEnemyPolice;
+	mEnemyPolice = nullptr;
 
 	/*delete mLevelTimeText;
 	mLevelTimeText = nullptr;*/
@@ -236,6 +243,23 @@ void PlayScreen::UpdateEnvironmentTransition() {
 	}
 }
 
+void PlayScreen::StartPoliceChase() {
+	if (!mPoliceChaseActive) {
+		mEnemyPolice = new EnemyPolice(mPlayer, mEnemySpawner->GetEnemies());
+		mEnemyPolice->Position(Vector2(Graphics::SCREEN_WIDTH * 0.5f, Graphics::SCREEN_HEIGHT + 100.0f));
+		mEnemyPolice->StartChase();
+		mPoliceChaseActive = true;
+		mPoliceChaseTimer = 0.0f;
+	}
+}
+
+void PlayScreen::EndPoliceChase() {
+	if (mPoliceChaseActive) {
+		delete mEnemyPolice;
+		mEnemyPolice = nullptr;
+		mPoliceChaseActive = false;
+	}
+}
 
 void PlayScreen::Update() {
 
@@ -272,6 +296,22 @@ void PlayScreen::Update() {
 		UpdateHighway();
 		mPlayer->Update();
 		mEnemySpawner->Update();
+
+		// Start the police chase after about 2 minutes
+		if (mTimer->DeltaTime() >= 120.0f && !mPoliceChaseActive) {
+			StartPoliceChase();
+		}
+
+		// Update police chase 
+		if (mPoliceChaseActive) {
+			mPoliceChaseTimer += mTimer->DeltaTime();
+			mEnemyPolice->Update();
+
+			// End the police chase/player gets away for now after 1 minute
+			if (mPoliceChaseTimer >= 60.0f) {
+				EndPoliceChase();
+			}
+		}
 
 		// Switch music based on key press (1-9)
 		for (int i = 0; i < 9; ++i) {
@@ -329,6 +369,9 @@ void PlayScreen::Render() {
 	mLivesBox->Render();
 	mPlayer->Render();
 	mEnemySpawner->Render();
+	if (mPoliceChaseActive) {
+		mEnemyPolice->Render();
+	}
 	/*mLevelTimeText->Render();*/
 	mPlayerScore->Render();
 	mPlayerScoreNumber->Render();
