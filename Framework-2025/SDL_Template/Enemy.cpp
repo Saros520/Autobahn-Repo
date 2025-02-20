@@ -12,6 +12,8 @@ Enemy::Enemy(bool moveDownward, int vehicleIndex) {
 
     // Set movement direction based on spawn position
     mMoveDirection = moveDownward ? Vector2(0.0f, 1.0f) : Vector2(0.0f, -1.0f);
+    mCurrentRotation = moveDownward ? 0.0f : 180.0f;
+    mTurning = false;
 
     // Seed random number generator
     std::srand(static_cast<unsigned int>(std::time(nullptr)));
@@ -84,9 +86,25 @@ void Enemy::Hit(PhysEntity* other) {
 }
 
 void Enemy::Update() {
+    
     // Move enemy vehicle
-    Vector2 moveAmount = mMoveDirection * mMoveSpeed * (1000.0f / 3600.0f) * mTimer->DeltaTime(); // Convert km/h to m/s
+    float currentSpeed = mTurning ? mMoveSpeed * mTurnSpeedFactor : mMoveSpeed;
+    Vector2 moveAmount = mMoveDirection * currentSpeed * (1000.0f / 3600.0f) * mTimer->DeltaTime(); // Convert km/h to m/s
     Translate(moveAmount, World);
+
+    // Handle turning
+    if (mTurning) {
+        float rotationStep = 90.0f * mTimer->DeltaTime(); // Adjust the rotation speed as needed
+        if (abs(mCurrentRotation - mTargetRotation) < rotationStep) {
+            mCurrentRotation = mTargetRotation;
+            mMoveDirection = mTargetDirection;
+            mTurning = false;
+        }
+        else {
+            mCurrentRotation += (mTargetRotation > mCurrentRotation ? rotationStep : -rotationStep);
+        }
+        Rotation(mCurrentRotation);
+    }
 
     // Check if enemy is off the screen
     if (Position().y > Graphics::SCREEN_HEIGHT + 140.0f || Position().y < -mTexture->ScaledDimensions().y) {
@@ -114,6 +132,17 @@ void Enemy::Render() {
 
 Vector2 Enemy::GetTextureDimensions() const {
     return mTexture->ScaledDimensions();
+}
+
+void Enemy::SetMoveDirection(const Vector2& direction) {
+    mMoveDirection = direction;
+}
+
+void Enemy::StartTurning(float targetRotation, const Vector2& targetDirection, float turnSpeedFactor) {
+    mTargetRotation = targetRotation;
+    mTargetDirection = targetDirection;
+    mTurnSpeedFactor = turnSpeedFactor;
+    mTurning = true;
 }
 
 void Enemy::SetColliderForVehicle(int vehicleIndex) {

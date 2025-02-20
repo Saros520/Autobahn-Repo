@@ -16,8 +16,14 @@ private:
     AnimatedTexture* mDeathAnimation;
     AudioManager* mAudio;
     bool mAnimating;
+    bool mTurning;
     float mMoveSpeed;
+    float mOriginalSpeed;
+    float mTurnSpeedFactor;
+    float mCurrentRotation;
+    float mTargetRotation;
     Vector2 mMoveDirection;
+    Vector2 mTargetDirection;
 
     static std::vector<float> mLeftLanes;
     static std::vector<float> mRightLanes;
@@ -43,6 +49,8 @@ public:
     void Render() override;
 
     Vector2 GetTextureDimensions() const;
+    void SetMoveDirection(const Vector2& direction);
+    void StartTurning(float targetRotation, const Vector2& targetDirection, float turnSpeedFactor);
 
 };
 #endif

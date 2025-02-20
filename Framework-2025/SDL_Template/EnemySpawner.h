@@ -1,6 +1,7 @@
 #ifndef __ENEMYSPAWNER_H
 #define __ENEMYSPAWNER_H
 
+#include "Timer.h"
 #include "Enemy.h"
 #include <vector>
 
