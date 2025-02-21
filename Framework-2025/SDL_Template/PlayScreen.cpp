@@ -246,17 +246,18 @@ void PlayScreen::UpdateEnvironmentTransition() {
 void PlayScreen::StartPoliceChase() {
 	if (!mPoliceChaseActive) {
 		mEnemyPolice = new EnemyPolice(mPlayer, mEnemySpawner->GetEnemies());
-		mEnemyPolice->Position(Vector2(Graphics::SCREEN_WIDTH * 0.5f, Graphics::SCREEN_HEIGHT + 100.0f));
 		mEnemyPolice->StartChase();
 		mPoliceChaseActive = true;
 		mPoliceChaseTimer = 0.0f;
+		EnemyPolice::SpawnNewPoliceCar(mPlayer, mEnemySpawner->GetEnemies());
 	}
 }
 
 void PlayScreen::EndPoliceChase() {
 	if (mPoliceChaseActive) {
-		delete mEnemyPolice;
-		mEnemyPolice = nullptr;
+		if (EnemyPolice::GetActivePoliceCar()) {
+			EnemyPolice::GetActivePoliceCar()->StopChase();
+		}
 		mPoliceChaseActive = false;
 	}
 }
@@ -305,7 +306,9 @@ void PlayScreen::Update() {
 		// Update police chase 
 		if (mPoliceChaseActive) {
 			mPoliceChaseTimer += mTimer->DeltaTime();
-			mEnemyPolice->Update();
+			if (EnemyPolice::GetActivePoliceCar()) {
+				EnemyPolice::GetActivePoliceCar()->Update();
+			}
 
 			// End the police chase/player gets away for now after 1 minute
 			if (mPoliceChaseTimer >= 60.0f) {
@@ -355,7 +358,6 @@ void PlayScreen::Update() {
 	}
 }
 
-
 void PlayScreen::Render() {
 	for (int i = 0; i < NUM_ROAD_SPRITES; ++i) {
 		mNorthRoadSprites[mCurrentEnvironment][i]->Render();
@@ -369,8 +371,8 @@ void PlayScreen::Render() {
 	mLivesBox->Render();
 	mPlayer->Render();
 	mEnemySpawner->Render();
-	if (mPoliceChaseActive) {
-		mEnemyPolice->Render();
+	if (mPoliceChaseActive && EnemyPolice::GetActivePoliceCar()) {
+		EnemyPolice::GetActivePoliceCar()->Render();
 	}
 	/*mLevelTimeText->Render();*/
 	mPlayerScore->Render();
