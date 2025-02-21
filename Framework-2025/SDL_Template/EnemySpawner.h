@@ -18,7 +18,7 @@ public:
 	~EnemySpawner();
 
 	void SpawnEnemy();
-	bool IsPositionOccupied(Vector2 position, float buffer, Enemy* excludeEnemy);
+	bool IsPositionOccupied(Vector2 position, float buffer);
 
 	void Update();
 	void Render();

@@ -298,7 +298,7 @@ void PlayScreen::Update() {
 		mEnemySpawner->Update();
 
 		// Start the police chase after about 2 minutes
-		if (mTimer->DeltaTime() >= 120.0f && !mPoliceChaseActive) {
+		if (mLevelTime >= 120.0f && !mPoliceChaseActive) {
 			StartPoliceChase();
 		}
 
@@ -349,7 +349,7 @@ void PlayScreen::Update() {
 		mPlayerScoreNumber->Distance(mPlayer->DistanceTraveled());
 		mPlayerScoreNumber->Update();
 
-		float speed = mPlayer->GetSpeed(); 
+		float speed = mPlayer->GetSpeed();
 		mSpeedScoreboard->Score(static_cast<int>(speed));
 		mSpeedScoreboard->Update();
 	}

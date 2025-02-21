@@ -48,7 +48,7 @@ void EnemySpawner::Update() {
         Vector2 pos = enemy->Position();
         bool offScreen = (pos.y > Graphics::SCREEN_HEIGHT + 140.0f || pos.y < -enemy->GetTextureDimensions().y);
         if (offScreen) {
-            std::cout << "Removing enemy at position: " << pos.x << ", " << pos.y << std::endl; // Debug output
+            //std::cout << "Removing enemy at position: " << pos.x << ", " << pos.y << std::endl; // Debug output
             delete enemy;
         }
         return offScreen;
@@ -57,6 +57,17 @@ void EnemySpawner::Update() {
 
 const std::vector<Enemy*>& EnemySpawner::GetEnemies() const {
     return mEnemies; // Return the list of currently spawned enemies
+}
+
+bool EnemySpawner::IsPositionOccupied(Vector2 position, float buffer) {
+    for (auto enemy : mEnemies) {
+        Vector2 enemyPos = enemy->Position();
+        if (abs(enemyPos.y - position.y) < buffer) {
+            //std::cout << "Position occupied by enemy at: " << enemyPos.x << ", " << enemyPos.y << std::endl; // Debug output
+            return true;
+        }
+    }
+    return false;
 }
 
 void EnemySpawner::SpawnEnemy() {
@@ -88,18 +99,26 @@ void EnemySpawner::SpawnEnemy() {
         // Set spawn position above the screen
         Vector2 spawnPosition = Vector2(laneX, -100.0f);
 
-        // Create the enemy and add it to the list
-        Enemy* enemy = new Enemy(moveDownward, vehicleIndex); // Move downward
-        enemy->Position(spawnPosition);
-        enemy->SetSpeedMultiplier(speedMultiplier); // Set speed multiplier
+        // Check if the position is occupied
+        bool positionOccupied = IsPositionOccupied(spawnPosition, 0.0f); // Adjust buffer as needed
 
-        if (flipTexture) {
-            enemy->Rotation(180.0f); // Flip vehicle textures on the left 180 degrees
+        // If the position is not occupied, spawn the enemy
+        if (!positionOccupied) {
+            Enemy* enemy = new Enemy(moveDownward, vehicleIndex); // Move downward
+            enemy->Position(spawnPosition);
+            enemy->SetSpeedMultiplier(speedMultiplier); // Set speed multiplier
+
+            if (flipTexture) {
+                enemy->Rotation(180.0f); // Flip vehicle textures on the left 180 degrees
+            }
+
+            mEnemies.push_back(enemy);
+            //std::cout << "Spawned enemy at laneX: " << laneX << " with speedMultiplier: " << speedMultiplier << std::endl; // Debug output
         }
-
-        mEnemies.push_back(enemy);
-        std::cout << "Spawned enemy at laneX: " << laneX << " with speedMultiplier: " << speedMultiplier << std::endl; // Debug output
-        };
+        else {
+            //std::cout << "Position occupied at laneX: " << laneX << std::endl; // Debug output
+        }
+    };
 
     // Spawn enemies in both left and right lanes
     spawnInLane(leftLanes, true, true, 2.3f);  // Spawn enemy in the left lane with faster speed
