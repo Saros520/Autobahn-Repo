@@ -63,42 +63,7 @@ void Player::SetColliderForCar(int carIndex) {
 	}
 	mColliders.clear();
 
-	// Set collider size and position based on what vehicle has been selected 
-	Vector2 colliderSize;
-	Vector2 colliderOffset;
-
-	switch (carIndex) {
-	case 0:
-		colliderSize = Vector2(48.0f, 63.0f);
-		colliderOffset = Vector2(-12.0f, 20.0f);
-		break;
-	case 1:
-		colliderSize = Vector2(40.0f, 90.0f);
-		colliderOffset = Vector2(-12.0f, 20.0f);
-		break;
-	case 2:
-		colliderSize = Vector2(48.0f, 85.0f);
-		colliderOffset = Vector2(-12.0f, 10.0f);
-		break;
-	case 3:
-		colliderSize = Vector2(48.0f, 85.0f);
-		colliderOffset = Vector2(-12.0f, 10.0f);
-		break;
-	case 4:
-		colliderSize = Vector2(48.0f, 85.0f);
-		colliderOffset = Vector2(-12.0f, 10.0f);
-		break;
-	case 5:
-		colliderSize = Vector2(48.0f, 85.0f);
-		colliderOffset = Vector2(-12.0f, 10.0f);
-		break;
-	default:
-		colliderSize = Vector2(48.0f, 85.0f);
-		colliderOffset = Vector2(-12.0f, 10.0f);
-		break;
-	}
-
-	AddCollider(new BoxCollider(colliderSize), colliderOffset);
+	AddCollider(new BoxCollider(mTexture->ScaledDimensions()));
 }
 
 Player::~Player() {

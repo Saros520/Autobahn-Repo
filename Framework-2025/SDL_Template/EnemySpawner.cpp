@@ -31,6 +31,8 @@ EnemySpawner::~EnemySpawner() {
 }
 
 void EnemySpawner::Update() {
+    std::cout << "Number of Enemies in EnemySpawner: " << mEnemies.size() << std::endl;
+
     mTimeSinceLastSpawn += mTimer->DeltaTime();
 
     if (mTimeSinceLastSpawn >= mSpawnInterval) {

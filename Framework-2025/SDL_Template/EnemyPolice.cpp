@@ -1,6 +1,7 @@
 #include "EnemyPolice.h"
 #include "Graphics.h"
 #include "ScreenManager.h"
+#include "PhysicsManager.h"
 
 EnemyPolice::EnemyPolice(Player* player, const std::vector<Enemy*>& otherEnemies)
 	: Enemy(true, 18), mOtherEnemies(otherEnemies), mAvoiding(false) {
@@ -8,7 +9,10 @@ EnemyPolice::EnemyPolice(Player* player, const std::vector<Enemy*>& otherEnemies
 	mPlayer = player;
 	mChaseDuration = 0.0f;
 	mChasing = false;
-	mBaseSpeed = 300.0f;
+	mBaseSpeed = 210.0f;
+
+	PhysicsManager::Instance()->UnregisterEntity(mId);
+	mId = PhysicsManager::Instance()->RegisterEntity(this, PhysicsManager::CollisionLayers::Police);
 }
 
 EnemyPolice::~EnemyPolice() {
@@ -17,6 +21,8 @@ EnemyPolice::~EnemyPolice() {
 }
 
 void EnemyPolice::Update() {
+	std::cout << "Number of Enemies in EnemyPolice: " << mOtherEnemies.size() << std::endl;
+
 	if (mChasing) {
 		mChaseDuration += mTimer->DeltaTime();
 
