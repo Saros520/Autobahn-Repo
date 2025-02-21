@@ -3,6 +3,8 @@
 #include "ScreenManager.h"
 #include "PhysicsManager.h"
 
+EnemyPolice* EnemyPolice::sActivePoliceCar = nullptr;
+
 EnemyPolice::EnemyPolice(Player* player, const std::vector<Enemy*>& otherEnemies)
 	: Enemy(true, 18), mOtherEnemies(otherEnemies), mAvoiding(false) {
 	mTimer = Timer::Instance();
@@ -84,4 +86,18 @@ void EnemyPolice::StartChase() {
 void EnemyPolice::StopChase() {
 	mChasing = false;
 	Active(false);
+}
+
+void EnemyPolice::Destroy() {
+	// Properly delete the police car
+	sActivePoliceCar = nullptr;
+	delete this;
+}
+
+void EnemyPolice::SpawnNewPoliceCar(Player* player, const std::vector<Enemy*>& otherEnemies) {
+	// Spawn a new police car below the bottom of the play screen if there isn't already an active one
+	if (sActivePoliceCar == nullptr) {
+		EnemyPolice* newPoliceCar = new EnemyPolice(player, otherEnemies);
+		newPoliceCar->StartChase();
+	}
 }
