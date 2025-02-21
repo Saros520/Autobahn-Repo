@@ -299,7 +299,7 @@ void PlayScreen::Update() {
 		mEnemySpawner->Update();
 
 		// Start the police chase after about 2 minutes
-		if (mLevelTime >= 120.0f && !mPoliceChaseActive) {
+		if (mLevelTime >= 12.0f && !mPoliceChaseActive) {
 			StartPoliceChase();
 		}
 

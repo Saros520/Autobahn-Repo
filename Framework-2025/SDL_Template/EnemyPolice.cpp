@@ -73,7 +73,6 @@ void EnemyPolice::Update() {
 
 		// Check for collision with the player car
 		if (CheckCollision(mPlayer)) {
-			// End the game with "Busted" message
 			ScreenManager::Instance()->SetScreen(ScreenManager::Start);
 			// Display "Busted" message
 		}

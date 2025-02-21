@@ -81,6 +81,7 @@ void EnemySpawner::SpawnEnemy() {
 
     // Function to spawn an enemy in a given lane
     auto spawnInLane = [&](const std::vector<float>& lanes, bool moveDownward, bool flipTexture, float speedMultiplier) {
+        
         // Weighted random selection to reduce the probability of transport trucks
         int vehicleIndex;
         if (std::rand() % 10 < 2) { // 20% chance to select a transport truck
