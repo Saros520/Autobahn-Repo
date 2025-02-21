@@ -90,7 +90,7 @@ PlayScreen::PlayScreen() {
 	mPlayer->Parent(this);
 	mPlayer->Position(Graphics::SCREEN_WIDTH * 0.642f, Graphics::SCREEN_HEIGHT * 0.9f); // offset to fit lanes centered
 
-	mEnemySpawner = new EnemySpawner(4.0f, vehicleIndex); // Spawn an enemy every 4 seconds
+	mEnemySpawner = new EnemySpawner(2.0f, vehicleIndex); // Spawn an enemy every 4 seconds
 
 	mEnemyPolice = nullptr;
 	mPoliceChaseActive = false;
