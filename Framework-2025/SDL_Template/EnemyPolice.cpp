@@ -1,8 +1,7 @@
 #include "EnemyPolice.h"
 #include "Graphics.h"
 #include "ScreenManager.h"
-
-EnemyPolice* EnemyPolice::sActivePoliceCar = nullptr;
+#include "PhysicsManager.h"
 
 EnemyPolice::EnemyPolice(Player* player, const std::vector<Enemy*>& otherEnemies)
 	: Enemy(true, 18), mOtherEnemies(otherEnemies), mAvoiding(false) {
@@ -12,8 +11,8 @@ EnemyPolice::EnemyPolice(Player* player, const std::vector<Enemy*>& otherEnemies
 	mChasing = false;
 	mBaseSpeed = 210.0f;
 
-	// Set initial position to being just below the bottom of the playscreen 
-	this->Position(Vector2(Graphics::SCREEN_WIDTH / 2, Graphics::SCREEN_HEIGHT + 50));
+	PhysicsManager::Instance()->UnregisterEntity(mId);
+	mId = PhysicsManager::Instance()->RegisterEntity(this, PhysicsManager::CollisionLayers::Police);
 }
 
 EnemyPolice::~EnemyPolice() {
@@ -22,13 +21,10 @@ EnemyPolice::~EnemyPolice() {
 }
 
 void EnemyPolice::Update() {
+	std::cout << "Number of Enemies in EnemyPolice: " << mOtherEnemies.size() << std::endl;
+
 	if (mChasing) {
 		mChaseDuration += mTimer->DeltaTime();
-
-		// Check if a new police car needs to be spawned
-		if (sActivePoliceCar == nullptr && mChaseDuration < 60.0f) {
-			SpawnNewPoliceCar(mPlayer, mOtherEnemies);
-		}
 
 		// Move towards the player car
 		Vector2 playerPos = mPlayer->Position();
@@ -46,11 +42,6 @@ void EnemyPolice::Update() {
 				moveAmount += avoidDirection * speed * mTimer->DeltaTime();
 				speed = mBaseSpeed * 0.75f;
 				mAvoiding = true;
-
-				// Destroy the police car if it collides with another enemy vehicle
-				Destroy();
-				sActivePoliceCar = nullptr;
-				return;
 			}
 		}
 
@@ -88,27 +79,9 @@ void EnemyPolice::Render() {
 void EnemyPolice::StartChase() {
 	mChasing = true;
 	mChaseDuration = 0.0f;
-	sActivePoliceCar = this;
 }
 
 void EnemyPolice::StopChase() {
 	mChasing = false;
 	Active(false);
-
-	// Move the police car below the bottom of the play screen and delete it
-	Position(Vector2(Graphics::SCREEN_WIDTH / 2, Graphics::SCREEN_HEIGHT + 50));
-	Destroy();
-	sActivePoliceCar = nullptr;
-}
-
-void EnemyPolice::Destroy() {
-	// Properly delete the police car
-	delete this;
-}
-
-void EnemyPolice::SpawnNewPoliceCar(Player* player, const std::vector<Enemy*>& otherEnemies) {
-	// Spawn a new police car below the bottom of the play screen
-	EnemyPolice* newPoliceCar = new EnemyPolice(player, otherEnemies);
-	newPoliceCar->StartChase();
-	
 }

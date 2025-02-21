@@ -33,8 +33,8 @@ Enemy::Enemy(bool moveDownward, int vehicleIndex) {
 
     mAnimating = false;
 
-    SetColliderForVehicle(vehicleIndex); // Set collider based on the selected car
     SetScaleForVehicle(vehicleIndex); // Set scale based on the selected car
+    SetColliderForVehicle(vehicleIndex); // Set collider based on the selected car
     SetSpeedForVehicle(vehicleIndex); // Set speed based on the selected car
 
     mId = PhysicsManager::Instance()->RegisterEntity(this, PhysicsManager::CollisionLayers::Hostile);
@@ -160,82 +160,7 @@ void Enemy::SetColliderForVehicle(int vehicleIndex) {
     Vector2 colliderSize;
     Vector2 colliderOffset;
 
-    switch (vehicleIndex) {
-    case 1:
-        colliderSize = Vector2(48.0f, 70.0f);
-        colliderOffset = Vector2(-19.0f, -10.0f);
-        break;
-    case 2:
-        colliderSize = Vector2(48.0f, 120.0f);
-        colliderOffset = Vector2(-19.0f, -40.0f);
-        break;
-    case 3:
-        colliderSize = Vector2(48.0f, 170.0f);
-        colliderOffset = Vector2(-13.0f, -60.0f);
-        break;
-    case 4:
-        colliderSize = Vector2(48.0f, 120.0f);
-        colliderOffset = Vector2(-19.0f, -40.0f);
-        break;
-    case 5:
-        colliderSize = Vector2(48.0f, 70.0f);
-        colliderOffset = Vector2(-19.0f, -10.0f);
-        break;
-    case 6:
-        colliderSize = Vector2(48.0f, 70.0f);
-        colliderOffset = Vector2(-19.0f, -10.0f);
-        break;
-    case 7:
-        colliderSize = Vector2(66.0f, 375.0f);
-        colliderOffset = Vector2(-17.0f, 7.0f);
-        break;
-    case 8:
-        colliderSize = Vector2(66.0f, 375.0f);
-        colliderOffset = Vector2(-17.0f, 7.0f);
-        break;
-    case 9:
-        colliderSize = Vector2(48.0f, 170.0f);
-        colliderOffset = Vector2(-13.0f, -60.0f);
-        break;
-    case 10:
-        colliderSize = Vector2(48.0f, 70.0f);
-        colliderOffset = Vector2(-19.0f, -10.0f);
-        break;
-    case 11:
-        colliderSize = Vector2(48.0f, 170.0f);
-        colliderOffset = Vector2(-13.0f, -60.0f);
-        break;
-    case 12:
-        colliderSize = Vector2(48.0f, 70.0f);
-        colliderOffset = Vector2(-19.0f, -10.0f);
-        break;
-    case 13:
-        colliderSize = Vector2(66.0f, 375.0f);
-        colliderOffset = Vector2(-17.0f, 7.0f);
-        break;
-    case 14:
-        colliderSize = Vector2(66.0f, 375.0f);
-        colliderOffset = Vector2(-17.0f, 7.0f);
-        break;
-    case 15:
-        colliderSize = Vector2(48.0f, 120.0f);
-        colliderOffset = Vector2(-19.0f, -40.0f);
-        break;
-    case 16:
-        colliderSize = Vector2(48.0f, 70.0f);
-        colliderOffset = Vector2(-19.0f, -10.0f);
-        break;
-    case 17:
-        colliderSize = Vector2(48.0f, 170.0f);
-        colliderOffset = Vector2(-13.0f, -60.0f);
-        break;
-    default:
-        colliderSize = Vector2(48.0f, 63.0f);
-        colliderOffset = Vector2(-19.0f, 20.0f);
-        break;
-    }
-
-    AddCollider(new BoxCollider(colliderSize), colliderOffset);
+    AddCollider(new BoxCollider(mTexture->ScaledDimensions()));
 }
 
 void Enemy::SetScaleForVehicle(int vehicleIndex) {

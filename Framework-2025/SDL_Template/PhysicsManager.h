@@ -10,7 +10,7 @@ public:
 		FriendlyProjectiles,
 		Hostile,
 		HostileProjectiles,
-		Pickup,
+		Police,
 		MaxLayers
 	};
 
@@ -20,7 +20,7 @@ public:
 		FriendlyProjectiles = 0x02, // 00000010
 		Hostile				= 0x04, // 00000100
 		HostileProjectiles	= 0x08, // 00001000
-		Pickup      		= 0x10  // 00010000
+		Police      		= 0x10  // 00010000
 	};
 
 private:
