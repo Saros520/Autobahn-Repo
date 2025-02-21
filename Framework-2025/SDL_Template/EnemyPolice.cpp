@@ -15,11 +15,14 @@ EnemyPolice::EnemyPolice(Player* player, const std::vector<Enemy*>& otherEnemies
 
 	PhysicsManager::Instance()->UnregisterEntity(mId);
 	mId = PhysicsManager::Instance()->RegisterEntity(this, PhysicsManager::CollisionLayers::Police);
+
+	sActivePoliceCar = this;
 }
 
 EnemyPolice::~EnemyPolice() {
 	mTimer = nullptr;
 	mPlayer = nullptr;
+	sActivePoliceCar = nullptr;
 }
 
 void EnemyPolice::Update() {

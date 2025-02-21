@@ -156,8 +156,9 @@ PlayScreen::~PlayScreen() {
 	delete mEnemySpawner;
 	mEnemySpawner = nullptr;
 
-	delete mEnemyPolice;
-	mEnemyPolice = nullptr;
+	if (EnemyPolice::GetActivePoliceCar() != nullptr) {
+		delete EnemyPolice::GetActivePoliceCar();
+	}
 
 	/*delete mLevelTimeText;
 	mLevelTimeText = nullptr;*/
@@ -244,11 +245,8 @@ void PlayScreen::UpdateEnvironmentTransition() {
 }
 
 void PlayScreen::StartPoliceChase() {
-	if (!mPoliceChaseActive) {
-		mEnemyPolice = new EnemyPolice(mPlayer, mEnemySpawner->GetEnemies());
-		mEnemyPolice->Parent(this);
-		mEnemyPolice->Position(Vector2(Graphics::SCREEN_WIDTH * 0.5f, Graphics::SCREEN_HEIGHT + 100.0f));
-		mEnemyPolice->StartChase();
+	if (!mPoliceChaseActive && EnemyPolice::GetActivePoliceCar() == nullptr) {
+		EnemyPolice::SpawnNewPoliceCar(mPlayer, mEnemySpawner->GetEnemies());
 		mPoliceChaseActive = true;
 		mPoliceChaseTimer = 0.0f;
 	}
@@ -256,8 +254,9 @@ void PlayScreen::StartPoliceChase() {
 
 void PlayScreen::EndPoliceChase() {
 	if (mPoliceChaseActive) {
-		delete mEnemyPolice;
-		mEnemyPolice = nullptr;
+		if (EnemyPolice::GetActivePoliceCar() != nullptr) {
+			delete EnemyPolice::GetActivePoliceCar();
+		}
 		mPoliceChaseActive = false;
 	}
 }
@@ -306,7 +305,9 @@ void PlayScreen::Update() {
 		// Update police chase 
 		if (mPoliceChaseActive) {
 			mPoliceChaseTimer += mTimer->DeltaTime();
-			mEnemyPolice->Update();
+			if (EnemyPolice::GetActivePoliceCar() != nullptr) {
+				EnemyPolice::GetActivePoliceCar()->Update();
+			}
 
 			// End the police chase/player gets away for now after 1 minute
 			if (mPoliceChaseTimer >= 60.0f) {
@@ -366,13 +367,17 @@ void PlayScreen::Render() {
 			mSouthRoadSprites[mNextEnvironment][i]->Render();
 		}
 	}
+
 	mSpeedBox->Render();
 	mLivesBox->Render();
 	mPlayer->Render();
 	mEnemySpawner->Render();
 	if (mPoliceChaseActive) {
-		mEnemyPolice->Render();
+		if (EnemyPolice::GetActivePoliceCar() != nullptr) {
+			EnemyPolice::GetActivePoliceCar()->Render();
+		}
 	}
+
 	/*mLevelTimeText->Render();*/
 	mPlayerScore->Render();
 	mPlayerScoreNumber->Render();
