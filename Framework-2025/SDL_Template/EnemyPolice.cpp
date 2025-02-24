@@ -41,7 +41,7 @@ void EnemyPolice::Update() {
 
 		// Sense this police car is after you it will avoid the other sprites
 		for (Enemy* enemy : mOtherEnemies) {
-			if (enemy != this && CheckCollision(enemy)) {
+			if (enemy != this && enemy != nullptr && CheckCollision(enemy)) {
 				Vector2 enemyPos = enemy->Position();
 				Vector2 avoidDirection = (Position() - enemyPos).Normalized();
 				moveAmount += avoidDirection * speed * mTimer->DeltaTime();
@@ -55,12 +55,16 @@ void EnemyPolice::Update() {
 			speed = mBaseSpeed;
 		}
 
-		// Limit this police car's vertical position to being next to the player car
-		if (Position().y + moveAmount.y > playerPos.y) {
-			moveAmount.y = playerPos.y - Position().y;
+		// Ensure the police car starts moving only after it has been spawned below the play screen
+		if (Position().y < Graphics::SCREEN_HEIGHT) {
+			Translate(moveAmount, World);
 		}
 
 		Translate(moveAmount, World);
+
+		// Debug output to verify the position
+		Vector2 pos = Position();
+		std::cout << "Police car position: (" << pos.x << ", " << pos.y << ")" << std::endl;
 
 		// Check if the police car has been chasing for 1 minute
 		if (mChaseDuration >= 60.0f) {
@@ -101,6 +105,15 @@ void EnemyPolice::SpawnNewPoliceCar(Player* player, const std::vector<Enemy*>& o
 	// Spawn a new police car below the bottom of the play screen if there isn't already an active one
 	if (sActivePoliceCar == nullptr) {
 		EnemyPolice* newPoliceCar = new EnemyPolice(player, otherEnemies);
+
+		// Set the initial position to being just below the playscreen 
+		float spawnY = Graphics::SCREEN_HEIGHT + 50.0f;
+		newPoliceCar->Position(Vector2(Graphics::SCREEN_HEIGHT * 0.5f, spawnY));
+
+		// Debug output to verify the position
+		Vector2 pos = newPoliceCar->Position();
+		std::cout << "Police car spawned at position: (" << pos.x << ", " << pos.y << ")" << std::endl;
+
 		newPoliceCar->StartChase();
 	}
 }
