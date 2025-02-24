@@ -8,6 +8,7 @@
 class EnemySpawner {
 private:
 	Timer* mTimer;
+	float mSpawnTimer;
 	float mSpawnInterval;
 	float mTimeSinceLastSpawn;
 	std::vector<Enemy*> mEnemies;
@@ -19,6 +20,8 @@ public:
 
 	void SpawnEnemy();
 	bool IsPositionOccupied(Vector2 position, float buffer);
+
+	void Reset();
 
 	void Update();
 	void Render();

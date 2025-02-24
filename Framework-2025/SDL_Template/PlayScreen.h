@@ -88,5 +88,7 @@ public:
 	Player* GetPlayer();
 	
 	void ResetPauseState();
+
+	void Reset();
 };
 #endif

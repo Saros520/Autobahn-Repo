@@ -41,12 +41,15 @@ void EnemyPolice::Update() {
 
 		// Sense this police car is after you it will avoid the other sprites
 		for (Enemy* enemy : mOtherEnemies) {
-			if (enemy != this && enemy != nullptr && CheckCollision(enemy)) {
-				Vector2 enemyPos = enemy->Position();
-				Vector2 avoidDirection = (Position() - enemyPos).Normalized();
-				moveAmount += avoidDirection * speed * mTimer->DeltaTime();
-				speed = mBaseSpeed * 0.75f;
-				mAvoiding = true;
+			if (enemy != this && enemy != nullptr) {
+				if (CheckCollision(enemy)) {
+					Vector2 enemyPos = enemy->Position();
+					Vector2 avoidDirection = (Position() - enemyPos).Normalized();
+					moveAmount += avoidDirection * speed * mTimer->DeltaTime();
+					speed = mBaseSpeed * 0.75f;
+					mAvoiding = true;
+				}
+				
 			}
 		}
 

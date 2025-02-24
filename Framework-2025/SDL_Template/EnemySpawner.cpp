@@ -134,3 +134,11 @@ void EnemySpawner::Render() {
         enemy->Render();
     }
 }
+
+void EnemySpawner::Reset() {
+    for (Enemy* enemy : mEnemies) {
+        delete enemy;
+    }
+    mEnemies.clear();
+    mSpawnTimer = 0.0f;
+}

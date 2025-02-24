@@ -1,5 +1,6 @@
 #ifndef __STARTSCREEN_H
 #define __STARTSCREEN_H
+
 #include "GLTexture.h"
 #include "AnimatedGLTexture.h"
 #include "InputManager.h"
@@ -99,6 +100,8 @@ public:
 	int SelectedMode();
 
 	void ChangeSelectedMode(int change);
+
+	void SetHighScore(int score);
 
 	void Update() override;
 	void Render() override;

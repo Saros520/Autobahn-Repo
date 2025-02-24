@@ -76,7 +76,7 @@ bool Enemy::IsAnimating() {
 }
 
 bool Enemy::IgnoreCollisions() {
-    return mAnimating;
+    return false;
 }
 
 void Enemy::Hit(PhysEntity* other) {

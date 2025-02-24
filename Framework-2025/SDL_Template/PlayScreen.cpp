@@ -254,11 +254,11 @@ void PlayScreen::StartPoliceChase() {
 
 void PlayScreen::EndPoliceChase() {
 	if (mPoliceChaseActive) {
-		if (EnemyPolice::GetActivePoliceCar() != nullptr) {
-			delete EnemyPolice::GetActivePoliceCar();
-		}
-		mPoliceChaseActive = false;
-	}
+        if (EnemyPolice::GetActivePoliceCar() != nullptr) {
+            delete EnemyPolice::GetActivePoliceCar();
+        }
+        mPoliceChaseActive = false;
+    }
 }
 
 void PlayScreen::Update() {
@@ -388,4 +388,27 @@ void PlayScreen::Render() {
 	if (mIsPaused) {
 		mPauseGame->Render();
 	}
+}
+
+void PlayScreen::Reset() {
+	mHighWaySpeed = 550.0f; // Reset highway speed
+	mCurrentEnvironment = 2;
+	mNextEnvironment = 1;
+	mEnvironmentChangeTimer = 0.0f;
+	mTransitioning = false;
+	mTransitionAlpha = 0.0f;
+
+	for (int i = 0; i < NUM_ROAD_SPRITES; ++i) {
+		mHighwayPosY[i] = mNorthRoadSprites[mCurrentEnvironment][i]->Position().y;
+	}
+
+	mPlayer->ResetLives();  // Reset player lives
+	mPlayer->Reset();  // Reset player state
+	mEnemySpawner->Reset();  // Reset enemy spawner
+	mPoliceChaseActive = false;
+	mPoliceChaseTimer = 0.0f;
+	mLevelTime = 0.0f;
+
+	mPlayerScoreNumber->Score(0);  // Reset score
+	mSpeedScoreboard->Score(0);  // Reset speed
 }

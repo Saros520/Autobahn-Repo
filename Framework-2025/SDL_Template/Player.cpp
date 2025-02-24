@@ -224,6 +224,10 @@ bool Player::IgnoreCollisions()
 	return !mVisible || mAnimating;
 }
 
+bool Player::IsOutOfLives() {
+	return mLives <= 0;
+}
+
 void Player::Hit(PhysEntity * other) {
 	mLives -= 1;
 
@@ -231,7 +235,7 @@ void Player::Hit(PhysEntity * other) {
 		mAnimating = true;
 		//mDeathAnimation->ResetAnimation();
 		mAudio->PlaySFX("SFX/PlayerExplosion.wav");
-		ScreenManager::Instance()->SetScreen(ScreenManager::Start);
+		ScreenManager::Instance()->SetScreen(ScreenManager::GameOver);
 	}
 	else {
 		mAnimating = true;
@@ -300,4 +304,15 @@ int Player::Lives() {
 
 void Player::ResetLives() {
 	mLives = 3;  // Reset lives when starting a new game
+}
+
+void Player::Reset() {
+	mScore = 0;
+	mLives = 3;
+	mCurrentSpeed = 186.0f;
+	mDistanceTraveled = 0.0f;
+	mAnimating = false;
+	mWasHit = false;
+	mVisible = true;
+	Position(Vector2(Graphics::SCREEN_WIDTH * 0.75f, Graphics::SCREEN_HEIGHT * 0.9f));
 }

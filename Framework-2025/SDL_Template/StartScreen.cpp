@@ -305,6 +305,10 @@ void StartScreen::Update() {
 	}
 }
 
+void StartScreen::SetHighScore(int score) {
+	mPlayerScoreNumber->Score(score);
+}
+
 void StartScreen::Render() {
 
 	// Render the moving highway background
@@ -319,6 +323,7 @@ void StartScreen::Render() {
 	mZoomingCarRight->Render();
 	
 	mPlayerScore->Render();
+	mPlayerScoreNumber->Render();
 
 	// Render the flickering logo
 	if (mFlickerRed) {

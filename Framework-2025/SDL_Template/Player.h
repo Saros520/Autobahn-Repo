@@ -55,6 +55,7 @@ public:
     int Score();
     int Lives();
     void ResetLives();
+    void Reset();
 
     void AddScore(int change);
 
@@ -66,6 +67,8 @@ public:
     void Hit(PhysEntity* other) override;
 
     bool WasHit();
+
+    bool IsOutOfLives();
 
     void SetMoveBounds(float top, float bottom, float left, float right);
 
