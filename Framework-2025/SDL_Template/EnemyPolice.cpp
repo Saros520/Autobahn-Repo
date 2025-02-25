@@ -2,16 +2,17 @@
 #include "Graphics.h"
 #include "ScreenManager.h"
 #include "PhysicsManager.h"
+#include <iostream>
 
 EnemyPolice* EnemyPolice::sActivePoliceCar = nullptr;
 
-EnemyPolice::EnemyPolice(Player* player, const std::vector<Enemy*>& otherEnemies)
-	: Enemy(true, 18), mOtherEnemies(otherEnemies), mAvoiding(false) {
+EnemyPolice::EnemyPolice(Player* player, EnemySpawner* enemySpawner)
+	: Enemy(true, 18), mEnemySpawner(enemySpawner), mAvoiding(false) {
 	mTimer = Timer::Instance();
 	mPlayer = player;
 	mChaseDuration = 0.0f;
 	mChasing = false;
-	mBaseSpeed = 210.0f;
+	mBaseSpeed = 50.0f;
 
 	PhysicsManager::Instance()->UnregisterEntity(mId);
 	mId = PhysicsManager::Instance()->RegisterEntity(this, PhysicsManager::CollisionLayers::Police);
@@ -22,11 +23,12 @@ EnemyPolice::EnemyPolice(Player* player, const std::vector<Enemy*>& otherEnemies
 EnemyPolice::~EnemyPolice() {
 	mTimer = nullptr;
 	mPlayer = nullptr;
+	mEnemySpawner = nullptr;
 	sActivePoliceCar = nullptr; // clearing the active police car
 }
 
 void EnemyPolice::Update() {
-	std::cout << "Number of Enemies in EnemyPolice: " << mOtherEnemies.size() << std::endl;
+	//std::cout << "Number of Enemies in EnemyPolice: " << mOtherEnemies.size() << std::endl;
 
 	if (mChasing) {
 		mChaseDuration += mTimer->DeltaTime();
@@ -40,7 +42,7 @@ void EnemyPolice::Update() {
 		mAvoiding = false;
 
 		// Sense this police car is after you it will avoid the other sprites
-		for (Enemy* enemy : mOtherEnemies) {
+		for (Enemy* enemy : mEnemySpawner->GetEnemies()) {
 			if (enemy != this && enemy != nullptr && CheckCollision(enemy)) {
 				Vector2 enemyPos = enemy->Position();
 				Vector2 avoidDirection = (Position() - enemyPos).Normalized();
@@ -101,10 +103,10 @@ void EnemyPolice::Destroy() {
 	delete this;
 }
 
-void EnemyPolice::SpawnNewPoliceCar(Player* player, const std::vector<Enemy*>& otherEnemies) {
+void EnemyPolice::SpawnNewPoliceCar(Player* player, EnemySpawner* enemySpawner) {
 	// Spawn a new police car below the bottom of the play screen if there isn't already an active one
 	if (sActivePoliceCar == nullptr) {
-		EnemyPolice* newPoliceCar = new EnemyPolice(player, otherEnemies);
+		EnemyPolice* newPoliceCar = new EnemyPolice(player, enemySpawner);
 
 		// Set the initial position to being just below the playscreen 
 		float spawnY = Graphics::SCREEN_HEIGHT + 50.0f;

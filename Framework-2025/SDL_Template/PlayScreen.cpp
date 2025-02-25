@@ -246,7 +246,7 @@ void PlayScreen::UpdateEnvironmentTransition() {
 
 void PlayScreen::StartPoliceChase() {
 	if (!mPoliceChaseActive && EnemyPolice::GetActivePoliceCar() == nullptr) {
-		EnemyPolice::SpawnNewPoliceCar(mPlayer, mEnemySpawner->GetEnemies());
+		EnemyPolice::SpawnNewPoliceCar(mPlayer, mEnemySpawner);
 		mPoliceChaseActive = true;
 		mPoliceChaseTimer = 0.0f;
 	}
@@ -298,7 +298,7 @@ void PlayScreen::Update() {
 		mEnemySpawner->Update();
 
 		// Start the police chase after about 2 minutes
-		if (mLevelTime >= 12.0f && !mPoliceChaseActive) {
+		if (mLevelTime >= 2.0f && !mPoliceChaseActive) {
 			StartPoliceChase();
 		}
 

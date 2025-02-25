@@ -3,6 +3,7 @@
 
 #include "Enemy.h"
 #include "Player.h"
+#include "EnemySpawner.h"
 #include <vector>
 
 class EnemyPolice : public Enemy {
@@ -13,11 +14,12 @@ private:
 	bool mChasing;
 	float mBaseSpeed;
 	bool mAvoiding;
-	std::vector<Enemy*> mOtherEnemies;
+	//std::vector<Enemy*> mOtherEnemies;
+	EnemySpawner* mEnemySpawner;
 	static EnemyPolice* sActivePoliceCar;
 
 public:
-	EnemyPolice(Player* player, const std::vector<Enemy*>& otherEnemies);
+	EnemyPolice(Player* player, EnemySpawner* enemySpawner);
 	~EnemyPolice();
 
 	void Update() override;
@@ -25,7 +27,7 @@ public:
 	void StartChase();
 	void StopChase();
 	void Destroy();
-	static void SpawnNewPoliceCar(Player* player, const std::vector<Enemy*>& otherEnemies);
+	static void SpawnNewPoliceCar(Player* player, EnemySpawner* enemySpawner);
 	static EnemyPolice* GetActivePoliceCar() { return sActivePoliceCar; }
 
 };
