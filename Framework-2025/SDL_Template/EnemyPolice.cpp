@@ -42,16 +42,6 @@ void EnemyPolice::Update() {
 		mAvoiding = false;
 
 		// Sense this police car is after you it will avoid the other sprites
-		for (Enemy* enemy : mOtherEnemies) {
-			if (enemy != this && enemy != nullptr) {
-				if (CheckCollision(enemy)) {
-					Vector2 enemyPos = enemy->Position();
-					Vector2 avoidDirection = (Position() - enemyPos).Normalized();
-					moveAmount += avoidDirection * speed * mTimer->DeltaTime();
-					speed = mBaseSpeed * 0.75f;
-					mAvoiding = true;
-				}
-				
 		for (Enemy* enemy : mEnemySpawner->GetEnemies()) {
 			if (enemy != this && enemy != nullptr && CheckCollision(enemy)) {
 				Vector2 enemyPos = enemy->Position();
@@ -60,37 +50,47 @@ void EnemyPolice::Update() {
 				speed = mBaseSpeed * 0.75f;
 				mAvoiding = true;
 			}
-		}
 
-		// If not avoiding other vehicles, resume base speed
-		if (!mAvoiding) {
-			speed = mBaseSpeed;
-		}
+			for (Enemy* enemy : mEnemySpawner->GetEnemies()) {
+				if (enemy != this && enemy != nullptr && CheckCollision(enemy)) {
+					Vector2 enemyPos = enemy->Position();
+					Vector2 avoidDirection = (Position() - enemyPos).Normalized();
+					moveAmount += avoidDirection * speed * mTimer->DeltaTime();
+					speed = mBaseSpeed * 0.75f;
+					mAvoiding = true;
+				}
+			}
 
-		// Ensure the police car starts moving only after it has been spawned below the play screen
-		if (Position().y < Graphics::SCREEN_HEIGHT) {
+			// If not avoiding other vehicles, resume base speed
+			if (!mAvoiding) {
+				speed = mBaseSpeed;
+			}
+
+			// Ensure the police car starts moving only after it has been spawned below the play screen
+			if (Position().y < Graphics::SCREEN_HEIGHT) {
+				Translate(moveAmount, World);
+			}
+
 			Translate(moveAmount, World);
+
+			// Debug output to verify the position
+			Vector2 pos = Position();
+			std::cout << "Police car position: (" << pos.x << ", " << pos.y << ")" << std::endl;
+
+			// Check if the police car has been chasing for 1 minute
+			if (mChaseDuration >= 60.0f) {
+				StopChase();
+			}
+
+			// Check for collision with the player car
+			if (CheckCollision(mPlayer)) {
+				ScreenManager::Instance()->SetScreen(ScreenManager::Start);
+				// Display "Busted" message
+			}
 		}
 
-		Translate(moveAmount, World);
-
-		// Debug output to verify the position
-		Vector2 pos = Position();
-		std::cout << "Police car position: (" << pos.x << ", " << pos.y << ")" << std::endl;
-
-		// Check if the police car has been chasing for 1 minute
-		if (mChaseDuration >= 60.0f) {
-			StopChase();
-		}
-
-		// Check for collision with the player car
-		if (CheckCollision(mPlayer)) {
-			ScreenManager::Instance()->SetScreen(ScreenManager::Start);
-			// Display "Busted" message
-		}
+		Enemy::Update();
 	}
-
-	Enemy::Update();
 }
 
 void EnemyPolice::Render() {

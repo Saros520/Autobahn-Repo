@@ -3,6 +3,13 @@
 #include "InputManager.h"
 #include <cstdlib>
 #include <ctime>
+//#include <sys/stat.h>
+//#include <iostream>
+
+//bool FileExists(const std::string& filePath) {
+//    struct stat buffer;
+//    return (stat(filePath.c_str(), &buffer) == 0);
+//}
 
 const int vehicleIndex = 0;
 
@@ -202,6 +209,14 @@ void PlayScreen::StartEnvironmentTransition() {
 	mTransitioning = true;
 	mTransitionAlpha = 0.0f;
 
+	// Set the current background state
+	SetCurrentBackground(
+		mNextEnvironment == 0 ? "City" : mNextEnvironment == 1 ? "Bridge" : mNextEnvironment == 2 ? "Forest" : "Plain",
+		1,
+		mNextEnvironment == 0 ? "City" : mNextEnvironment == 1 ? "Bridge" : mNextEnvironment == 2 ? "Forest" : "Plain",
+		1
+	);
+
 	// Calculate the scale factor to cover the whole play screen
 	float scaleX = static_cast<float>(Graphics::SCREEN_WIDTH) / mNorthRoadSprites[mNextEnvironment][0]->ScaledDimensions().x;
 	float scaleY = static_cast<float>(Graphics::SCREEN_HEIGHT) / mNorthRoadSprites[mNextEnvironment][0]->ScaledDimensions().y;
@@ -261,6 +276,29 @@ void PlayScreen::EndPoliceChase() {
 	}
 }
 
+void PlayScreen::SetCurrentBackground(std::string northRoadType, int northRoadIndex, std::string southRoadType, int southRoadIndex) {
+	mCurrentNorthRoadType = northRoadType;
+	mCurrentNorthRoadIndex = northRoadIndex;
+	mCurrentSouthRoadType = southRoadType;
+	mCurrentSouthRoadIndex = southRoadIndex;
+}
+
+std::string PlayScreen::GetCurrentNorthRoadType() const {
+	return mCurrentNorthRoadType;
+}
+
+int PlayScreen::GetCurrentNorthRoadIndex() const {
+	return mCurrentNorthRoadIndex;
+}
+
+std::string PlayScreen::GetCurrentSouthRoadType() const {
+	return mCurrentSouthRoadType;
+}
+
+int PlayScreen::GetCurrentSouthRoadIndex() const {
+	return mCurrentSouthRoadIndex;
+}
+
 void PlayScreen::Update() {
 
 	if (mInput->KeyPressed(SDL_SCANCODE_ESCAPE)) {
@@ -315,6 +353,37 @@ void PlayScreen::Update() {
 			}
 		}
 
+		// Check for game over conditions
+		if (mPlayer->IsOutOfLives() || mPlayer->WasHitByPolice()) {
+			std::string northRoadSprite, southRoadSprite;
+			switch (mCurrentEnvironment) {
+			case 0:
+				northRoadSprite = "NorthRoadCity1.png";
+				southRoadSprite = "SouthRoadCity1.png";
+				break;
+			case 1:
+				northRoadSprite = "NorthRoadBridge1.png";
+				southRoadSprite = "SouthRoadBridge1.png";
+				break;
+			case 2:
+				northRoadSprite = "NorthRoadForest1.png";
+				southRoadSprite = "SouthRoadForest1.png";
+				break;
+			case 3:
+				northRoadSprite = "NorthRoadPlain1.png";
+				southRoadSprite = "SouthRoadPlain1.png";
+				break;
+			default:
+				northRoadSprite = "NorthRoadCity1.png";
+				southRoadSprite = "SouthRoadCity1.png";
+				break;
+			}
+			ScreenManager::Instance()->SetScreen(ScreenManager::GameOver);
+			ScreenManager::Instance()->SetGameOverBackground(northRoadSprite, southRoadSprite);
+			OnGameOver();
+			return; // Exit the update loop to prevent further updates
+		}
+
 		// Switch music based on key press (1-9)
 		for (int i = 0; i < 9; ++i) {
 			if (mInput->KeyPressed(static_cast<SDL_Scancode>(SDL_SCANCODE_1 + i))) {
@@ -357,7 +426,6 @@ void PlayScreen::Update() {
 	}
 }
 
-
 void PlayScreen::Render() {
 	for (int i = 0; i < NUM_ROAD_SPRITES; ++i) {
 		mNorthRoadSprites[mCurrentEnvironment][i]->Render();
@@ -388,4 +456,36 @@ void PlayScreen::Render() {
 	if (mIsPaused) {
 		mPauseGame->Render();
 	}
+}
+
+void PlayScreen::OnGameOver() {
+	std::string currentNorthRoadType = GetCurrentNorthRoadType();
+	int currentNorthRoadIndex = GetCurrentNorthRoadIndex();
+	std::string currentSouthRoadType = GetCurrentSouthRoadType();
+	int currentSouthRoadIndex = GetCurrentSouthRoadIndex();
+
+	ScreenManager::Instance()->SetScreen(ScreenManager::GameOver);
+}
+
+void PlayScreen::Reset() {
+	mHighWaySpeed = 550.0f; // Reset highway speed
+	mCurrentEnvironment = 2;
+	mNextEnvironment = 1;
+	mEnvironmentChangeTimer = 0.0f;
+	mTransitioning = false;
+	mTransitionAlpha = 0.0f;
+
+	for (int i = 0; i < NUM_ROAD_SPRITES; ++i) {
+		mHighwayPosY[i] = mNorthRoadSprites[mCurrentEnvironment][i]->Position().y;
+	}
+
+	mPlayer->ResetLives();  // Reset player lives
+	mPlayer->Reset();  // Reset player state
+	mEnemySpawner->Reset();  // Reset enemy spawner
+	mPoliceChaseActive = false;
+	mPoliceChaseTimer = 0.0f;
+	mLevelTime = 0.0f;
+
+	mPlayerScoreNumber->Score(0);  // Reset score
+	mSpeedScoreboard->Score(0);  // Reset speed
 }

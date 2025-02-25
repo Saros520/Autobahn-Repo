@@ -50,7 +50,7 @@ void ScreenManager::SetScreen(Screens newScreen) {
         mPlayScreen->GetPlayer()->ResetLives();  // Reset lives when loading new game
         mPlayScreen->Reset();
     }
-    /*else if (mCurrentScreen == GameOver) {*/
+    else if (mCurrentScreen == GameOver) {
         delete mGameOverScreen; // Delete the previous game over screen if it exists
         mGameOverScreen = new GameOverScreen(
             mGameOverNorthRoadSprite,
@@ -58,7 +58,7 @@ void ScreenManager::SetScreen(Screens newScreen) {
         );
         mGameOverScreen->SetCurrentScore(mPlayScreen->GetPlayer()->Score());
     }
-//}
+}
 
 void ScreenManager::Update() {
     switch (mCurrentScreen) {
