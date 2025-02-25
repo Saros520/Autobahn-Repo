@@ -29,7 +29,7 @@ StartScreen::StartScreen() {
 	// Player Car Entities
 	mPlayerCar = new Texture("PlayerCar7.png");
 	mPlayerCar->Parent(this);
-	mPlayerCar->Position(Graphics::SCREEN_WIDTH * 0.5f + 43.0f, Graphics::SCREEN_HEIGHT * 0.5f - 105.0f);
+	mPlayerCar->Position(Graphics::SCREEN_WIDTH * 0.5f - 5.0f, Graphics::SCREEN_HEIGHT * 0.5f - 55.0f);
 	mPlayerCar->Scale(Vector2(8.0f, 8.0f));
 
 	// top bar entities
