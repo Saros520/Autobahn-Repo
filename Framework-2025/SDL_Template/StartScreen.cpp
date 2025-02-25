@@ -1,11 +1,11 @@
 #include "StartScreen.h"
 #include "ScreenManager.h"
 #include "AudioManager.h"
+#include <fstream>
 
 StartScreen::StartScreen() {
 	mTimer = Timer::Instance();
 	mInput = InputManager::Instance();
-
 	mAudio = AudioManager::Instance();
 
 	 
@@ -39,8 +39,21 @@ StartScreen::StartScreen() {
 
 	mTopBar->Parent(this);
 	mPlayerScore->Parent(mTopBar);
+	mPlayerScoreNumber->Parent(mTopBar);
 
 	mPlayerScore->Position(Graphics::SCREEN_WIDTH * -0.12f, -48.0f);
+	mPlayerScoreNumber->Position(Vector2(Graphics::SCREEN_WIDTH * 0.35f, -63.0f));
+
+	// Load high score from file
+	std::ifstream file("highscore.txt");
+	if (file.is_open()) {
+		file >> mHighScore;
+	}
+	else {
+		mHighScore = 0;
+	}
+	file.close();
+	mPlayerScoreNumber->Score(mHighScore);
 
 	// logo entities
 	mLogoRed = new Texture("Auto-bahnLogoRed.png", 0, 0, 500, 200);
@@ -306,7 +319,15 @@ void StartScreen::Update() {
 }
 
 void StartScreen::SetHighScore(int score) {
-	mPlayerScoreNumber->Score(score);
+	mHighScore = score;
+	mPlayerScoreNumber->Score(mHighScore);
+
+	// Save new high score to file
+	std::ofstream file("highscore.txt");
+	if (file.is_open()) {
+		file << mHighScore;
+		file.close();
+	}
 }
 
 void StartScreen::Render() {

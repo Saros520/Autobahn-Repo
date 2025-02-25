@@ -16,6 +16,7 @@ private:
     bool mVisible;
     bool mAnimating;
     bool mWasHit;
+    bool mWasHitByPolice;
 
     int mScore;
     int mLives;
@@ -67,6 +68,8 @@ public:
     void Hit(PhysEntity* other) override;
 
     bool WasHit();
+
+    bool WasHitByPolice() const;
 
     bool IsOutOfLives();
 

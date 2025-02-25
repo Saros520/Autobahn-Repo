@@ -228,14 +228,16 @@ bool Player::IsOutOfLives() {
 	return mLives <= 0;
 }
 
-void Player::Hit(PhysEntity * other) {
+void Player::Hit(PhysEntity* other) {
+	if (other->Tag() == "PoliceCar") {
+		mWasHitByPolice = true;
+	}
+
 	mLives -= 1;
 
 	if (mLives <= 0) {
 		mAnimating = true;
-		//mDeathAnimation->ResetAnimation();
 		mAudio->PlaySFX("SFX/PlayerExplosion.wav");
-		ScreenManager::Instance()->SetScreen(ScreenManager::GameOver);
 	}
 	else {
 		mAnimating = true;
@@ -247,6 +249,10 @@ void Player::Hit(PhysEntity * other) {
 
 bool Player::WasHit() {
 	return mWasHit;
+}
+
+bool Player::WasHitByPolice() const {
+	return mWasHitByPolice;
 }
 
 void Player::Update() {
@@ -313,6 +319,7 @@ void Player::Reset() {
 	mDistanceTraveled = 0.0f;
 	mAnimating = false;
 	mWasHit = false;
+	mWasHitByPolice = false;
 	mVisible = true;
 	Position(Vector2(Graphics::SCREEN_WIDTH * 0.75f, Graphics::SCREEN_HEIGHT * 0.9f));
 }

@@ -1,11 +1,11 @@
 #ifndef __SCREENMANAGER_H
 #define __SCREENMANAGER_H
 
-#include "StartScreen.h"
 #include "PlayScreen.h"
+#include "GameOverScreen.h"
+#include "StartScreen.h"
 #include "CarSelectScreen.h"
 #include "OptionsScreen.h"
-#include "GameOverScreen.h"
 #include "InputManager.h"
 
 class ScreenManager {
@@ -14,30 +14,38 @@ public:
 
 private:
     static ScreenManager* sInstance;
-    Screens mCurrentScreen;
 
     InputManager* mInput;
+
     StartScreen* mStartScreen;
-    PlayScreen* mPlayScreen;
     CarSelectScreen* mCarSelectScreen;
     OptionsScreen* mOptionsScreen;
+    PlayScreen* mPlayScreen;
     GameOverScreen* mGameOverScreen;
 
-    int mSelectedCar;
+    Screens mCurrentScreen;
 
-    ScreenManager();
-    ~ScreenManager();
+    std::string mGameOverNorthRoadSprite;
+    std::string mGameOverSouthRoadSprite;
+
+    int mSelectedCar;
 
 public:
     static ScreenManager* Instance();
     static void Release();
+
+    void SetScreen(Screens newScreen);
+    void SetGameOverBackground(std::string northRoadSprite, std::string southRoadSprite);
 
     void Update();
     void Render();
 
     void SetSelectedCar(int car);
     int GetSelectedCar();
-    void SetScreen(Screens newScreen);
+
+private:
+    ScreenManager();
+    ~ScreenManager();
 };
 
 #endif

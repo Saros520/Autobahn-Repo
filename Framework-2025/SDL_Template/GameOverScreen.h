@@ -1,26 +1,32 @@
 #ifndef __GAMEOVERSCREEN_H
 #define __GAMEOVERSCREEN_H
 
-#include "GameEntity.h"
+#include "Texture.h"
 #include "Scoreboard.h"
 #include "InputManager.h"
 
-class ScreenManager;
-
 class GameOverScreen : public GameEntity {
 private:
+    Texture* mNorthRoadBackground;
+    Texture* mSouthRoadBackground;
+    Texture* mBustedText;
     Scoreboard* mPlayerScore;
+    Scoreboard* mHighScoreBoard;
     InputManager* mInput;
-
     int mCurrentScore;
+    int mHighScore;
+
+    Vector2 mBackgroundScaleFactor;
 
 public:
-    GameOverScreen();
+    GameOverScreen(std::string northRoadSprite, std::string southRoadSprite);
     ~GameOverScreen();
 
+    void SetBackground(std::string northRoadSprite, std::string southRoadSprite);
     void SetCurrentScore(int score);
     void Update() override;
     void Render() override;
 };
 
 #endif
+

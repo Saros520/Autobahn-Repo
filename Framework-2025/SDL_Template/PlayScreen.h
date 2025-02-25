@@ -77,6 +77,11 @@ private:
 
 	bool mIsPaused;
 
+	// Variables to track the current background state 
+	std::string mCurrentNorthRoadType;
+	int mCurrentNorthRoadIndex;
+	std::string mCurrentSouthRoadType;
+	int mCurrentSouthRoadIndex;
 
 public:
 	PlayScreen();
@@ -90,5 +95,16 @@ public:
 	void ResetPauseState();
 
 	void Reset();
+
+	// Methods to set and get the current background state
+	void SetCurrentBackground(std::string northRoadType, int northRoadIndex, std::string southRoadType, int southRoadIndex);
+	std::string GetCurrentNorthRoadType() const;
+	int GetCurrentNorthRoadIndex() const;
+	std::string GetCurrentSouthRoadType() const;
+	int GetCurrentSouthRoadIndex() const;
+
+	// Method to handle game over event
+	void OnGameOver();
+
 };
 #endif

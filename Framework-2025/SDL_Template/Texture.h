@@ -39,6 +39,9 @@ namespace SDLFramework {
 
 		virtual void Render() override;
 
+		int GetWidth() const;
+		int GetHeight() const;
+
 	protected:
 		void UpdateDstRect();
 	};

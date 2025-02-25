@@ -14,7 +14,6 @@ class StartScreen : public GameEntity {
 private:
 	Timer * mTimer;
 	InputManager * mInput;
-
 	AudioManager* mAudio;
 
 	// Title Screen Entities
@@ -25,7 +24,6 @@ private:
 	// Top Bar Entities
 	GameEntity * mTopBar;
 	Texture * mPlayerScore;
-
 	Scoreboard * mPlayerScoreNumber;
 
 	// Player Car Entities
@@ -90,6 +88,8 @@ private:
 	Vector2 mSliderKnobStartPos;
 	Vector2 mSliderKnobEndPos;
 	bool mInOptions;
+
+	int mHighScore;
 
 public:
 	StartScreen();
