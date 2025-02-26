@@ -28,12 +28,12 @@ PlayScreen::PlayScreen() {
 
 	mSpeedBox = new Texture("SpeedBox.png");
 	mSpeedBox->Parent(this);
-	mSpeedBox->Position(Graphics::SCREEN_WIDTH * 1.21f, Graphics::SCREEN_HEIGHT * 0.53f);
+	mSpeedBox->Position(Graphics::SCREEN_WIDTH * 1.21f, Graphics::SCREEN_HEIGHT * 0.52f);
 	mSpeedBox->Scale(Vector2(1.0f, 2.0f));
 
 	mLivesBox = new Texture("LivesBox.png");
 	mLivesBox->Parent(this);
-	mLivesBox->Position(Graphics::SCREEN_WIDTH * 0.35f, Graphics::SCREEN_HEIGHT * 0.53f);
+	mLivesBox->Position(Graphics::SCREEN_WIDTH * 0.35f, Graphics::SCREEN_HEIGHT * 0.52f);
 	mLivesBox->Scale(Vector2(1.0f, 2.0f));
 
 	// Initialize random seed for the highway backgrounds
@@ -127,7 +127,7 @@ PlayScreen::PlayScreen() {
 	mSpeedScoreboard->Parent(mBottomBar);
 
 	mSpeedLabel->Position(Graphics::SCREEN_WIDTH * 0.10f, 30.0f);
-	mSpeedScoreboard->Position(Graphics::SCREEN_WIDTH * 0.17f, 86.5f);
+	mSpeedScoreboard->Position(Graphics::SCREEN_WIDTH * 0.169f, 86.0f);
 	mLivesLabel->Position(Graphics::SCREEN_WIDTH * -0.7579f, 30.0f);
 
 }
