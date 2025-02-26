@@ -76,10 +76,10 @@ void EnemyPolice::Update() {
         // If the path is blocked, move to avoid the enemy vehicle
         if (pathBlocked) {
             if (Position().x < Graphics::SCREEN_WIDTH * 0.5f) {
-                moveAmount = Vector2(speed * mTimer->DeltaTime(), 1.0f); // Move right
+                moveAmount = Vector2(speed * mTimer->DeltaTime(), 0.5f); // Move right
             }
             else {
-                moveAmount = Vector2(-speed * mTimer->DeltaTime(), 1.0f); // Move left
+                moveAmount = Vector2(-speed * mTimer->DeltaTime(), 0.5f); // Move left
             }
         }
         else if (!mAvoiding) {
