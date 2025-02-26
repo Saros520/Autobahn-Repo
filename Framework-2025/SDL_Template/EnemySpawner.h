@@ -9,6 +9,7 @@ private:
 	Timer* mTimer;
 	float mSpawnInterval;
 	float mTimeSinceLastSpawn;
+	std::vector<Enemy*> mEnemies;
 
 public:
 	EnemySpawner(float spawnInteval);

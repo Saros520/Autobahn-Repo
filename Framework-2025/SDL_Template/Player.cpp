@@ -22,7 +22,7 @@ Player::Player() {
 	mMoveSpeed = 223.0f;
 	mHorizontalMoveSpeed = 186.0f;
 	mAcceleration = 40.0f;
-	mDeceleration = 25.0f;
+	mDeceleration = 30.0f;
 	mCurrentSpeed = 186.0f;
 	mMoveBoundsX = Vector2(20.0f + mTexture->ScaledDimensions().x / 2, Graphics::SCREEN_WIDTH - mTexture->ScaledDimensions().x / 2);
 	mMoveBoundsY = Vector2(110.0f, Graphics::SCREEN_HEIGHT);

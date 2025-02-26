@@ -9,14 +9,22 @@ std::vector<float> Enemy::mRightLanes;
 
 Enemy::Enemy() {
 	mTimer = Timer::Instance();
-	mTexture = new Texture("EnemyCar.png");
-	mTexture->Parent(this);
-	mTexture ->Position(Vec2_Zero);
-
 	mMoveSpeed = 150.0f;
 
 	// Seed random number generator
-	std::srand(std::time(nullptr));
+	std::srand(static_cast<unsigned int>(std::time(nullptr)));
+
+	// Randomly select one of the enemy car sprites
+	int carIndex = std::rand() % 17 + 1;
+	std::string fileName = "EnemyCar" + std::to_string(carIndex) + ".png";
+	mTexture = new Texture(fileName);
+	mTexture->Parent(this);
+	mTexture->Position(Vec2_Zero);
+
+	mDeathAnimation = new AnimatedTexture(fileName, 0, 0, 128, 128, 4, 1.0f, Animation::Layouts::Horizontal);
+	mDeathAnimation->Parent(this);
+	mDeathAnimation->Position(Vec2_Zero);
+	mDeathAnimation->SetWrapMode(Animation::WrapModes::Once);
 
 	mTexture = new Texture("Deer.png", 61, 0, 60, 64);
 	mTexture->Parent(this);
