@@ -55,7 +55,7 @@ void EnemyPolice::Update() {
                 // Check if the enemy is within a certain distance to avoid
                 if (verticalDistance < 360.0f && horizontalDistance < 200.0f) { // Adjust the distance thresholds as needed
                     Vector2 avoidDirection = (Position() - enemyPos).Normalized();
-                    separationForce += Vector2(avoidDirection.x / distanceToEnemy, avoidDirection.y / distanceToEnemy); // Stronger force for closer enemies
+                    separationForce += Vector2(avoidDirection.x / distanceToEnemy, avoidDirection.y / distanceToEnemy) * 2.0f; // Stronger force for closer enemies
                     mAvoiding = true;
                 }
 
@@ -154,7 +154,7 @@ void EnemyPolice::StopChase() {
                 // Check if the enemy is within a certain distance to avoid
                 if (verticalDistance < 360.0f && horizontalDistance < 200.0f) { // Adjust the distance thresholds as needed
                     Vector2 avoidDirection = (Position() - enemyPos).Normalized();
-                    separationForce += Vector2(avoidDirection.x / distanceToEnemy, avoidDirection.y / distanceToEnemy); // Stronger force for closer enemies
+                    separationForce += Vector2(avoidDirection.x / distanceToEnemy, avoidDirection.y / distanceToEnemy) * 2.0f; // Stronger force for closer enemies
                     mAvoiding = true;
                 }
             }
