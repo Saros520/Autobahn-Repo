@@ -8,28 +8,30 @@
 
 class EnemyPolice : public Enemy {
 private:
-	Timer* mTimer;
-	Player* mPlayer;
-	float mChaseDuration;
-	bool mChasing;
-	float mBaseSpeed;
-	bool mAvoiding;
-	//std::vector<Enemy*> mOtherEnemies;
-	EnemySpawner* mEnemySpawner;
-	static EnemyPolice* sActivePoliceCar;
+    static EnemyPolice* sActivePoliceCar;
+    static float sChaseDuration;
+
+    Timer* mTimer;
+    Player* mPlayer;
+    EnemySpawner* mEnemySpawner;
+    bool mAvoiding;
+    float mBaseSpeed;
+    bool mChasing;
+
+    bool CheckRayIntersection(const Vector2& rayStart, const Vector2& rayEnd, const Vector2& enemyPos, const Vector2& enemySize);
+
 
 public:
-	EnemyPolice(Player* player, EnemySpawner* enemySpawner);
-	~EnemyPolice();
+    EnemyPolice(Player* player, EnemySpawner* enemySpawner);
+    ~EnemyPolice();
 
-	void Update() override;
-	void Render() override;
-	void StartChase();
-	void StopChase();
-	void Destroy();
-	static void SpawnNewPoliceCar(Player* player, EnemySpawner* enemySpawner);
-	static EnemyPolice* GetActivePoliceCar() { return sActivePoliceCar; }
-
+    void Update() override;
+    void Render() override;
+    void StartChase();
+    void StopChase();
+    void Destroy();
+    static void SpawnNewPoliceCar(Player* player, EnemySpawner* enemySpawner);
+    static EnemyPolice* GetActivePoliceCar() { return sActivePoliceCar; }
 };
 
 #endif

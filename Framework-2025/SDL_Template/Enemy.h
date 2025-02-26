@@ -53,6 +53,7 @@ public:
     void SetMoveDirection(const Vector2& direction);
     void StartTurning(float targetRotation, const Vector2& targetDirection, float turnSpeedFactor);
     void SetSpeedMultiplier(float multiplier);
+    void Destroy();
 
 };
 #endif

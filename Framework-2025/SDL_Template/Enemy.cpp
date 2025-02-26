@@ -287,3 +287,9 @@ void Enemy::SetSpeedForVehicle(int vehicleIndex) {
         break;
     }
 }
+
+void Enemy::Destroy() {
+    // Properly delete the enemy
+    PhysicsManager::Instance()->UnregisterEntity(mId);
+    Active(false);
+}
