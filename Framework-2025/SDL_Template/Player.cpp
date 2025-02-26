@@ -13,14 +13,14 @@ Player::Player() {
 	mWasHit = false;
 
 	mScore = 0;
-	mLives = 2;
+	mLives = 3;
 
 	mTexture = nullptr;
 
 	SetCarTexture(0);
 
 	mMoveSpeed = 223.0f;
-	mHorizontalMoveSpeed = 186.0f;
+	mHorizontalMoveSpeed = 200.0f;
 	mAcceleration = 40.0f;
 	mDeceleration = 30.0f;
 	mCurrentSpeed = 186.0f;
@@ -36,12 +36,9 @@ Player::Player() {
 	mDeathAnimation->Position(Vec2_Zero);
 	mDeathAnimation->SetWrapMode(Animation::WrapModes::Once);
 
-	for (int i = 0; i < MAX_BULLETS; ++i) {
+	/*for (int i = 0; i < MAX_BULLETS; ++i) {
 		mBullets[i] = new Bullet(true);
-	}
-
-	/*AddCollider(new BoxCollider(Vector2(20.0f, 37.0f)), Vector2( 18.0f, 10.0f));
-	AddCollider(new BoxCollider(Vector2(20.0f, 37.0f)), Vector2(-18.0f, 10.0f));*/
+	}*/
 
 	SetColliderForCar(0);
 
@@ -66,42 +63,7 @@ void Player::SetColliderForCar(int carIndex) {
 	}
 	mColliders.clear();
 
-	// Set collider size and position based on what vehicle has been selected 
-	Vector2 colliderSize;
-	Vector2 colliderOffset;
-
-	switch (carIndex) {
-	case 0:
-		colliderSize = Vector2(48.0f, 63.0f);
-		colliderOffset = Vector2(-12.0f, 20.0f);
-		break;
-	case 1:
-		colliderSize = Vector2(40.0f, 90.0f);
-		colliderOffset = Vector2(-12.0f, 20.0f);
-		break;
-	case 2:
-		colliderSize = Vector2(48.0f, 85.0f);
-		colliderOffset = Vector2(-12.0f, 10.0f);
-		break;
-	case 3:
-		colliderSize = Vector2(48.0f, 85.0f);
-		colliderOffset = Vector2(-12.0f, 10.0f);
-		break;
-	case 4:
-		colliderSize = Vector2(48.0f, 85.0f);
-		colliderOffset = Vector2(-12.0f, 10.0f);
-		break;
-	case 5:
-		colliderSize = Vector2(48.0f, 85.0f);
-		colliderOffset = Vector2(-12.0f, 10.0f);
-		break;
-	default:
-		colliderSize = Vector2(48.0f, 85.0f);
-		colliderOffset = Vector2(-12.0f, 10.0f);
-		break;
-	}
-
-	AddCollider(new BoxCollider(colliderSize), colliderOffset);
+	AddCollider(new BoxCollider(mTexture->ScaledDimensions()));
 }
 
 Player::~Player() {
@@ -115,9 +77,9 @@ Player::~Player() {
 	delete mDeathAnimation;
 	mDeathAnimation = nullptr;
 
-	for (auto b : mBullets) {
+	/*for (auto b : mBullets) {
 		delete b;
-	}
+	}*/
 }
 
 void Player::HandleMovement() {
@@ -141,7 +103,7 @@ void Player::HandleMovement() {
 		moveDir = moveDir.Normalized();
 		if (moveDir.y > 0) { // Decelerating
 			mCurrentSpeed -= mDeceleration * mTimer->DeltaTime();
-			if (mCurrentSpeed < 150.0f) { // Minimum speed in km/h
+			if (mCurrentSpeed < 150.0f) { 
 				mCurrentSpeed = 150.0f;
 			}
 		}
@@ -211,17 +173,17 @@ bool Player::IsOffHighway() {
 	return (pos.x < mMoveBoundsX.x || pos.x > mMoveBoundsX.y);
 }
 
-void Player::HandleFiring() {
-	if (mInput->KeyPressed(SDL_SCANCODE_SPACE)) {
-		for (int i = 0; i < MAX_BULLETS; ++i) {
-			if (!mBullets[i]->Active()) {
-				mBullets[i]->Fire(Position());
-				mAudio->PlaySFX("SFX/Fire.wav");
-				break;
-			}
-		}
-	}
-}
+//void Player::HandleFiring() {
+//	if (mInput->KeyPressed(SDL_SCANCODE_SPACE)) {
+//		for (int i = 0; i < MAX_BULLETS; ++i) {
+//			if (!mBullets[i]->Active()) {
+//				mBullets[i]->Fire(Position());
+//				mAudio->PlaySFX("SFX/Fire.wav");
+//				break;
+//			}
+//		}
+//	}
+//}
 
 void Player::Visible(bool visible) {
 	mVisible = visible;
@@ -235,10 +197,6 @@ int Player::Score() {
 	return mScore;
 }
 
-int Player::Lives() {
-	return mLives;
-}
-
 void Player::AddScore(int change) {
 	mScore += change;
 }
@@ -250,7 +208,7 @@ float Player::DistanceTraveled() {
 float Player::GetSpeed() {
 	
 	// Calculate Speed based on movement conditions
-	float speed = 50.0f; // Default speed in kilometers per hour
+	float speed = 50.0f; 
 	if (mInput->KeyDown(SDL_SCANCODE_W) || mInput->KeyDown(SDL_SCANCODE_UP)) {
 		speed = 62.0f; // Speed when moving up
 	}
@@ -266,16 +224,35 @@ bool Player::IgnoreCollisions()
 	return !mVisible || mAnimating;
 }
 
-void Player::Hit(PhysEntity * other) {
+bool Player::IsOutOfLives() {
+	return mLives <= 0;
+}
+
+void Player::Hit(PhysEntity* other) {
+	if (other->Tag() == "PoliceCar") {
+		mWasHitByPolice = true;
+	}
+
 	mLives -= 1;
-	mAnimating = true;
-	mDeathAnimation->ResetAnimation();
-	mAudio->PlaySFX("SFX/PlayerExplosion.wav");
-	mWasHit = true;
+
+	if (mLives <= 0) {
+		mAnimating = true;
+		mAudio->PlaySFX("SFX/PlayerExplosion.wav");
+	}
+	else {
+		mAnimating = true;
+		mDeathAnimation->ResetAnimation();
+		mAudio->PlaySFX("SFX/PlayerExplosion.wav");
+		mWasHit = true;
+	}
 }
 
 bool Player::WasHit() {
 	return mWasHit;
+}
+
+bool Player::WasHitByPolice() const {
+	return mWasHitByPolice;
 }
 
 void Player::Update() {
@@ -285,17 +262,19 @@ void Player::Update() {
 			mWasHit = false;
 		}
 
-		mDeathAnimation->Update();
-		mAnimating = mDeathAnimation->IsAnimating();
+		//mDeathAnimation->Update();
+		//mAnimating = mDeathAnimation->IsAnimating();
 
-		if (!mAnimating) {
+		if (!mAnimating && mLives <= 0) {
 			ScreenManager::Instance()->SetScreen(ScreenManager::Start);
 		}
+		mDeathAnimation->Update();
+		mAnimating = mDeathAnimation->IsAnimating();
 	}
 	else {
 		if (Active()) {
 			HandleMovement();
-			HandleFiring();
+	//		HandleFiring();
 		}
 
 		// Update distance traveled based on movement conditions
@@ -303,9 +282,9 @@ void Player::Update() {
 		mDistanceTraveled += speed * mTimer->DeltaTime() / 1000.0f; // Convert to kilometers
 	}
 
-	for (int i = 0; i < MAX_BULLETS; ++i) {
+	/*for (int i = 0; i < MAX_BULLETS; ++i) {
 		mBullets[i]->Update();
-	}
+	}*/
 }
 
 void Player::Render() {
@@ -318,9 +297,29 @@ void Player::Render() {
 		}
 	}
 
-	for (int i = 0; i < MAX_BULLETS; ++i) {
+	/*for (int i = 0; i < MAX_BULLETS; ++i) {
 		mBullets[i]->Render();
-	}
+	}*/
 
 	PhysEntity::Render();
+}
+
+int Player::Lives() {
+	return mLives;
+}
+
+void Player::ResetLives() {
+	mLives = 3;  // Reset lives when starting a new game
+}
+
+void Player::Reset() {
+	mScore = 0;
+	mLives = 3;
+	mCurrentSpeed = 186.0f;
+	mDistanceTraveled = 0.0f;
+	mAnimating = false;
+	mWasHit = false;
+	mWasHitByPolice = false;
+	mVisible = true;
+	Position(Vector2(Graphics::SCREEN_WIDTH * 0.75f, Graphics::SCREEN_HEIGHT * 0.9f));
 }

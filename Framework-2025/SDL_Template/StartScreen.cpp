@@ -1,11 +1,11 @@
 #include "StartScreen.h"
 #include "ScreenManager.h"
 #include "AudioManager.h"
+#include <fstream>
 
 StartScreen::StartScreen() {
 	mTimer = Timer::Instance();
 	mInput = InputManager::Instance();
-
 	mAudio = AudioManager::Instance();
 
 	 
@@ -29,7 +29,7 @@ StartScreen::StartScreen() {
 	// Player Car Entities
 	mPlayerCar = new Texture("PlayerCar7.png");
 	mPlayerCar->Parent(this);
-	mPlayerCar->Position(Graphics::SCREEN_WIDTH * 0.5f + 43.0f, Graphics::SCREEN_HEIGHT * 0.5f - 105.0f);
+	mPlayerCar->Position(Graphics::SCREEN_WIDTH * 0.5f - 5.0f, Graphics::SCREEN_HEIGHT * 0.5f - 55.0f);
 	mPlayerCar->Scale(Vector2(8.0f, 8.0f));
 
 	// top bar entities
@@ -39,8 +39,21 @@ StartScreen::StartScreen() {
 
 	mTopBar->Parent(this);
 	mPlayerScore->Parent(mTopBar);
+	mPlayerScoreNumber->Parent(mTopBar);
 
 	mPlayerScore->Position(Graphics::SCREEN_WIDTH * -0.12f, -48.0f);
+	mPlayerScoreNumber->Position(Vector2(Graphics::SCREEN_WIDTH * 0.35f, -63.0f));
+
+	// Load high score from file
+	std::ifstream file("highscore.txt");
+	if (file.is_open()) {
+		file >> mHighScore;
+	}
+	else {
+		mHighScore = 0;
+	}
+	file.close();
+	mPlayerScoreNumber->Score(mHighScore);
 
 	// logo entities
 	mLogoRed = new Texture("Auto-bahnLogoRed.png", 0, 0, 500, 200);
@@ -223,7 +236,7 @@ bool musicPlaying = false;
 
 void StartScreen::Update() {
 	if (!musicPlaying) {
-		mAudio->PlayMusic("GetLow.mp3", -1); // play music
+		//mAudio->PlayMusic("GetLow.mp3", -1); // play music
 		musicPlaying = true; // Ensure it only plays once
 	}
 
@@ -305,6 +318,18 @@ void StartScreen::Update() {
 	}
 }
 
+void StartScreen::SetHighScore(int score) {
+	mHighScore = score;
+	mPlayerScoreNumber->Score(mHighScore);
+
+	// Save new high score to file
+	std::ofstream file("highscore.txt");
+	if (file.is_open()) {
+		file << mHighScore;
+		file.close();
+	}
+}
+
 void StartScreen::Render() {
 
 	// Render the moving highway background
@@ -319,6 +344,7 @@ void StartScreen::Render() {
 	mZoomingCarRight->Render();
 	
 	mPlayerScore->Render();
+	mPlayerScoreNumber->Render();
 
 	// Render the flickering logo
 	if (mFlickerRed) {

@@ -1,5 +1,6 @@
 #ifndef __STARTSCREEN_H
 #define __STARTSCREEN_H
+
 #include "GLTexture.h"
 #include "AnimatedGLTexture.h"
 #include "InputManager.h"
@@ -13,7 +14,6 @@ class StartScreen : public GameEntity {
 private:
 	Timer * mTimer;
 	InputManager * mInput;
-
 	AudioManager* mAudio;
 
 	// Title Screen Entities
@@ -24,7 +24,6 @@ private:
 	// Top Bar Entities
 	GameEntity * mTopBar;
 	Texture * mPlayerScore;
-
 	Scoreboard * mPlayerScoreNumber;
 
 	// Player Car Entities
@@ -90,6 +89,8 @@ private:
 	Vector2 mSliderKnobEndPos;
 	bool mInOptions;
 
+	int mHighScore;
+
 public:
 	StartScreen();
 	~StartScreen();
@@ -99,6 +100,8 @@ public:
 	int SelectedMode();
 
 	void ChangeSelectedMode(int change);
+
+	void SetHighScore(int score);
 
 	void Update() override;
 	void Render() override;

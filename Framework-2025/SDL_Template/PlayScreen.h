@@ -5,6 +5,7 @@
 #include "Player.h"
 #include "Scoreboard.h"
 #include "EnemySpawner.h"
+#include "EnemyPolice.h"
 #include "PauseGame.h"
 #include "Texture.h"
 #include <vector>
@@ -50,6 +51,9 @@ private:
 
 	Player * mPlayer;
 	EnemySpawner* mEnemySpawner;
+	EnemyPolice* mEnemyPolice;
+	bool mPoliceChaseActive;
+	float mPoliceChaseTimer;
 	PauseGame* mPauseGame;
 
 	float mLevelTime;
@@ -66,11 +70,18 @@ private:
 	void UpdateHighway();
 	void StartEnvironmentTransition();
     void UpdateEnvironmentTransition();
+	void StartPoliceChase();
+	void EndPoliceChase();
 	void UpdatePlayer();
 	void UpdateEnemy();
 
 	bool mIsPaused;
 
+	// Variables to track the current background state 
+	std::string mCurrentNorthRoadType;
+	int mCurrentNorthRoadIndex;
+	std::string mCurrentSouthRoadType;
+	int mCurrentSouthRoadIndex;
 
 public:
 	PlayScreen();
@@ -82,5 +93,18 @@ public:
 	Player* GetPlayer();
 	
 	void ResetPauseState();
+
+	void Reset();
+
+	// Methods to set and get the current background state
+	void SetCurrentBackground(std::string northRoadType, int northRoadIndex, std::string southRoadType, int southRoadIndex);
+	std::string GetCurrentNorthRoadType() const;
+	int GetCurrentNorthRoadIndex() const;
+	std::string GetCurrentSouthRoadType() const;
+	int GetCurrentSouthRoadIndex() const;
+
+	// Method to handle game over event
+	void OnGameOver();
+
 };
 #endif

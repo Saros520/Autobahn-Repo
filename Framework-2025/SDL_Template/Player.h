@@ -1,5 +1,6 @@
 #ifndef __PLAYER_H
 #define __PLAYER_H
+
 #include "AnimatedTexture.h"
 #include "AudioManager.h"
 #include "InputManager.h"
@@ -16,6 +17,7 @@ private:
     bool mVisible;
     bool mAnimating;
     bool mWasHit;
+    bool mWasHitByPolice;
 
     int mScore;
     int mLives;
@@ -33,11 +35,11 @@ private:
 
     float mDistanceTraveled;
 
-    static const int MAX_BULLETS = 2;
-    Bullet* mBullets[MAX_BULLETS];
+    //static const int MAX_BULLETS = 2;
+    //Bullet* mBullets[MAX_BULLETS];
 
     void HandleMovement();
-    void HandleFiring();
+  //  void HandleFiring();
 
     bool IsOffHighway();
 
@@ -54,6 +56,8 @@ public:
 
     int Score();
     int Lives();
+    void ResetLives();
+    void Reset();
 
     void AddScore(int change);
 
@@ -65,6 +69,10 @@ public:
     void Hit(PhysEntity* other) override;
 
     bool WasHit();
+
+    bool WasHitByPolice() const;
+
+    bool IsOutOfLives();
 
     void SetMoveBounds(float top, float bottom, float left, float right);
 

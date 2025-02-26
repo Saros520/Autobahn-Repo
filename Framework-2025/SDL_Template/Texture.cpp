@@ -6,26 +6,29 @@ namespace SDLFramework {
 		mGraphics = Graphics::Instance();
 		mTex = AssetManager::Instance()->GetTexture(filename, managed);
 
+		if (mTex == nullptr) {
+			std::cerr << "Unable to load texture from file: " << filename << " SDL Error: " << SDL_GetError() << std::endl;
+		}
+
 		SDL_QueryTexture(mTex, nullptr, nullptr, &mWidth, &mHeight);
 
 		mClipped = false;
-
 		mSourceRect = SDL_Rect();
-
 		mDestinationRect.w = mWidth;
 		mDestinationRect.h = mHeight;
-
 		mFlip = SDL_FLIP_NONE;
-
 	}
 
 	Texture::Texture(std::string filename, int x, int y, int w, int h, bool managed) {
 		mGraphics = Graphics::Instance();
 		mTex = AssetManager::Instance()->GetTexture(filename, managed);
 
+		if (mTex == nullptr) {
+			std::cerr << "Unable to load texture from file: " << filename << " SDL Error: " << SDL_GetError() << std::endl;
+		}
+
 		mWidth = w;
 		mHeight = h;
-
 		mClipped = true;
 		mDestinationRect.w = mWidth;
 		mDestinationRect.h = mHeight;
@@ -34,7 +37,6 @@ namespace SDLFramework {
 		mSourceRect.y = y;
 		mSourceRect.w = mWidth;
 		mSourceRect.h = mHeight;
-
 		mFlip = SDL_FLIP_NONE;
 	}
 
@@ -42,12 +44,13 @@ namespace SDLFramework {
 		mGraphics = Graphics::Instance();
 		mTex = AssetManager::Instance()->GetText(text, fontPath, size, color, managed);
 
+		if (mTex == nullptr) {
+			std::cerr << "Unable to create texture from text: " << text << " TTF Error: " << TTF_GetError() << std::endl;
+		}
+
 		mClipped = false;
-
 		SDL_QueryTexture(mTex, nullptr, nullptr, &mWidth, &mHeight);
-
 		mSourceRect = SDL_Rect();
-
 		mDestinationRect.w = mWidth;
 		mDestinationRect.h = mHeight;
 	}
@@ -62,7 +65,6 @@ namespace SDLFramework {
 		Vector2 scaledDimensions = Scale();
 		scaledDimensions.x *= mWidth;
 		scaledDimensions.y *= mHeight;
-
 		return scaledDimensions;
 	}
 
@@ -72,22 +74,21 @@ namespace SDLFramework {
 
 	void Texture::Render() {
 		UpdateDstRect();
-
 		mGraphics->DrawTexture(mTex, mClipped ? &mSourceRect : nullptr, &mDestinationRect, Rotation(World), mFlip);
 	}
 
 	void Texture::UpdateDstRect() {
 		Vector2 pos = Position(World);
 		Vector2 scale = Scale(World);
-		mDestinationRect.x = (int)(pos.x - mWidth * scale.x * 0.5f);
-		mDestinationRect.y = (int)(pos.y - mHeight * scale.y * 0.5f);
-		mDestinationRect.w = (int)(mWidth * scale.x);
-		mDestinationRect.h = (int)(mHeight * scale.y);
+		mDestinationRect.x = static_cast<int>(pos.x - mWidth * scale.x * 0.5f);
+		mDestinationRect.y = static_cast<int>(pos.y - mHeight * scale.y * 0.5f);
+		mDestinationRect.w = static_cast<int>(mWidth * scale.x);
+		mDestinationRect.h = static_cast<int>(mHeight * scale.y);
 	}
 
 	void Texture::Flip(bool hFlip, bool vFlip) {
 		if (hFlip && vFlip) {
-			mFlip = (SDL_RendererFlip)(SDL_FLIP_HORIZONTAL | SDL_FLIP_VERTICAL);
+			mFlip = static_cast<SDL_RendererFlip>(SDL_FLIP_HORIZONTAL | SDL_FLIP_VERTICAL);
 		}
 		else if (hFlip) {
 			mFlip = SDL_FLIP_HORIZONTAL;
@@ -107,4 +108,18 @@ namespace SDLFramework {
 	void Texture::Alpha(Uint8 alpha) {
 		SDL_SetTextureAlphaMod(mTex, alpha);
 	}
+
+	bool Texture::IsValid() const {
+		return mTex != nullptr;
+	}
+
+	int Texture::GetWidth() const {
+		return mWidth;
+	}
+
+	int Texture::GetHeight() const {
+		return mHeight;
+	}
+
 }
+

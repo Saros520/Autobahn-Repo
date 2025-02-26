@@ -35,7 +35,12 @@ namespace SDLFramework {
 
 		void SetColor(Uint8 red, Uint8 green, Uint8 blue);
 
+		bool IsValid() const;
+
 		virtual void Render() override;
+
+		int GetWidth() const;
+		int GetHeight() const;
 
 	protected:
 		void UpdateDstRect();

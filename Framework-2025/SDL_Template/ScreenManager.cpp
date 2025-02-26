@@ -1,8 +1,9 @@
 #include "ScreenManager.h"
+#include <iostream>
 
-ScreenManager * ScreenManager::sInstance = nullptr;
+ScreenManager* ScreenManager::sInstance = nullptr;
 
-ScreenManager * ScreenManager::Instance() {
+ScreenManager* ScreenManager::Instance() {
     if (sInstance == nullptr) {
         sInstance = new ScreenManager();
     }
@@ -21,6 +22,7 @@ ScreenManager::ScreenManager() {
     mCarSelectScreen = new CarSelectScreen();
     mOptionsScreen = new OptionsScreen();
     mPlayScreen = new PlayScreen();
+    mGameOverScreen = nullptr; 
 
     mCurrentScreen = Start;
     mSelectedCar = 0;
@@ -31,6 +33,13 @@ ScreenManager::~ScreenManager() {
     delete mCarSelectScreen;
     delete mOptionsScreen;
     delete mPlayScreen;
+    delete mGameOverScreen;
+}
+
+void ScreenManager::SetGameOverBackground(std::string northRoadSprite, std::string southRoadSprite) {
+    mGameOverNorthRoadSprite = northRoadSprite;
+    mGameOverSouthRoadSprite = southRoadSprite;
+    std::cout << "SetGameOverBackground: " << mGameOverNorthRoadSprite << ", " << mGameOverSouthRoadSprite << std::endl;
 }
 
 void ScreenManager::SetScreen(Screens newScreen) {
@@ -38,6 +47,16 @@ void ScreenManager::SetScreen(Screens newScreen) {
 
     if (mCurrentScreen == Play) {
         mPlayScreen->ResetPauseState();  // Reset pause state when loading back into game
+        mPlayScreen->GetPlayer()->ResetLives();  // Reset lives when loading new game
+        mPlayScreen->Reset();
+    }
+    else if (mCurrentScreen == GameOver) {
+        delete mGameOverScreen; // Delete the previous game over screen if it exists
+        mGameOverScreen = new GameOverScreen(
+            mGameOverNorthRoadSprite,
+            mGameOverSouthRoadSprite
+        );
+        mGameOverScreen->SetCurrentScore(mPlayScreen->GetPlayer()->Score());
     }
 }
 
@@ -46,17 +65,17 @@ void ScreenManager::Update() {
     case Start:
         mStartScreen->Update();
         if (mInput->KeyPressed(SDL_SCANCODE_RETURN)) {
-			if (mStartScreen->SelectedMode() == 0) {
-				mCurrentScreen = CarSelect;
-				mStartScreen->ResetAnimation();
-			}
-			else if (mStartScreen->SelectedMode() == 1) {
-				mCurrentScreen = Options;
-			}
-			else if (mStartScreen->SelectedMode() == 2) {
-				SDL_Quit();
-				exit(0);
-			}
+            if (mStartScreen->SelectedMode() == 0) {
+                mCurrentScreen = CarSelect;
+                mStartScreen->ResetAnimation();
+            }
+            else if (mStartScreen->SelectedMode() == 1) {
+                mCurrentScreen = Options;
+            }
+            else if (mStartScreen->SelectedMode() == 2) {
+                SDL_Quit();
+                exit(0);
+            }
         }
         break;
     case CarSelect:
@@ -75,7 +94,12 @@ void ScreenManager::Update() {
     case Play:
         mPlayScreen->Update();
         break;
-
+    case GameOver:
+        mGameOverScreen->Update();
+        if (mInput->KeyPressed(SDL_SCANCODE_RETURN)) {
+            mCurrentScreen = Start;
+        }
+        break;
     }
 }
 
@@ -92,6 +116,9 @@ void ScreenManager::Render() {
         break;
     case Play:
         mPlayScreen->Render();
+        break;
+    case GameOver:
+        mGameOverScreen->Render();
         break;
     }
 }
