@@ -116,7 +116,7 @@ PlayScreen::PlayScreen() {
 	mSpeedScoreboard->Parent(mBottomBar);
 
 	mSpeedLabel->Position(Graphics::SCREEN_WIDTH * 0.10f, 30.0f);
-	mSpeedScoreboard->Position(Graphics::SCREEN_WIDTH * 0.15f, 85.0f);
+	mSpeedScoreboard->Position(Graphics::SCREEN_WIDTH * 0.169f, 86.0f);
 	mLivesLabel->Position(Graphics::SCREEN_WIDTH * -0.7579f, 30.0f);
 
 }
