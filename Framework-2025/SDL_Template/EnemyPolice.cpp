@@ -12,7 +12,7 @@ EnemyPolice::EnemyPolice(Player* player, EnemySpawner* enemySpawner)
 	mPlayer = player;
 	mChaseDuration = 0.0f;
 	mChasing = false;
-	mBaseSpeed = 50.0f;
+	mBaseSpeed = 30.0f;
 
 	PhysicsManager::Instance()->UnregisterEntity(mId);
 	mId = PhysicsManager::Instance()->RegisterEntity(this, PhysicsManager::CollisionLayers::Police);
