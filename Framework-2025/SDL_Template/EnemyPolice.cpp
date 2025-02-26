@@ -3,6 +3,7 @@
 #include "ScreenManager.h"
 #include "PhysicsManager.h"
 #include <iostream>
+#include <cmath>
 
 EnemyPolice* EnemyPolice::sActivePoliceCar = nullptr;
 float EnemyPolice::sChaseDuration = 0.0f; // Initialize static chase duration
@@ -38,13 +39,15 @@ void EnemyPolice::Update() {
         Vector2 moveAmount = direction * speed * mTimer->DeltaTime();
 
         mAvoiding = false;
+        bool pathBlocked = false;
         Vector2 separationForce(0.0f, 0.0f);
 
-        // Advanced obstacle detection using raycasting
+        // Check if there is an enemy vehicle between the police car and the player car
         for (Enemy* enemy : mEnemySpawner->GetEnemies()) {
             if (enemy != this && enemy != nullptr) {
                 Vector2 enemyPos = enemy->Position();
                 Vector2 toEnemy = enemyPos - Position();
+                Vector2 toPlayer = playerPos - Position();
                 float distanceToEnemy = toEnemy.Magnitude();
                 float verticalDistance = std::abs(enemyPos.y - Position().y);
                 float horizontalDistance = std::abs(enemyPos.x - Position().x);
@@ -56,14 +59,10 @@ void EnemyPolice::Update() {
                     mAvoiding = true;
                 }
 
-                // Raycasting to detect obstacles
-                Vector2 rayDirection = (enemyPos - Position()).Normalized();
-                float rayLength = distanceToEnemy;
-                Vector2 rayEnd = Position() + rayDirection * rayLength;
-
-                // Check if the ray intersects with the enemy vehicle
-                if (CheckRayIntersection(Position(), rayEnd, enemyPos, enemy->GetTextureDimensions())) {
-                    mAvoiding = true;
+                // Check if the enemy is vertically or diagonally between the police car and the player car
+                if ((enemyPos.y < playerPos.y && enemyPos.y > Position().y && std::abs(enemyPos.x - Position().x) < 200.0f) ||
+                    (std::abs(toEnemy.Normalized().x - toPlayer.Normalized().x) < 0.1f && distanceToEnemy < toPlayer.Magnitude())) {
+                    pathBlocked = true;
                 }
             }
         }
@@ -71,7 +70,20 @@ void EnemyPolice::Update() {
         // Apply separation force
         if (mAvoiding) {
             moveAmount += separationForce * speed * mTimer->DeltaTime();
-            speed = mBaseSpeed * 0.75f;
+            speed = mBaseSpeed * 0.8f;
+        }
+
+        // If the path is blocked, move to avoid the enemy vehicle
+        if (pathBlocked) {
+            if (Position().x < Graphics::SCREEN_WIDTH * 0.5f) {
+                moveAmount = Vector2(speed * mTimer->DeltaTime(), 1.0f); // Move right
+            }
+            else {
+                moveAmount = Vector2(-speed * mTimer->DeltaTime(), 1.0f); // Move left
+            }
+        }
+        else if (!mAvoiding) {
+            speed = mBaseSpeed;
         }
 
         // Ensure the police car starts moving only after it has been spawned below the play screen
@@ -109,22 +121,6 @@ void EnemyPolice::Update() {
 
         Enemy::Update();
     }
-}
-
-bool EnemyPolice::CheckRayIntersection(const Vector2& rayStart, const Vector2& rayEnd, const Vector2& enemyPos, const Vector2& enemySize) {
-    // Check if the ray intersects with the enemy vehicle's bounding box
-    float minX = enemyPos.x - enemySize.x / 2.0f;
-    float maxX = enemyPos.x + enemySize.x / 2.0f;
-    float minY = enemyPos.y - enemySize.y / 2.0f;
-    float maxY = enemyPos.y + enemySize.y / 2.0f;
-
-    // Check if the ray intersects with the bounding box
-    if (rayStart.x < minX && rayEnd.x < minX) return false;
-    if (rayStart.x > maxX && rayEnd.x > maxX) return false;
-    if (rayStart.y < minY && rayEnd.y < minY) return false;
-    if (rayStart.y > maxY && rayEnd.y > maxY) return false;
-
-    return true;
 }
 
 void EnemyPolice::Render() {
@@ -167,7 +163,7 @@ void EnemyPolice::StopChase() {
         // Apply separation force
         if (mAvoiding) {
             moveAmount += separationForce * speed * mTimer->DeltaTime();
-            speed = mBaseSpeed * 0.93f;
+            speed = mBaseSpeed * 0.8f;
         }
 
         if (!mAvoiding) {
