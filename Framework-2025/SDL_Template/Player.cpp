@@ -20,7 +20,7 @@ Player::Player() {
 	SetCarTexture(0);
 
 	mMoveSpeed = 223.0f;
-	mHorizontalMoveSpeed = 186.0f;
+	mHorizontalMoveSpeed = 200.0f;
 	mAcceleration = 40.0f;
 	mDeceleration = 30.0f;
 	mCurrentSpeed = 186.0f;
