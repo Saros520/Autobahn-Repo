@@ -50,6 +50,7 @@ Enemy::~Enemy() {
     delete mDeathAnimation;
     mDeathAnimation = nullptr;
 
+    PhysicsManager::Instance()->UnregisterEntity(mId);
 }
 
 void Enemy::InitializeLanes() {
