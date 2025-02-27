@@ -270,7 +270,8 @@ void PlayScreen::StartPoliceChase() {
 void PlayScreen::EndPoliceChase() {
     if (mPoliceChaseActive) {
         if (EnemyPolice::GetActivePoliceCar() != nullptr) {
-            delete EnemyPolice::GetActivePoliceCar();
+            EnemyPolice::GetActivePoliceCar()->Destroy();
+            mEnemyPolice = nullptr; // Set the pointer to nullptr after deletion
         }
         mPoliceChaseActive = false;
     }

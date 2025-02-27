@@ -17,9 +17,7 @@ private:
     bool mAvoiding;
     float mBaseSpeed;
     bool mChasing;
-
-    bool CheckRayIntersection(const Vector2& rayStart, const Vector2& rayEnd, const Vector2& enemyPos, const Vector2& enemySize);
-
+    bool mDestroyed;
 
 public:
     EnemyPolice(Player* player, EnemySpawner* enemySpawner);
@@ -32,6 +30,7 @@ public:
     void Destroy();
     static void SpawnNewPoliceCar(Player* player, EnemySpawner* enemySpawner);
     static EnemyPolice* GetActivePoliceCar() { return sActivePoliceCar; }
+
 };
 
 #endif

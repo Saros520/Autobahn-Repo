@@ -9,7 +9,7 @@ EnemyPolice* EnemyPolice::sActivePoliceCar = nullptr;
 float EnemyPolice::sChaseDuration = 0.0f; // Initialize static chase duration
 
 EnemyPolice::EnemyPolice(Player* player, EnemySpawner* enemySpawner)
-    : Enemy(true, 18), mEnemySpawner(enemySpawner), mAvoiding(false) {
+    : Enemy(true, 18), mEnemySpawner(enemySpawner), mAvoiding(false), mDestroyed(false) {
     mTimer = Timer::Instance();
     mPlayer = player;
     mChasing = false;
@@ -29,6 +29,13 @@ EnemyPolice::~EnemyPolice() {
 }
 
 void EnemyPolice::Update() {
+    if (mDestroyed) {
+        return; // Do not update if the object is destroyed
+    }
+
+    // Call the base class update method first
+    Enemy::Update();
+
     if (mChasing) {
         sChaseDuration += mTimer->DeltaTime();
 
@@ -113,12 +120,14 @@ void EnemyPolice::Update() {
                 return;
             }
         }
-
-        Enemy::Update();
     }
 }
 
 void EnemyPolice::Render() {
+    if (mDestroyed) {
+        return; // Do not render if the object is destroyed
+    }
+
     Enemy::Render();
 }
 
@@ -181,7 +190,7 @@ void EnemyPolice::StopChase() {
 void EnemyPolice::Destroy() {
     // Properly delete the police car
     sActivePoliceCar = nullptr;
-    delete this;
+    mDestroyed = true; // Set the destroyed flag
 }
 
 void EnemyPolice::SpawnNewPoliceCar(Player* player, EnemySpawner* enemySpawner) {
@@ -191,7 +200,7 @@ void EnemyPolice::SpawnNewPoliceCar(Player* player, EnemySpawner* enemySpawner) 
 
         // Set the initial position to being just below the playscreen 
         float spawnY = Graphics::SCREEN_HEIGHT + 50.0f;
-        newPoliceCar->Position(Vector2(Graphics::SCREEN_HEIGHT * 0.5f, spawnY));
+        newPoliceCar->Position(Vector2(Graphics::SCREEN_WIDTH * 0.5f, spawnY));
 
         // Debug output to verify the position
         Vector2 pos = newPoliceCar->Position();
