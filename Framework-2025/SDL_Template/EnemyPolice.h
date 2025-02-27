@@ -30,6 +30,7 @@ public:
     void Destroy();
     static void SpawnNewPoliceCar(Player* player, EnemySpawner* enemySpawner);
     static EnemyPolice* GetActivePoliceCar() { return sActivePoliceCar; }
+    bool IsDestroyed() const { return mDestroyed; }
 
 };
 

@@ -47,7 +47,7 @@ void EnemyPolice::Update() {
 
         mAvoiding = false;
         bool pathBlocked = false;
-        Vector2 separationForce(0.0f, 0.0f);
+        Vector2 separationForce(0.5f, 0.5f);
 
         // Check if there is an enemy vehicle between the police car and the player car
         for (Enemy* enemy : mEnemySpawner->GetEnemies()) {
