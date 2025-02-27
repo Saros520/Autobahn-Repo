@@ -14,6 +14,10 @@ private:
     InputManager* mInput;
     AudioManager* mAudio;
 
+    float mResetDelay;
+    float mResetDelayTimer;
+    bool mWaitingForResetDelay;
+
     bool mVisible;
     bool mAnimating;
     bool mWasHit;

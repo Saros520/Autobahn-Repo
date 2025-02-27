@@ -24,7 +24,7 @@ Enemy::Enemy(bool moveDownward, int vehicleIndex) {
     mTexture->Parent(this);
     mTexture->Position(Vec2_Zero);
 
-    mDeathAnimation = new AnimatedTexture(fileName, 0, 0, 128, 128, 4, 1.0f, Animation::Layouts::Horizontal);
+    mDeathAnimation = new AnimatedTexture("EnemyExplosion.png", 0, 0, 128, 128, 4, 3.0f, Animation::Layouts::Horizontal);
     mDeathAnimation->Parent(this);
     mDeathAnimation->Position(Vec2_Zero);
     mDeathAnimation->SetWrapMode(Animation::WrapModes::Once);
