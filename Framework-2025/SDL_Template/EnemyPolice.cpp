@@ -102,11 +102,6 @@ void EnemyPolice::Update() {
             StopChase();
         }
 
-        // Check for collision with the player car
-        if (CheckCollision(mPlayer)) {
-            ScreenManager::Instance()->SetScreen(ScreenManager::GameOver);
-        }
-
         // Check for collision with other enemy vehicles
         for (Enemy* enemy : mEnemySpawner->GetEnemies()) {
             if (enemy != this && enemy != nullptr && CheckCollision(enemy)) {
