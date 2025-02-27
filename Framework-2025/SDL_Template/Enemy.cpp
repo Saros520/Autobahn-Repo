@@ -84,6 +84,7 @@ void Enemy::Hit(PhysEntity* other) {
     mAnimating = true;
     mDeathAnimation->ResetAnimation();
     mAudio->PlaySFX("SFX/PlayerExplosion.wav");
+    PhysicsManager::Instance()->UnregisterEntity(mId);
 }
 
 void Enemy::Update() {

@@ -32,6 +32,8 @@ Bullet::~Bullet() {
 
 	delete mTexture;
 	mTexture = nullptr;
+
+	PhysicsManager::Instance()->UnregisterEntity(mId);
 }
 
 void Bullet::Fire(Vector2 pos) {

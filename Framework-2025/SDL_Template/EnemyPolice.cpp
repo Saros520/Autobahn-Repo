@@ -19,6 +19,8 @@ EnemyPolice::EnemyPolice(Player* player, EnemySpawner* enemySpawner)
     mId = PhysicsManager::Instance()->RegisterEntity(this, PhysicsManager::CollisionLayers::Police);
 
     sActivePoliceCar = this; // Set the active police car
+
+    Tag("PoliceCar");
 }
 
 EnemyPolice::~EnemyPolice() {
@@ -26,6 +28,8 @@ EnemyPolice::~EnemyPolice() {
     mPlayer = nullptr;
     mEnemySpawner = nullptr;
     sActivePoliceCar = nullptr; // clearing the active police car
+
+    PhysicsManager::Instance()->UnregisterEntity(mId);
 }
 
 void EnemyPolice::Update() {
@@ -191,6 +195,7 @@ void EnemyPolice::Destroy() {
     // Properly delete the police car
     sActivePoliceCar = nullptr;
     mDestroyed = true; // Set the destroyed flag
+    PhysicsManager::Instance()->UnregisterEntity(mId);
 }
 
 void EnemyPolice::SpawnNewPoliceCar(Player* player, EnemySpawner* enemySpawner) {

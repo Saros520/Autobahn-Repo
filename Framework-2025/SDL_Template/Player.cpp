@@ -80,6 +80,7 @@ Player::~Player() {
 	/*for (auto b : mBullets) {
 		delete b;
 	}*/
+	PhysicsManager::Instance()->UnregisterEntity(mId);
 }
 
 void Player::HandleMovement() {
