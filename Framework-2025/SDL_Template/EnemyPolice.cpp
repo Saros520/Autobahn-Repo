@@ -51,7 +51,7 @@ void EnemyPolice::Update() {
 
         mAvoiding = false;
         bool pathBlocked = false;
-        Vector2 separationForce(0.3f, 0.3f);
+        Vector2 separationForce(0.35f, 0.35f);
 
         // Check if there is an enemy vehicle between the police car and the player car
         for (Enemy* enemy : mEnemySpawner->GetEnemies()) {
@@ -64,15 +64,15 @@ void EnemyPolice::Update() {
                 float horizontalDistance = std::abs(enemyPos.x - Position().x);
 
                 // Check if the enemy is within a certain distance to avoid
-                if (verticalDistance < 360.0f && horizontalDistance < 200.0f) { // Adjust the distance thresholds as needed
+                if (verticalDistance < 460.0f && horizontalDistance < 300.0f) { // Adjust the distance thresholds as needed
                     Vector2 avoidDirection = (Position() - enemyPos).Normalized();
-                    separationForce += Vector2(avoidDirection.x / distanceToEnemy, avoidDirection.y / distanceToEnemy) * 2.0f; // Stronger force for closer enemies
+                    separationForce += Vector2(avoidDirection.x / distanceToEnemy, avoidDirection.y / distanceToEnemy) * 3.0f; // Stronger force for closer enemies
                     mAvoiding = true;
                 }
 
                 // Check if the enemy is vertically or diagonally between the police car and the player car
-                if ((enemyPos.y < playerPos.y && enemyPos.y > Position().y && std::abs(enemyPos.x - Position().x) < 200.0f) ||
-                    (std::abs(toEnemy.Normalized().x - toPlayer.Normalized().x) < 0.1f && distanceToEnemy < toPlayer.Magnitude())) {
+                if ((enemyPos.y < playerPos.y && enemyPos.y > Position().y && std::abs(enemyPos.x - Position().x) < 0.4f) ||
+                    (std::abs(toEnemy.Normalized().x - toPlayer.Normalized().x) < 0.2f && distanceToEnemy < toPlayer.Magnitude())) {
                     pathBlocked = true;
                 }
             }
@@ -87,10 +87,10 @@ void EnemyPolice::Update() {
         // If the path is blocked, move to avoid the enemy vehicle
         if (pathBlocked) {
             if (Position().x < Graphics::SCREEN_WIDTH * 0.5f) {
-                moveAmount = Vector2(speed * mTimer->DeltaTime(), 0.5f); // Move right
+                moveAmount = Vector2(speed * mTimer->DeltaTime(), 0.9f); // Move right
             }
             else {
-                moveAmount = Vector2(-speed * mTimer->DeltaTime(), 0.5f); // Move left
+                moveAmount = Vector2(-speed * mTimer->DeltaTime(), 0.9f); // Move left
             }
         }
         else if (!mAvoiding) {
@@ -160,7 +160,7 @@ void EnemyPolice::StopChase() {
                 float horizontalDistance = std::abs(enemyPos.x - Position().x);
 
                 // Check if the enemy is within a certain distance to avoid
-                if (verticalDistance < 360.0f && horizontalDistance < 200.0f) { // Adjust the distance thresholds as needed
+                if (verticalDistance < 460.0f && horizontalDistance < 300.0f) { // Adjust the distance thresholds as needed
                     Vector2 avoidDirection = (Position() - enemyPos).Normalized();
                     separationForce += Vector2(avoidDirection.x / distanceToEnemy, avoidDirection.y / distanceToEnemy) * 2.0f; // Stronger force for closer enemies
                     mAvoiding = true;
