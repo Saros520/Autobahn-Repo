@@ -24,12 +24,12 @@ Player::Player() {
 	mAcceleration = 40.0f;
 	mDeceleration = 30.0f;
 	mCurrentSpeed = 186.0f;
-	mMoveBoundsX = Vector2(20.0f + mTexture->ScaledDimensions().x / 2, Graphics::SCREEN_WIDTH - mTexture->ScaledDimensions().x / 2);
-	mMoveBoundsY = Vector2(110.0f, Graphics::SCREEN_HEIGHT);
+	mMoveBoundsX = Vector2(120.0f + mTexture->ScaledDimensions().x / 2, 780.0f - mTexture->ScaledDimensions().x / 2);
+	mMoveBoundsY = Vector2(90.0f, Graphics::SCREEN_HEIGHT);
 
 	mDistanceTraveled = 0.0f;
 
-	Position(Vector2(Graphics::SCREEN_WIDTH * 0.75f, Graphics::SCREEN_HEIGHT * 0.9f));
+	Position(Vector2(Graphics::SCREEN_WIDTH * 0.503f, Graphics::SCREEN_HEIGHT * 0.9f));
 
 	mDeathAnimation = new AnimatedTexture("CarExplosion.png", 0, 0, 128, 128, 5, 1.0f, Animation::Layouts::Horizontal);
 	mDeathAnimation->Parent(this);
@@ -321,5 +321,5 @@ void Player::Reset() {
 	mWasHit = false;
 	mWasHitByPolice = false;
 	mVisible = true;
-	Position(Vector2(Graphics::SCREEN_WIDTH * 0.75f, Graphics::SCREEN_HEIGHT * 0.9f));
+	Position(Vector2(Graphics::SCREEN_WIDTH * 0.503f, Graphics::SCREEN_HEIGHT * 0.9f));
 }
