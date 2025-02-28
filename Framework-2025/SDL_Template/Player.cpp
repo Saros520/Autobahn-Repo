@@ -94,6 +94,7 @@ void Player::HandleMovement() {
 
     if (moveDir.MagnitudeSqr() > 0.0f) {
         moveDir = moveDir.Normalized();
+        mMoveDirection = moveDir; // Update mMoveDirection
         if (moveDir.y > 0) {
             mCurrentSpeed -= mDeceleration * mTimer->DeltaTime();
             if (mCurrentSpeed < 150.0f) {
@@ -182,6 +183,10 @@ void Player::AddScore(int change) {
 
 float Player::DistanceTraveled() const {
     return mDistanceTraveled;
+}
+
+Vector2 Player::GetVelocity() const {
+    return mMoveDirection * mCurrentSpeed;
 }
 
 float Player::GetSpeed() {

@@ -39,6 +39,8 @@ private:
 
     float mDistanceTraveled;
 
+    Vector2 mMoveDirection;
+
     //static const int MAX_BULLETS = 2;
     //Bullet* mBullets[MAX_BULLETS];
 
@@ -79,6 +81,8 @@ public:
     bool IsOutOfLives();
 
     void SetMoveBounds(float top, float bottom, float left, float right);
+
+    Vector2 GetVelocity() const;
 
     void Update() override;
     void Render() override;
