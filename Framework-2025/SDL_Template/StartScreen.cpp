@@ -43,7 +43,7 @@ StartScreen::StartScreen() {
     mPlayerScore->Position(Graphics::SCREEN_WIDTH * -0.12f, -48.0f);
     mPlayerScoreNumber->Position(Vector2(Graphics::SCREEN_WIDTH * 0.2f, -48.0f));
 
-    // Load high score from file
+    // Load high score from memory
     ReloadHighScore();
 
     // logo entities
@@ -306,17 +306,9 @@ void StartScreen::Update() {
 void StartScreen::SetHighScore(float score) {
     mHighScore = score;
     mPlayerScoreNumber->Score(mHighScore);
-
-    // Save new high score to file
-    std::ofstream file("highscore.txt");
-    if (file.is_open()) {
-        file << mHighScore;
-        file.close();
-    }
 }
 
 void StartScreen::ReloadHighScore() {
-    mPlayerScoreNumber->LoadHighScore();
     mHighScore = mPlayerScoreNumber->GetHighScore();
     mPlayerScoreNumber->Distance(mHighScore);
 }

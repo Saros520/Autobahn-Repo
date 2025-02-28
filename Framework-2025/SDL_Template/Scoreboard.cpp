@@ -7,12 +7,12 @@
 
 Scoreboard::Scoreboard()
     : Scoreboard({ 230, 230, 230 }) {
-    LoadHighScore();
+    mHighScoreValue = 0.0f;
 }
 
 Scoreboard::Scoreboard(SDL_Color color) {
     mColor = color;
-    LoadHighScore();
+    mHighScoreValue = 0.0f;
 }
 
 Scoreboard::~Scoreboard() {
@@ -49,38 +49,12 @@ void Scoreboard::ClearBoard() {
     mScore.clear();
 }
 
-void Scoreboard::SaveHighScore() {
-    std::ofstream file("highscore.txt");
-    if (file.is_open()) {
-        file << mHighScoreValue;
-    }
-    file.close();
-}
-
-void Scoreboard::LoadHighScore() {
-    std::ifstream file("highscore.txt");
-    if (file.is_open()) {
-        file >> mHighScoreValue;
-    }
-    else {
-        mHighScoreValue = 0;
-    }
-    file.close();
-}
-
 float Scoreboard::GetHighScore() const {
     return mHighScoreValue;
 }
 
 void Scoreboard::SetHighScore(float highScore) {
     mHighScoreValue = highScore;
-
-    // Save new high score to file
-    std::ofstream file("highscore.txt");
-    if (file.is_open()) {
-        file << mHighScoreValue;
-        file.close();
-    }
 }
 
 void Scoreboard::UpdateScoreDisplay() {

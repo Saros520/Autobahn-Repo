@@ -2,42 +2,41 @@
 #include "ScreenManager.h"
 #include "AssetManager.h"
 #include "Graphics.h"
-#include <fstream>
 #include <iostream>
 
 GameOverScreen::GameOverScreen(std::string northRoadSprite, std::string southRoadSprite, float currentScore) {
     mInput = InputManager::Instance();
     mBustedText = new Texture("Busted", "emulogic.ttf", 72, { 255, 0, 0 });
-	mYouTraveled = new Texture("You Traveled", "emulogic.ttf", 32, { 255, 0, 0 });
-	mHighScoreLabel = new Texture("High Score", "emulogic.ttf", 32, { 255, 0, 0 });
 
     // Set the backgrounds for the GameOver screen
     SetBackground(northRoadSprite, southRoadSprite);
 
-    // Bottom bar entities
-	mYouTraveled->Parent(this);
-	mYouTraveled->Position(Graphics::SCREEN_WIDTH * 0.37f, Graphics::SCREEN_HEIGHT * 0.9f);
-    mCurrentScore = currentScore;
-    mPlayerScore = new Scoreboard({ 255, 0, 0 });
-    mPlayerScore->Distance(mCurrentScore);
-    mPlayerScore->Parent(this);
-    mPlayerScore->Position(Graphics::SCREEN_WIDTH * 0.67f, Graphics::SCREEN_HEIGHT * 0.9f);
-
     // Top bar entities
-	mHighScoreLabel->Parent(this);
-	mHighScoreLabel->Position(Graphics::SCREEN_WIDTH * 0.35f, Graphics::SCREEN_HEIGHT * 0.05f);
+    mHighScoreLabel = new Texture("High Score", "emulogic.ttf", 32, { 255, 0, 0 });
+    mHighScoreLabel->Parent(this);
+    mHighScoreLabel->Position(Graphics::SCREEN_WIDTH * 0.35f, Graphics::SCREEN_HEIGHT * 0.05f);
     mHighScoreBoard = new Scoreboard({ 255, 0, 0 }); // Red color for high score
-    mHighScoreBoard->LoadHighScore();
     mHighScore = mHighScoreBoard->GetHighScore();
 
-    if (mCurrentScore > mHighScore) {
-        mHighScore = mCurrentScore;
+    if (currentScore > mHighScore) {
+        mHighScore = currentScore;
         mHighScoreBoard->SetHighScore(mHighScore);
     }
 
     mHighScoreBoard->Distance(mHighScore);
     mHighScoreBoard->Parent(this);
     mHighScoreBoard->Position(Graphics::SCREEN_WIDTH * 0.7f, Graphics::SCREEN_HEIGHT * 0.05f);
+
+    // Bottom bar entities
+    mYouTraveled = new Texture("You Traveled", "emulogic.ttf", 32, { 255, 0, 0 });
+    mYouTraveled->Parent(this);
+    mYouTraveled->Position(Graphics::SCREEN_WIDTH * 0.37f, Graphics::SCREEN_HEIGHT * 0.9f);
+
+    mCurrentScore = currentScore;
+    mPlayerScore = new Scoreboard({ 255, 0, 0 });
+    mPlayerScore->Distance(mCurrentScore);
+    mPlayerScore->Parent(this);
+    mPlayerScore->Position(Graphics::SCREEN_WIDTH * 0.67f, Graphics::SCREEN_HEIGHT * 0.9f);
 }
 
 GameOverScreen::~GameOverScreen() {
@@ -93,8 +92,8 @@ void GameOverScreen::Render() {
     else {
         std::cerr << "Background texture is null" << std::endl;
     }
-	mYouTraveled->Render();
-	mHighScoreLabel->Render();
+    mYouTraveled->Render();
+    mHighScoreLabel->Render();
     mPlayerScore->Render();
     mHighScoreBoard->Render();
 

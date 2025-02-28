@@ -27,8 +27,6 @@ public:
 	void Update() override;
 	void Render() override;
 
-	void SaveHighScore();
-	void LoadHighScore();
 	float GetHighScore() const;
 	void SetHighScore(float highScore);
 
