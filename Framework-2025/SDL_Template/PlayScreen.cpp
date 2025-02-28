@@ -5,6 +5,8 @@
 #include <ctime>
 #include <sys/stat.h>
 #include <iostream>
+#include <iomanip>
+#include <sstream>
 
 bool FileExists(const std::string& filePath) {
     struct stat buffer;
@@ -85,13 +87,16 @@ PlayScreen::PlayScreen() {
     mTopBar = new GameEntity(Graphics::SCREEN_WIDTH * 0.5f, 80.0f);
     mPlayerScore = new Texture("High-Score", "emulogic.ttf", 32, { 200, 0, 0 });
     mPlayerScoreNumber = new Scoreboard();
+    mHighScoreNumber = new Scoreboard();
 
     mTopBar->Parent(this);
     mPlayerScore->Parent(mTopBar);
     mPlayerScoreNumber->Parent(mTopBar);
+    mHighScoreNumber->Parent(mTopBar);
 
     mPlayerScore->Position(Graphics::SCREEN_WIDTH * -0.12f, -63.0f);
     mPlayerScoreNumber->Position(Graphics::SCREEN_WIDTH * 0.35f, -63.0f);
+    mHighScoreNumber->Position(Graphics::SCREEN_WIDTH * 0.2f, -63.0f);
 
     mPlayer = new Player();
     mPlayer->Parent(this);
@@ -102,13 +107,6 @@ PlayScreen::PlayScreen() {
     mEnemyPolice = nullptr;
     mPoliceChaseActive = false;
     mPoliceChaseTimer = 0.0f;
-
-    /*mLevelTime = 0.0f;
-    mLevelTimeText = new Scoreboard();
-    mLevelTimeText->Parent(this);
-    mLevelTimeText->Position(Graphics::SCREEN_WIDTH * 0.5f, 32.0f);*/
-
-    /*mLevelTimeText->Score(mLevelTime);*/
 
     mPauseGame = new PauseGame();
     mPauseGame->Parent(this);
@@ -171,14 +169,14 @@ PlayScreen::~PlayScreen() {
         delete EnemyPolice::GetActivePoliceCar();
     }
 
-    /*delete mLevelTimeText;
-    mLevelTimeText = nullptr;*/
-
     delete mPlayerScore;
     mPlayerScore = nullptr;
 
     delete mPlayerScoreNumber;
     mPlayerScoreNumber = nullptr;
+
+    delete mHighScoreNumber;
+    mHighScoreNumber = nullptr;
 
     delete mTopBar;
     mTopBar = nullptr;
@@ -197,7 +195,6 @@ PlayScreen::~PlayScreen() {
 
     delete mBottomBar;
     mBottomBar = nullptr;
-
 }
 
 void PlayScreen::UpdateHighway() {
@@ -419,8 +416,6 @@ void PlayScreen::Update() {
             musicPaused = !musicPaused;  // Toggle the pause state
         }
 
-        /*mLevelTimeText->Score(mLevelTime);
-        mLevelTimeText->Update();*/
         mPlayerScoreNumber->Score(mPlayer->Score());
         mPlayerScoreNumber->Update();
 
@@ -428,8 +423,18 @@ void PlayScreen::Update() {
         mSpeedScoreboard->Score(playerLives); // Display remaining lives
         mSpeedScoreboard->Update();
 
+        // Display distance traveled in kilometers to the hundredths place
         mPlayerScoreNumber->Distance(mPlayer->DistanceTraveled());
         mPlayerScoreNumber->Update();
+
+        // Update high score if the current distance is greater
+        float currentDistance = mPlayer->DistanceTraveled();
+        float highScore = mHighScoreNumber->GetHighScore();
+        if (currentDistance > highScore) {
+            mHighScoreNumber->SetHighScore(currentDistance);
+        }
+        mHighScoreNumber->Distance(mHighScoreNumber->GetHighScore());
+        mHighScoreNumber->Update();
 
         float speed = mPlayer->GetSpeed();
         mSpeedScoreboard->Score(static_cast<int>(speed));
@@ -443,9 +448,9 @@ void PlayScreen::Render() {
         mSouthRoadSprites[mCurrentEnvironment][i]->Render();
         if (mTransitioning) {
             mNorthRoadSprites[mNextEnvironment][i]->Render();
-			mSouthRoadSprites[mNextEnvironment][i]->Render();
-		}
-	}
+            mSouthRoadSprites[mNextEnvironment][i]->Render();
+        }
+    }
 
 	mSpeedBox->Render();
 	mLivesBox->Render();
@@ -458,46 +463,46 @@ void PlayScreen::Render() {
 		}
 	}
 
-	/*mLevelTimeText->Render();*/
-	mPlayerScore->Render();
-	mPlayerScoreNumber->Render();
-	mSpeedLabel->Render();
-	mSpeedScoreboard->Render();
-	mLivesLabel->Render();
-	
-	if (mIsPaused) {
-		mPauseGame->Render();
-	}
+    mPlayerScore->Render();
+    mPlayerScoreNumber->Render();
+    mHighScoreNumber->Render();
+    mSpeedLabel->Render();
+    mSpeedScoreboard->Render();
+    mLivesLabel->Render();
+
+    if (mIsPaused) {
+        mPauseGame->Render();
+    }
 }
 
 void PlayScreen::OnGameOver() {
-	std::string currentNorthRoadType = GetCurrentNorthRoadType();
-	int currentNorthRoadIndex = GetCurrentNorthRoadIndex();
-	std::string currentSouthRoadType = GetCurrentSouthRoadType();
-	int currentSouthRoadIndex = GetCurrentSouthRoadIndex();
+    std::string currentNorthRoadType = GetCurrentNorthRoadType();
+    int currentNorthRoadIndex = GetCurrentNorthRoadIndex();
+    std::string currentSouthRoadType = GetCurrentSouthRoadType();
+    int currentSouthRoadIndex = GetCurrentSouthRoadIndex();
 
-	ScreenManager::Instance()->SetScreen(ScreenManager::GameOver);
+    ScreenManager::Instance()->SetScreen(ScreenManager::GameOver);
 }
 
 void PlayScreen::Reset() {
-	mHighWaySpeed = 550.0f; // Reset highway speed
-	mCurrentEnvironment = 2;
-	mNextEnvironment = 1;
-	mEnvironmentChangeTimer = 0.0f;
-	mTransitioning = false;
-	mTransitionAlpha = 0.0f;
+    mHighWaySpeed = 550.0f; // Reset highway speed
+    mCurrentEnvironment = 2;
+    mNextEnvironment = 1;
+    mEnvironmentChangeTimer = 0.0f;
+    mTransitioning = false;
+    mTransitionAlpha = 0.0f;
 
-	for (int i = 0; i < NUM_ROAD_SPRITES; ++i) {
-		mHighwayPosY[i] = mNorthRoadSprites[mCurrentEnvironment][i]->Position().y;
-	}
+    for (int i = 0; i < NUM_ROAD_SPRITES; ++i) {
+        mHighwayPosY[i] = mNorthRoadSprites[mCurrentEnvironment][i]->Position().y;
+    }
 
-	mPlayer->ResetLives();  // Reset player lives
-	mPlayer->Reset();  // Reset player state
-	mEnemySpawner->Reset();  // Reset enemy spawner
-	mPoliceChaseActive = false;
-	mPoliceChaseTimer = 0.0f;
-	mLevelTime = 0.0f;
+    mPlayer->ResetLives();  // Reset player lives
+    mPlayer->Reset();  // Reset player state
+    mEnemySpawner->Reset();  // Reset enemy spawner
+    mPoliceChaseActive = false;
+    mPoliceChaseTimer = 0.0f;
+    mLevelTime = 0.0f;
 
-	mPlayerScoreNumber->Score(0);  // Reset score
-	mSpeedScoreboard->Score(0);  // Reset speed
+    mPlayerScoreNumber->Score(0);  // Reset score
+    mSpeedScoreboard->Score(0);  // Reset speed
 }

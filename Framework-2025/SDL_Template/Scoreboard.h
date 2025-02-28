@@ -12,6 +12,7 @@ private:
 	std::vector<Texture *> mScore;
 	int mScoreValue;
 	int mHighScoreValue;
+	float mDistanceValue;
 
 	SDL_Color mColor;
 

@@ -48,6 +48,7 @@ private:
 	GameEntity* mTopBar;
 	Texture* mPlayerScore;
 	Scoreboard* mPlayerScoreNumber;
+	Scoreboard* mHighScoreNumber;
 
 	Player * mPlayer;
 	EnemySpawner* mEnemySpawner;
