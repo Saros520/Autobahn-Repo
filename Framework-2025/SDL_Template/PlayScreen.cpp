@@ -130,6 +130,10 @@ PlayScreen::PlayScreen() {
     mSpeedScoreboard->Position(Graphics::SCREEN_WIDTH * 0.169f, 86.0f);
     mLivesLabel->Position(Graphics::SCREEN_WIDTH * -0.7579f, 30.0f);
 
+    mLivesScoreboard = new Scoreboard();
+    mLivesScoreboard->Parent(mBottomBar);
+    mLivesScoreboard->Position(Graphics::SCREEN_WIDTH * -0.72f, 86.0f);
+
 }
 
 Player* PlayScreen::GetPlayer() {
@@ -187,6 +191,9 @@ PlayScreen::~PlayScreen() {
 
     delete mLivesLabel;
     mLivesLabel = nullptr;
+
+    delete mLivesScoreboard;
+    mLivesScoreboard = nullptr;
 
     delete mBottomBar;
     mBottomBar = nullptr;
@@ -301,6 +308,9 @@ int PlayScreen::GetCurrentSouthRoadIndex() const {
 }
 
 void PlayScreen::Update() {
+
+    mLivesScoreboard->Score(mPlayer->Lives()); 
+    mLivesScoreboard->Update();
 
     if (mInput->KeyPressed(SDL_SCANCODE_ESCAPE)) {
         mIsPaused = !mIsPaused;
@@ -439,6 +449,7 @@ void PlayScreen::Render() {
 
 	mSpeedBox->Render();
 	mLivesBox->Render();
+    mLivesScoreboard->Render();
 	mPlayer->Render();
 	mEnemySpawner->Render();
 	if (mPoliceChaseActive) {

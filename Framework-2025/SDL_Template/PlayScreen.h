@@ -66,6 +66,7 @@ private:
 	Texture* mLivesLabel;
 	Texture* mSpeedBox;
 	Texture* mLivesBox;
+	Scoreboard* mLivesScoreboard;
 
 	void UpdateHighway();
 	void StartEnvironmentTransition();
