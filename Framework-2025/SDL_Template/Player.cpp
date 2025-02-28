@@ -202,7 +202,7 @@ void Player::AddScore(int change) {
 	mScore += change;
 }
 
-float Player::DistanceTraveled() {
+float Player::DistanceTraveled() const {
 	return mDistanceTraveled;
 }
 

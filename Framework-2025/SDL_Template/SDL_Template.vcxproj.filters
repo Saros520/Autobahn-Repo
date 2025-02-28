@@ -141,6 +141,15 @@
     <ClCompile Include="PauseGame.cpp">
       <Filter>Source Files\AutoBahn Game</Filter>
     </ClCompile>
+    <ClCompile Include="EnemyPolice.cpp">
+      <Filter>Source Files\AutoBahn Game</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemySpawner.cpp">
+      <Filter>Source Files\AutoBahn Game</Filter>
+    </ClCompile>
+    <ClCompile Include="GameOverScreen.cpp">
+      <Filter>Source Files\AutoBahn Game</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameEntity.h">
@@ -236,10 +245,19 @@
     <ClInclude Include="CarSelectScreen.h">
       <Filter>Header Files\AutoBahn Game</Filter>
     </ClInclude>
-    <ClInclude Include="OptionsScreen.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="PauseGame.h">
+      <Filter>Header Files\AutoBahn Game</Filter>
+    </ClInclude>
+    <ClInclude Include="GameOverScreen.h">
+      <Filter>Header Files\AutoBahn Game</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyPolice.h">
+      <Filter>Header Files\AutoBahn Game</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemySpawner.h">
+      <Filter>Header Files\AutoBahn Game</Filter>
+    </ClInclude>
+    <ClInclude Include="OptionsScreen.h">
       <Filter>Header Files\AutoBahn Game</Filter>
     </ClInclude>
   </ItemGroup>

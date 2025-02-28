@@ -14,7 +14,6 @@ public:
 
 private:
     static ScreenManager* sInstance;
-
     InputManager* mInput;
 
     StartScreen* mStartScreen;

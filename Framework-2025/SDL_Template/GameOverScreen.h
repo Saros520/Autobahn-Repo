@@ -19,11 +19,10 @@ private:
     Vector2 mBackgroundScaleFactor;
 
 public:
-    GameOverScreen(std::string northRoadSprite, std::string southRoadSprite);
+    GameOverScreen(std::string northRoadSprite, std::string southRoadSprite, float currentScore);
     ~GameOverScreen();
 
     void SetBackground(std::string northRoadSprite, std::string southRoadSprite);
-    void SetCurrentScore(int score);
     void Update() override;
     void Render() override;
 };

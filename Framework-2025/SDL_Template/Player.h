@@ -65,7 +65,7 @@ public:
 
     void AddScore(int change);
 
-    float DistanceTraveled();
+    float DistanceTraveled() const;
     float GetSpeed(); // New method to get the current speed
 
     // Inherited from PhysEntity

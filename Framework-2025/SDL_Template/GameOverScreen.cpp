@@ -5,24 +5,31 @@
 #include <fstream>
 #include <iostream>
 
-GameOverScreen::GameOverScreen(std::string northRoadSprite, std::string southRoadSprite) {
+GameOverScreen::GameOverScreen(std::string northRoadSprite, std::string southRoadSprite, float currentScore) {
     mInput = InputManager::Instance();
-    mPlayerScore = new Scoreboard();
-    mHighScoreBoard = new Scoreboard({ 255, 0, 0 }); // Red color for high score
     mBustedText = new Texture("Busted", "emulogic.ttf", 72, { 255, 0, 0 });
 
     // Set the backgrounds for the GameOver screen
     SetBackground(northRoadSprite, southRoadSprite);
 
-    // Load high score from file
-    std::ifstream file("highscore.txt");
-    if (file.is_open()) {
-        file >> mHighScore;
+    mCurrentScore = currentScore;
+    mPlayerScore = new Scoreboard({ 255, 0, 0 });
+    mPlayerScore->Distance(mCurrentScore);
+    mPlayerScore->Parent(this);
+    mPlayerScore->Position(Graphics::SCREEN_WIDTH * 0.5f, Graphics::SCREEN_HEIGHT * 0.4f);
+
+    mHighScoreBoard = new Scoreboard({ 255, 0, 0 }); // Red color for high score
+    mHighScoreBoard->LoadHighScore();
+    mHighScore = mHighScoreBoard->GetHighScore();
+
+    if (mCurrentScore > mHighScore) {
+        mHighScore = mCurrentScore;
+        mHighScoreBoard->SetHighScore(mHighScore);
     }
-    else {
-        mHighScore = 0;
-    }
-    file.close();
+
+    mHighScoreBoard->Distance(mHighScore);
+    mHighScoreBoard->Parent(this);
+    mHighScoreBoard->Position(Graphics::SCREEN_WIDTH * 0.5f, Graphics::SCREEN_HEIGHT * 0.5f);
 }
 
 GameOverScreen::~GameOverScreen() {
@@ -60,26 +67,6 @@ void GameOverScreen::SetBackground(std::string NorthRoadSprite, std::string Sout
     // Center the backgrounds on the screen
     mNorthRoadBackground->Position(Graphics::SCREEN_WIDTH * 0.78f, Graphics::SCREEN_HEIGHT * 0.5f);
     mSouthRoadBackground->Position(Graphics::SCREEN_WIDTH * 0.22f, Graphics::SCREEN_HEIGHT * 0.5f);
-}
-
-void GameOverScreen::SetCurrentScore(int score) {
-    mCurrentScore = score;
-    mPlayerScore->Score(mCurrentScore);
-
-    if (mCurrentScore > mHighScore) {
-        mHighScore = mCurrentScore;
-        mHighScoreBoard->Score(mHighScore);
-
-        // Save new high score to file
-        std::ofstream file("highscore.txt");
-        if (file.is_open()) {
-            file << mHighScore;
-            file.close();
-        }
-    }
-    else {
-        mHighScoreBoard->Score(mHighScore);
-    }
 }
 
 void GameOverScreen::Update() {

@@ -8,7 +8,6 @@ StartScreen::StartScreen() {
 	mInput = InputManager::Instance();
 	mAudio = AudioManager::Instance();
 
-	 
 	// Title Screen Entities
 	mTitleScreen = new Texture("TitleScreen.png");
 	mTitleScreen2 = new Texture("TitleScreen.png");
@@ -45,15 +44,7 @@ StartScreen::StartScreen() {
 	mPlayerScoreNumber->Position(Vector2(Graphics::SCREEN_WIDTH * 0.35f, -63.0f));
 
 	// Load high score from file
-	std::ifstream file("highscore.txt");
-	if (file.is_open()) {
-		file >> mHighScore;
-	}
-	else {
-		mHighScore = 0;
-	}
-	file.close();
-	mPlayerScoreNumber->Score(mHighScore);
+	ReloadHighScore();
 
 	// logo entities
 	mLogoRed = new Texture("Auto-bahnLogoRed.png", 0, 0, 500, 200);
@@ -328,6 +319,12 @@ void StartScreen::SetHighScore(int score) {
 		file << mHighScore;
 		file.close();
 	}
+}
+
+void StartScreen::ReloadHighScore() {
+	mPlayerScoreNumber->LoadHighScore();
+	mHighScore = mPlayerScoreNumber->GetHighScore();
+	mPlayerScoreNumber->Distance(mHighScore);
 }
 
 void StartScreen::Render() {

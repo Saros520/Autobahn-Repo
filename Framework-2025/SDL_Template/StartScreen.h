@@ -103,6 +103,8 @@ public:
 
 	void SetHighScore(int score);
 
+	void ReloadHighScore();
+
 	void Update() override;
 	void Render() override;
 

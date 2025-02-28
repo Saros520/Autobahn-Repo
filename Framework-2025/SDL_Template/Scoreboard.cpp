@@ -19,53 +19,19 @@ Scoreboard::~Scoreboard() {
     ClearBoard();
 }
 
-void Scoreboard::Score(int score) {
-    ClearBoard();
-
-    std::string str = std::to_string(score);
-
-    for (int i = 0; i < str.length(); ++i) {
-        Texture* texture = new Texture(str.substr(i, 1), "emulogic.ttf", 32, mColor);
-        if (texture->IsValid()) {
-            mScore.push_back(texture);
-            mScore.back()->Parent(this);
-            mScore.back()->Position(Vector2(-32.0f * (str.length() - i), 0.0f));
-        }
-        else {
-            std::cerr << "Unable to load texture for character: " << str.substr(i, 1) << std::endl;
-            delete texture;
-        }
-    }
-
-    if (score > mHighScoreValue) {
-        mHighScoreValue = score;
-        SaveHighScore();
-    }
+void Scoreboard::Score(float score) {
+    mScoreValue = score;
+    UpdateScoreDisplay();
 }
 
 void Scoreboard::Distance(float distance) {
-    ClearBoard();
-
-    std::ostringstream oss;
-    oss << std::fixed << std::setprecision(2) << distance << " km";
-    std::string str = oss.str();
-
-    for (int i = 0; i < str.length(); ++i) {
-        Texture* texture = new Texture(str.substr(i, 1), "emulogic.ttf", 32, mColor);
-        if (texture->IsValid()) {
-            mScore.push_back(texture);
-            mScore.back()->Parent(this);
-            mScore.back()->Position(Vector2(-32.0f * (str.length() - i), 0.0f));
-        }
-        else {
-            std::cerr << "Unable to load texture for character: " << str.substr(i, 1) << std::endl;
-            delete texture;
-        }
-    }
+    mScoreValue = distance;
+    UpdateScoreDisplay();
 }
 
 void Scoreboard::Update() {
-    
+    // If you need to update the score dynamically, you can add logic here
+    // For example, you could check if the score has changed and update the display
 }
 
 void Scoreboard::Render() {
@@ -102,6 +68,32 @@ void Scoreboard::LoadHighScore() {
     file.close();
 }
 
-int Scoreboard::GetHighScore() {
+float Scoreboard::GetHighScore() const {
     return mHighScoreValue;
+}
+
+void Scoreboard::SetHighScore(float highScore) {
+    mHighScoreValue = highScore;
+    SaveHighScore();
+}
+
+void Scoreboard::UpdateScoreDisplay() {
+    ClearBoard();
+
+    std::ostringstream oss;
+    oss << std::fixed << std::setprecision(2) << mScoreValue;
+    std::string str = oss.str();
+
+    for (int i = 0; i < str.length(); ++i) {
+        Texture* texture = new Texture(str.substr(i, 1), "emulogic.ttf", 32, mColor);
+        if (texture->IsValid()) {
+            mScore.push_back(texture);
+            mScore.back()->Parent(this);
+            mScore.back()->Position(Vector2(-32.0f * (str.length() - i), 0.0f));
+        }
+        else {
+            std::cerr << "Unable to load texture for character: " << str.substr(i, 1) << std::endl;
+            delete texture;
+        }
+    }
 }
