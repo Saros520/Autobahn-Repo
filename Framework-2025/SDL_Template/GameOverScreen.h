@@ -10,6 +10,8 @@ private:
     Texture* mNorthRoadBackground;
     Texture* mSouthRoadBackground;
     Texture* mBustedText;
+    Texture* mYouTraveled;
+	Texture* mHighScoreLabel;
     Scoreboard* mPlayerScore;
     Scoreboard* mHighScoreBoard;
     InputManager* mInput;

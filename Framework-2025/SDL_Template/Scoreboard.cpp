@@ -74,7 +74,13 @@ float Scoreboard::GetHighScore() const {
 
 void Scoreboard::SetHighScore(float highScore) {
     mHighScoreValue = highScore;
-    SaveHighScore();
+
+    // Save new high score to file
+    std::ofstream file("highscore.txt");
+    if (file.is_open()) {
+        file << mHighScoreValue;
+        file.close();
+    }
 }
 
 void Scoreboard::UpdateScoreDisplay() {
