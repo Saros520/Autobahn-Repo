@@ -293,7 +293,7 @@ void PlayScreen::EndPoliceChase() {
 
 void PlayScreen::StartTopPoliceChase() {
     if (!mTopPoliceChaseActive && mTopPoliceCar == nullptr) {
-        mTopPoliceCar = new EnemyPolice(mPlayer, mEnemySpawner, true);
+        EnemyPolice::SpawnNewPoliceCar(mPlayer, mEnemySpawner, true);
         mTopPoliceChaseActive = true;
         mTopPoliceChaseTimer = 0.0f;
     }

@@ -10,7 +10,9 @@ SpikeStrip::SpikeStrip() {
 	mTexture->Position(Vec2_Zero); 
 
 	AddCollider(new BoxCollider(mTexture->ScaledDimensions()));
-	mId = PhysicsManager::Instance()->RegisterEntity(this, PhysicsManager::CollisionLayers::Hostile);
+	mId = PhysicsManager::Instance()->RegisterEntity(this, PhysicsManager::CollisionLayers::HostileProjectiles);
+
+	Tag("SpikeStrip");
 }
 
 SpikeStrip::~SpikeStrip() {
