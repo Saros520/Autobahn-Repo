@@ -8,6 +8,7 @@
 #include "EnemyPolice.h"
 #include "PauseGame.h"
 #include "Texture.h"
+#include "SpikeStrip.h"
 #include <vector>
 
 class PlayScreen : public GameEntity {
@@ -55,6 +56,13 @@ private:
 	EnemyPolice* mEnemyPolice;
 	bool mPoliceChaseActive;
 	float mPoliceChaseTimer;
+
+	EnemyPolice* mTopPoliceCar;
+	bool mTopPoliceChaseActive;
+	float mTopPoliceChaseTimer;
+
+	std::vector<SpikeStrip*> mSpikeStrips;
+
 	PauseGame* mPauseGame;
 
 	float mLevelTime;
@@ -74,6 +82,10 @@ private:
     void UpdateEnvironmentTransition();
 	void StartPoliceChase();
 	void EndPoliceChase();
+	void StartTopPoliceChase();
+	void EndTopPoliceChase();
+	void UpdateTopPoliceCar();
+	void CheckSpikeStripCollision();
 	void UpdatePlayer();
 	void UpdateEnemy();
 
@@ -104,6 +116,8 @@ public:
 	int GetCurrentNorthRoadIndex() const;
 	std::string GetCurrentSouthRoadType() const;
 	int GetCurrentSouthRoadIndex() const;
+
+	void AddSpikeStrip(SpikeStrip* spikeStrip);
 
 	// Method to handle game over event
 	void OnGameOver();

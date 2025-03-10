@@ -1,5 +1,6 @@
 #ifndef __GAMEENTITY_H
 #define __GAMEENTITY_H
+
 #include "MathHelper.h"
 
 namespace SDLFramework {

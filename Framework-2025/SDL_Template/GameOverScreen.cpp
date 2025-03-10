@@ -49,20 +49,22 @@ GameOverScreen::~GameOverScreen() {
     delete mBustedText;
 }
 
-void GameOverScreen::SetBackground(std::string NorthRoadSprite, std::string SouthRoadSprite) {
+void GameOverScreen::SetBackground(std::string northRoadSprite, std::string southRoadSprite) {
+    std::string basePath = "Assets/"; // Base path to the assets
+
     if (mNorthRoadBackground != nullptr) {
         delete mNorthRoadBackground;
     }
     if (mSouthRoadBackground != nullptr) {
         delete mSouthRoadBackground;
     }
-    mNorthRoadBackground = new Texture(NorthRoadSprite);
+    mNorthRoadBackground = new Texture(northRoadSprite);
     if (!mNorthRoadBackground->IsValid()) {
-        std::cerr << "Failed to load NorthRoad background texture: " << NorthRoadSprite << std::endl;
+        std::cerr << "Failed to load NorthRoad background texture: " << northRoadSprite << std::endl;
     }
-    mSouthRoadBackground = new Texture(SouthRoadSprite);
+    mSouthRoadBackground = new Texture(southRoadSprite);
     if (!mSouthRoadBackground->IsValid()) {
-        std::cerr << "Failed to load SouthRoad background texture: " << SouthRoadSprite << std::endl;
+        std::cerr << "Failed to load SouthRoad background texture: " << southRoadSprite << std::endl;
     }
 
     // Calculate the scale factor to cover the whole screen

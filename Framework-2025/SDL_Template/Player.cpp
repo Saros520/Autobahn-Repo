@@ -209,7 +209,13 @@ bool Player::IsOutOfLives() {
 }
 
 void Player::Hit(PhysEntity* other) {
-    if (other->Tag() == "PoliceCar") {
+    if (other->Tag() == "PoliceCar" || other->Tag() == "SpikeStrip") {
+        mWasHit = true;
+        mAnimating = true;
+        mAudio->PlaySFX("SFX/PlayerExplosion.wav");
+        ScreenManager::Instance()->SetScreen(ScreenManager::GameOver);
+    }
+    else if (other->Tag() == "PoliceCar") {
         mWasHitByPolice = true;
     }
 

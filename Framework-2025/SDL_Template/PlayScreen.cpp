@@ -108,6 +108,10 @@ PlayScreen::PlayScreen() {
     mPoliceChaseActive = false;
     mPoliceChaseTimer = 0.0f;
 
+    mTopPoliceCar = nullptr;
+    mTopPoliceChaseActive = false;
+    mTopPoliceChaseTimer = 0.0f;
+
     mPauseGame = new PauseGame();
     mPauseGame->Parent(this);
     mIsPaused = false;
@@ -195,6 +199,12 @@ PlayScreen::~PlayScreen() {
 
     delete mBottomBar;
     mBottomBar = nullptr;
+
+    // Clean up spike strips
+    for (auto& spikeStrip : mSpikeStrips) {
+        delete spikeStrip;
+    }
+    mSpikeStrips.clear();
 }
 
 void PlayScreen::UpdateHighway() {
@@ -281,6 +291,53 @@ void PlayScreen::EndPoliceChase() {
     }
 }
 
+void PlayScreen::StartTopPoliceChase() {
+    if (!mTopPoliceChaseActive && mTopPoliceCar == nullptr) {
+        mTopPoliceCar = new EnemyPolice(mPlayer, mEnemySpawner, true);
+        mTopPoliceChaseActive = true;
+        mTopPoliceChaseTimer = 0.0f;
+    }
+}
+
+void PlayScreen::EndTopPoliceChase() {
+    if (mTopPoliceChaseActive) {
+        if (EnemyPolice::GetActivePoliceCar() != nullptr) {
+            EnemyPolice::GetActivePoliceCar()->Destroy();
+            mTopPoliceCar = nullptr;
+        }
+        mTopPoliceChaseActive = false;
+    }
+}
+
+void PlayScreen::UpdateTopPoliceCar() {
+    if (mTopPoliceChaseActive) {
+        mTopPoliceChaseTimer += mTimer->DeltaTime();
+        if (mTopPoliceCar != nullptr) {
+            mTopPoliceCar->Update();
+        }
+
+        if (mTopPoliceChaseTimer >= 60.0f) {
+            EndTopPoliceChase();
+        }
+
+        CheckSpikeStripCollision();
+    }
+}
+
+void PlayScreen::AddSpikeStrip(SpikeStrip* spikeStrip) {
+    mSpikeStrips.push_back(spikeStrip);
+}
+
+void PlayScreen::CheckSpikeStripCollision() {
+    for (auto& spikeStrip : mSpikeStrips) {
+        if (mPlayer->CheckCollision(spikeStrip)) {
+            mPlayer->Hit(spikeStrip);
+            ScreenManager::Instance()->SetScreen(ScreenManager::GameOver);
+            return;
+        }
+    }
+}
+
 void PlayScreen::SetCurrentBackground(std::string northRoadType, int northRoadIndex, std::string southRoadType, int southRoadIndex) {
     mCurrentNorthRoadType = northRoadType;
     mCurrentNorthRoadIndex = northRoadIndex;
@@ -343,22 +400,32 @@ void PlayScreen::Update() {
         mPlayer->Update();
         mEnemySpawner->Update();
 
-        // Start the police chase after about 2 minutes
-        if (mLevelTime >= 2.0f && !mPoliceChaseActive) {
+        // Start the first police chase after about 2 minutes
+        if (mLevelTime >= 240.0f && !mPoliceChaseActive) {
             StartPoliceChase();
         }
 
-        // Update police chase 
+        // Update first police chase 
         if (mPoliceChaseActive) {
             mPoliceChaseTimer += mTimer->DeltaTime();
             if (EnemyPolice::GetActivePoliceCar() != nullptr) {
                 EnemyPolice::GetActivePoliceCar()->Update();
             }
 
-            // End the police chase/player gets away for now after 1 minute
+            // End the first police chase/player gets away for now after 1 minute
             if (mPoliceChaseTimer >= 60.0f) {
                 EndPoliceChase();
             }
+        }
+
+        // Start the second police chase after about 4 minutes
+        if (mLevelTime >= 2.0f && !mTopPoliceChaseActive) {
+            StartTopPoliceChase();
+        }
+
+        // Update second police chase
+        if (mTopPoliceChaseActive) {
+            UpdateTopPoliceCar();
         }
 
         // Check for game over conditions
@@ -439,6 +506,17 @@ void PlayScreen::Update() {
         float speed = mPlayer->GetSpeed();
         mSpeedScoreboard->Score(static_cast<int>(speed));
         mSpeedScoreboard->Update();
+
+        // Check for out-of-bounds spike strips and remove them
+        for (auto it = mSpikeStrips.begin(); it != mSpikeStrips.end();) {
+            if ((*it)->IsOutOfBounds()) {
+                delete* it;
+                it = mSpikeStrips.erase(it);
+            }
+            else {
+                ++it;
+            }
+        }
     }
 }
 
@@ -462,6 +540,15 @@ void PlayScreen::Render() {
 			EnemyPolice::GetActivePoliceCar()->Render();
 		}
 	}
+    if (mTopPoliceChaseActive) {
+        if (mTopPoliceCar != nullptr) {
+            mTopPoliceCar->Render();
+        }
+    }
+
+    for (auto& spikeStrip : mSpikeStrips) {
+        spikeStrip->Render();
+    }
 
     mPlayerScore->Render();
     mPlayerScoreNumber->Render();
@@ -482,6 +569,10 @@ void PlayScreen::OnGameOver() {
     int currentSouthRoadIndex = GetCurrentSouthRoadIndex();
 
     ScreenManager::Instance()->SetScreen(ScreenManager::GameOver);
+    ScreenManager::Instance()->SetGameOverBackground(
+        currentNorthRoadType + std::to_string(currentNorthRoadIndex) + ".png",
+        currentSouthRoadType + std::to_string(currentSouthRoadIndex) + ".png"
+    );
 }
 
 void PlayScreen::Reset() {
@@ -501,6 +592,8 @@ void PlayScreen::Reset() {
     mEnemySpawner->Reset();  // Reset enemy spawner
     mPoliceChaseActive = false;
     mPoliceChaseTimer = 0.0f;
+    mTopPoliceChaseActive = false;
+    mTopPoliceChaseTimer = 0.0f;
     mLevelTime = 0.0f;
 
     mPlayerScoreNumber->Score(0);  // Reset score
