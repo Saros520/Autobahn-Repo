@@ -293,19 +293,11 @@ void PlayScreen::EndPoliceChase() {
 
 void PlayScreen::StartTopPoliceChase() {
     if (!mTopPoliceChaseActive && mTopPoliceCar == nullptr) {
-        EnemyPolice::SpawnNewPoliceCar(mPlayer, mEnemySpawner, true);
-        mTopPoliceChaseActive = true;
-        mTopPoliceChaseTimer = 0.0f;
-    }
-}
-
-void PlayScreen::EndTopPoliceChase() {
-    if (mTopPoliceChaseActive) {
-        if (EnemyPolice::GetActivePoliceCar() != nullptr) {
-            EnemyPolice::GetActivePoliceCar()->Destroy();
-            mTopPoliceCar = nullptr;
+        mTopPoliceCar = EnemyPolice::SpawnNewPoliceCar(mPlayer, mEnemySpawner, true);
+        if (mTopPoliceCar != nullptr) {
+            mTopPoliceChaseActive = true;
+            mTopPoliceChaseTimer = 0.0f;
         }
-        mTopPoliceChaseActive = false;
     }
 }
 
@@ -321,6 +313,16 @@ void PlayScreen::UpdateTopPoliceCar() {
         }
 
         CheckSpikeStripCollision();
+    }
+}
+
+void PlayScreen::EndTopPoliceChase() {
+    if (mTopPoliceChaseActive) {
+        if (mTopPoliceCar != nullptr) {
+            mTopPoliceCar->Destroy();
+            mTopPoliceCar = nullptr;
+        }
+        mTopPoliceChaseActive = false;
     }
 }
 

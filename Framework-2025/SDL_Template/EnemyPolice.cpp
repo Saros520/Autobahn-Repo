@@ -55,7 +55,7 @@ void EnemyPolice::Update() {
         Vector2 predictedPlayerPos = playerPos + playerVelocity * 0.5f; // Predict 0.5 seconds ahead
 
         // Move horizontally to track the player car
-        Vector2 moveAmount(6.0f, 6.0f);
+        Vector2 moveAmount(0.0f, 0.0f);
         if (predictedPlayerPos.x < Position().x) {
             moveAmount = Vector2(-mBaseSpeed * mTimer->DeltaTime(), 0.0f);
         }
@@ -148,7 +148,7 @@ void EnemyPolice::Update() {
         // Predict the player car's future position
         Vector2 playerPos = mPlayer->Position();
         Vector2 playerVelocity = mPlayer->GetVelocity();
-        Vector2 predictedPlayerPos = playerPos + playerVelocity * 0.75f; // Predict 0.75 seconds ahead
+        Vector2 predictedPlayerPos = playerPos + playerVelocity * 0.5f; // Predict 0.5 seconds ahead
 
         // Calculate the direction towards the predicted player position
         Vector2 direction = (predictedPlayerPos - Position()).Normalized();
@@ -163,7 +163,7 @@ void EnemyPolice::Update() {
 
         mAvoiding = false;
         bool pathBlocked = false;
-        Vector2 separationForce(0.0f, 0.0f);
+        Vector2 separationForce(0.5f, 0.5f);
 
         // Check if there is an enemy vehicle between the police car and the player car
         for (Enemy* enemy : mEnemySpawner->GetEnemies()) {
@@ -311,7 +311,7 @@ void EnemyPolice::LaySpikeStrip() {
     mPlayScreen->AddSpikeStrip(spikeStrip);
 }
 
-void EnemyPolice::SpawnNewPoliceCar(Player* player, EnemySpawner* enemySpawner, bool isTopPoliceCar) {
+EnemyPolice* EnemyPolice::SpawnNewPoliceCar(Player* player, EnemySpawner* enemySpawner, bool isTopPoliceCar) {
     // Spawn a new police car if there isn't already an active one
     if (sActivePoliceCar == nullptr) {
         EnemyPolice* newPoliceCar = new EnemyPolice(player, enemySpawner, isTopPoliceCar);
@@ -325,5 +325,8 @@ void EnemyPolice::SpawnNewPoliceCar(Player* player, EnemySpawner* enemySpawner, 
         std::cout << "Police car spawned at position: (" << pos.x << ", " << pos.y << ")" << std::endl;
 
         newPoliceCar->StartChase();
+
+        return newPoliceCar;
     }
+    return nullptr;
 }
