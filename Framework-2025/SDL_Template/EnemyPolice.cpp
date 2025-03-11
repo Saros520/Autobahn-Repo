@@ -25,6 +25,8 @@ EnemyPolice::EnemyPolice(Player* player, EnemySpawner* enemySpawner, bool isTopP
     sActivePoliceCar = this; // Set the active police car
 
     Tag("PoliceCar");
+
+    mPlayScreen = dynamic_cast<PlayScreen*>(mPlayer->Parent()); // Set mPlayScreen
 }
 
 EnemyPolice::~EnemyPolice() {
@@ -310,7 +312,7 @@ void EnemyPolice::Destroy() {
 void EnemyPolice::LaySpikeStrip() {
     if (mPlayScreen != nullptr) {
         SpikeStrip* spikeStrip = new SpikeStrip();
-        spikeStrip->Position(Position() + Vector2(0.0f, 250.0f));
+        spikeStrip->Position(Position() + Vector2(0.0f, 50.0f));
         mPlayScreen->AddSpikeStrip(spikeStrip);
     }
     else {

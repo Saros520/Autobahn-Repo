@@ -275,7 +275,7 @@ void PlayScreen::UpdateEnvironmentTransition() {
 
 void PlayScreen::StartPoliceChase() {
     if (!mPoliceChaseActive && EnemyPolice::GetActivePoliceCar() == nullptr) {
-        EnemyPolice::SpawnNewPoliceCar(mPlayer, mEnemySpawner, false);
+        mEnemyPolice = EnemyPolice::SpawnNewPoliceCar(mPlayer, mEnemySpawner, false);
         mPoliceChaseActive = true;
         mPoliceChaseTimer = 0.0f;
     }
@@ -312,7 +312,6 @@ void PlayScreen::UpdateTopPoliceCar() {
             EndTopPoliceChase();
         }
 
-        CheckSpikeStripCollision();
     }
 }
 
@@ -332,13 +331,13 @@ void PlayScreen::AddSpikeStrip(SpikeStrip* spikeStrip) {
     }
 }
 
-void PlayScreen::CheckSpikeStripCollision() {
-    for (auto& spikeStrip : mSpikeStrips) {
-        if (mPlayer->CheckCollision(spikeStrip)) {
-            mPlayer->Hit(spikeStrip);
-            ScreenManager::Instance()->SetScreen(ScreenManager::GameOver);
-            return;
+void PlayScreen::RemoveOffScreenSpikeStrips() {
+    for (int i = mSpikeStrips.size() - 1; i >= 0; i--) {
+        if (mSpikeStrips[i]->Position().y > mScreenBoundsY) {
+            std::vector<SpikeStrip*>::iterator iter = std::find(mSpikeStrips.begin(), mSpikeStrips.end(), mSpikeStrips[i]);
+            mSpikeStrips.erase(iter);
         }
+        
     }
 }
 
@@ -511,16 +510,14 @@ void PlayScreen::Update() {
         mSpeedScoreboard->Score(static_cast<int>(speed));
         mSpeedScoreboard->Update();
 
-        // Check for out-of-bounds spike strips and remove them
-        for (auto it = mSpikeStrips.begin(); it != mSpikeStrips.end();) {
-            if ((*it)->IsOutOfBounds()) {
-                delete* it;
-                it = mSpikeStrips.erase(it);
-            }
-            else {
-                ++it;
-            }
+        // Update the spike strip
+        for (auto it : mSpikeStrips) {
+            it->Update();
         }
+
+        // Check for out-of-bounds spike strips and remove them
+        RemoveOffScreenSpikeStrips();
+        
     }
 }
 

@@ -75,7 +75,7 @@ namespace SDLFramework {
 		mPhysicsManager->SetLayerCollisionMask(PhysicsManager::CollisionLayers::Friendly, PhysicsManager::CollisionFlags::Hostile | PhysicsManager::CollisionFlags::HostileProjectiles | PhysicsManager::CollisionFlags::Police);
 		mPhysicsManager->SetLayerCollisionMask(PhysicsManager::CollisionLayers::FriendlyProjectiles, PhysicsManager::CollisionFlags::Hostile);
 		mPhysicsManager->SetLayerCollisionMask(PhysicsManager::CollisionLayers::Hostile, PhysicsManager::CollisionFlags::Friendly | PhysicsManager::CollisionFlags::FriendlyProjectiles | PhysicsManager::CollisionFlags::Police);
-		mPhysicsManager->SetLayerCollisionMask(PhysicsManager::CollisionLayers::HostileProjectiles, PhysicsManager::CollisionFlags::Friendly);
+		mPhysicsManager->SetLayerCollisionMask(PhysicsManager::CollisionLayers::HostileProjectiles, PhysicsManager::CollisionFlags::Friendly); // Spike strips are remote controlled by nearby police cars lol
 		mPhysicsManager->SetLayerCollisionMask(PhysicsManager::CollisionLayers::Police, PhysicsManager::CollisionFlags::Friendly | PhysicsManager::CollisionFlags::Hostile);
 	}
 

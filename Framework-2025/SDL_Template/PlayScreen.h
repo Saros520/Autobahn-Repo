@@ -17,6 +17,8 @@ private:
 	Timer * mTimer;
 	AudioManager * mAudio;
 	InputManager* mInput;
+	
+	float mScreenBoundsY = 1100;
 
 	static const int NUM_ROAD_SPRITES = 5;
 	static const int NUM_ENVIRONMENTS = 4;
@@ -85,7 +87,6 @@ private:
 	void StartTopPoliceChase();
 	void EndTopPoliceChase();
 	void UpdateTopPoliceCar();
-	void CheckSpikeStripCollision();
 	void UpdatePlayer();
 	void UpdateEnemy();
 
@@ -121,6 +122,9 @@ public:
 
 	// Method to handle game over event
 	void OnGameOver();
+
+	// Method to remove off-screen spike strips
+	void RemoveOffScreenSpikeStrips();
 
 };
 #endif

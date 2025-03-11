@@ -9,6 +9,7 @@ class SpikeStrip : public PhysEntity {
 private:
 	Timer* mTimer;
 	Texture* mTexture;
+	Vector2 mColliderOffset;
 
 public:
 	SpikeStrip();
@@ -17,6 +18,7 @@ public:
 	void Update() override;
 	void Render() override;
 	bool IsOutOfBounds();
+	void Destroy();
 
 };
 
