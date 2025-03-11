@@ -11,7 +11,7 @@ EnemyPolice* EnemyPolice::sActivePoliceCar = nullptr;
 float EnemyPolice::sChaseDuration = 0.0f; // Initialize static chase duration
 
 EnemyPolice::EnemyPolice(Player* player, EnemySpawner* enemySpawner, bool isTopPoliceCar)
-    : Enemy(isTopPoliceCar ? false : true, 18), mEnemySpawner(enemySpawner), mAvoiding(false), mDestroyed(false), mIsTopPoliceCar(isTopPoliceCar) {
+    : Enemy(isTopPoliceCar ? false : true, 18), mEnemySpawner(enemySpawner), mAvoiding(false), mDestroyed(false), mIsTopPoliceCar(isTopPoliceCar), mPlayScreen(nullptr) {
     mTimer = Timer::Instance();
     mPlayer = player;
     mChasing = false;
@@ -31,6 +31,7 @@ EnemyPolice::~EnemyPolice() {
     mTimer = nullptr;
     mPlayer = nullptr;
     mEnemySpawner = nullptr;
+    mPlayScreen = nullptr; // clearing the play screen pointer
     sActivePoliceCar = nullptr; // clearing the active police car
 
     PhysicsManager::Instance()->UnregisterEntity(mId);
@@ -46,7 +47,7 @@ void EnemyPolice::Update() {
 
     // Top police car logic
     if (mIsTopPoliceCar) {
-		sChaseDuration += mTimer->DeltaTime();
+        sChaseDuration += mTimer->DeltaTime();
         mSpikeStripTimer += mTimer->DeltaTime();
 
         // Predict the player car's future position
@@ -57,10 +58,10 @@ void EnemyPolice::Update() {
         // Move horizontally to track the player car
         Vector2 moveAmount(0.0f, 0.0f);
         if (predictedPlayerPos.x < Position().x) {
-            moveAmount = Vector2(-mBaseSpeed * mTimer->DeltaTime(), 0.0f);
+            moveAmount.x = -mBaseSpeed * mTimer->DeltaTime();
         }
         else if (predictedPlayerPos.x > Position().x) {
-            moveAmount = Vector2(mBaseSpeed * mTimer->DeltaTime(), 0.0f);
+            moveAmount.x = mBaseSpeed * mTimer->DeltaTime();
         }
 
         // Ensure the top police car stays near the top of the screen
@@ -70,7 +71,7 @@ void EnemyPolice::Update() {
         else {
             moveAmount.y = 0.0f;
         }
-        
+
         mAvoiding = false;
         bool pathBlocked = false;
         Vector2 separationForce(0.5f, 0.5f);
@@ -207,9 +208,9 @@ void EnemyPolice::Update() {
             speed = mBaseSpeed;
         }
 
-        // Logic for spawning police cars
-        if (Position().y < Graphics::SCREEN_HEIGHT) {
-            Translate(moveAmount, World);
+        // Ensure the bottom police car stays on the screen
+        if (Position().y > Graphics::SCREEN_HEIGHT) {
+            moveAmount.y = -mBaseSpeed * mTimer->DeltaTime();
         }
 
         Translate(moveAmount, World);
@@ -306,9 +307,14 @@ void EnemyPolice::Destroy() {
 }
 
 void EnemyPolice::LaySpikeStrip() {
-    SpikeStrip* spikeStrip = new SpikeStrip();
-    spikeStrip->Position(Position() + Vector2(0.0f, 250.0f));
-    mPlayScreen->AddSpikeStrip(spikeStrip);
+    if (mPlayScreen != nullptr) {
+        SpikeStrip* spikeStrip = new SpikeStrip();
+        spikeStrip->Position(Position() + Vector2(0.0f, 250.0f));
+        mPlayScreen->AddSpikeStrip(spikeStrip);
+    }
+    else {
+        std::cerr << "Error: mPlayScreen is nullptr. Cannot lay spike strip." << std::endl;
+    }
 }
 
 EnemyPolice* EnemyPolice::SpawnNewPoliceCar(Player* player, EnemySpawner* enemySpawner, bool isTopPoliceCar) {
