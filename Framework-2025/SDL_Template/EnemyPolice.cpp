@@ -57,6 +57,7 @@ void EnemyPolice::Update() {
 
         // Move horizontally to track the player car
         Vector2 moveAmount(0.0f, 0.0f);
+        float horizontalMultiplier = 3.8f;
         if (predictedPlayerPos.x < Position().x) {
             moveAmount.x = -mBaseSpeed * mTimer->DeltaTime();
         }
@@ -65,11 +66,11 @@ void EnemyPolice::Update() {
         }
 
         // Ensure the top police car stays near the top of the screen
-        if (Position().y > 250.0f) {
+        if (Position().y > 100.0f) {
             moveAmount.y = -mBaseSpeed * mTimer->DeltaTime();
         }
         else {
-            moveAmount.y = 0.0f;
+            moveAmount.y = 1.0f;
         }
 
         mAvoiding = false;
