@@ -155,7 +155,7 @@ void Player::HandleMovement() {
     if (IsOffHighway()) {
         mAnimating = true;
         mDeathAnimation->ResetAnimation();
-        mAudio->PlaySFX("SFX/PlayerExplosion.wav");
+        mAudio->PlaySFX("SFX/CrashSound.wav");
         mWasHit = true;
     }
 }
@@ -212,7 +212,7 @@ void Player::Hit(PhysEntity* other) {
     if (other->Tag() == "PoliceCar" || other->Tag() == "SpikeStrip") {
         mWasHit = true;
         mAnimating = true;
-        mAudio->PlaySFX("SFX/PlayerExplosion.wav");
+        mAudio->PlaySFX("SFX/CrashSound.wav");
         ScreenManager::Instance()->SetScreen(ScreenManager::GameOver);
     }
     else if (other->Tag() == "PoliceCar") {
@@ -223,12 +223,12 @@ void Player::Hit(PhysEntity* other) {
 
     if (mLives <= 0) {
         mAnimating = true;
-        mAudio->PlaySFX("SFX/PlayerExplosion.wav");
+        mAudio->PlaySFX("SFX/CrashSound.wav");
     }
     else {
         mAnimating = true;
         mDeathAnimation->ResetAnimation();
-        mAudio->PlaySFX("SFX/PlayerExplosion.wav");
+        mAudio->PlaySFX("SFX/CrashSound.wav");
         mWasHit = true;
     }
 }
