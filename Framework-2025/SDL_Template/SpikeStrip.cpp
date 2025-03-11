@@ -28,7 +28,7 @@ SpikeStrip::~SpikeStrip() {
 
 void SpikeStrip::Update() {
 	// Move the spike strip down the screen
-	Translate(Vector2(0.0f, 200.0f * mTimer->DeltaTime()), World);
+	Translate(Vector2(0.0f, 565.0f * mTimer->DeltaTime()), World);
 
 	// Update the position of the collider to follow the spike strip
 	for (auto collider : mColliders) {

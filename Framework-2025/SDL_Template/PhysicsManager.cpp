@@ -1,4 +1,5 @@
 #include "PhysicsManager.h"
+#include <iostream> // for debugging crash
 
 PhysicsManager* PhysicsManager::sInstance = nullptr;
 
@@ -44,9 +45,15 @@ void PhysicsManager::Update() {
             if (mLayerMasks[i].test(j) && i <= j) {
                 for (unsigned int k = 0; k < mCollisionLayers[i].size(); k++) {
                     for (unsigned int l = 0; l < mCollisionLayers[j].size(); l++) {
-                        if (mCollisionLayers[i][k] && mCollisionLayers[j][l] && mCollisionLayers[i][k]->CheckCollision(mCollisionLayers[j][l])) {
-                            mCollisionLayers[i][k]->Hit(mCollisionLayers[j][l]);
-                            mCollisionLayers[j][l]->Hit(mCollisionLayers[i][k]);
+                        if (mCollisionLayers[i][k] && mCollisionLayers[j][l]) {
+                            if (mCollisionLayers[i][k]->CheckCollision(mCollisionLayers[j][l])) {
+                                std::cout << "Collision detected between entities " << mCollisionLayers[i][k]->GetId() << " and " << mCollisionLayers[j][l]->GetId() << std::endl;
+                                mCollisionLayers[i][k]->Hit(mCollisionLayers[j][l]);
+                                mCollisionLayers[j][l]->Hit(mCollisionLayers[i][k]);
+                            }
+                        }
+                        else {
+                            std::cout << "Null pointer detected in collision layers at indices [" << i << "][" << k << "] or [" << j << "][" << l << "]" << std::endl;
                         }
                     }
                 }
