@@ -13,6 +13,18 @@ private:
     Scoreboard* mPlayerScore;
     Scoreboard* mHighScoreBoard;
     InputManager* mInput;
+    // Bottom Bar Entities
+    GameEntity* mBottomBar;
+    Texture* mCreator;
+    Texture* mTopBorder;
+    Texture* mCreatorName;
+    Texture* mCreatorName2;
+    Texture* mCreatorName3;
+    Texture* mBottomBorder;
+    Texture* mMainMenu2;
+    Texture* mMainMenu3;
+    GameEntity* mTopBar;
+    Texture* mGameOver2;
     int mCurrentScore;
     int mHighScore;
 

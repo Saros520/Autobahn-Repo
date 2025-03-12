@@ -41,7 +41,7 @@ OptionsScreen::OptionsScreen() {
 
 	mSliderMinValue = 0.0f;
 	mSliderMaxValue = 100.0f;
-	mSliderCurrentValue = 50.0f; // Default music volume
+	mSliderCurrentValue = 10.0f; // Default music volume
 
 }
 

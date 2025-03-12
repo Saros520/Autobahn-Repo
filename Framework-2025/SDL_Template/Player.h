@@ -37,6 +37,10 @@ private:
     Vector2 mMoveBoundsX;
     Vector2 mMoveBoundsY;
 
+    Vector2 mStartPosition;
+    float mCollisionCooldownTime;
+    bool mIsCooldownActive;
+
     float mDistanceTraveled;
 
     //static const int MAX_BULLETS = 2;
@@ -52,6 +56,8 @@ private:
 public:
     Player();
     ~Player();
+
+    float mVolume = 1.0f;
 
     void SetCarTexture(int carIndex);
 

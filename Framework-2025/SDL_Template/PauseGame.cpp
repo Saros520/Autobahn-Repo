@@ -1,7 +1,7 @@
 #include "PauseGame.h"
 #include "ScreenManager.h"
 #include "Graphics.h"
-#include "OptionsScreen.h"
+#include "AudioManager.h"
 
 PauseGame::PauseGame() {
     mInput = InputManager::Instance();
@@ -116,6 +116,10 @@ PauseGame::PauseGame() {
     mCursorOffset = Vector2(0, 53);
     mSelectedOption = 0;
     mCursor->Position(mCursorStartPos);
+
+    mSliderMinValue = 0.0f;
+    mSliderMaxValue = 100.0f;
+    mSliderCurrentValue = 10.0f; // Default music volume
 }
 
 PauseGame::~PauseGame() {

@@ -29,7 +29,11 @@ Player::Player() {
 
 	mDistanceTraveled = 0.0f;
 
-	Position(Vector2(Graphics::SCREEN_WIDTH * 0.503f, Graphics::SCREEN_HEIGHT * 0.9f));
+	mStartPosition = Vector2(Graphics::SCREEN_WIDTH * 0.503f, Graphics::SCREEN_HEIGHT * 0.9f);
+	Position(mStartPosition);  // Set the initial position of the car
+
+	mCollisionCooldownTime = 0.0f;
+	mIsCooldownActive = false;
 
 	mDeathAnimation = new AnimatedTexture("CarExplosion.png", 0, 0, 128, 128, 5, 1.0f, Animation::Layouts::Horizontal);
 	mDeathAnimation->Parent(this);
@@ -87,17 +91,25 @@ void Player::HandleMovement() {
 	const float Gravity = 100.0f;
 	Vector2 moveDir = Vec2_Zero;
 
-	if (mInput->KeyDown(SDL_SCANCODE_W) || mInput->KeyDown(SDL_SCANCODE_UP)) {
+	if (mInput->KeyPressed(SDL_SCANCODE_W) || mInput->KeyDown(SDL_SCANCODE_UP)) {
 		moveDir.y -= 1;
+		mAudio->PlaySFX("CarRev.MP3");
 	}
-	if (mInput->KeyDown(SDL_SCANCODE_S) || mInput->KeyDown(SDL_SCANCODE_DOWN)) {
+	else {
+		mAudio->StopSFX("CarRev.MP3");
+	}
+
+	if (mInput->KeyPressed(SDL_SCANCODE_S) || mInput->KeyDown(SDL_SCANCODE_DOWN)) {
 		moveDir.y += 1;
+		mAudio->PlaySFX("CarRev.MP3");
 	}
-	if (mInput->KeyDown(SDL_SCANCODE_A) || mInput->KeyDown(SDL_SCANCODE_LEFT)) {
+	if (mInput->KeyPressed(SDL_SCANCODE_A) || mInput->KeyDown(SDL_SCANCODE_LEFT)) {
 		moveDir.x -= 1;
+		mAudio->PlaySFX("CarRev.MP3");
 	}
-	if (mInput->KeyDown(SDL_SCANCODE_D) || mInput->KeyDown(SDL_SCANCODE_RIGHT)) {
+	if (mInput->KeyPressed(SDL_SCANCODE_D) || mInput->KeyDown(SDL_SCANCODE_RIGHT)) {
 		moveDir.x += 1;
+		mAudio->PlaySFX("CarRev.MP3");
 	}
 
 	if (moveDir.MagnitudeSqr() > 0.0f) {
@@ -230,6 +242,11 @@ bool Player::IsOutOfLives() {
 }
 
 void Player::Hit(PhysEntity* other) {
+	if (mIsCooldownActive) {
+		// If the cooldown is active, ignore collisions
+		return;
+	}
+
 	if (other->Tag() == "PoliceCar") {
 		mWasHitByPolice = true;
 	}
@@ -245,7 +262,11 @@ void Player::Hit(PhysEntity* other) {
 		mDeathAnimation->ResetAnimation();
 		mAudio->PlaySFX("SFX/PlayerExplosion.wav");
 		mWasHit = true;
+		Position(mStartPosition);
 	}
+	// Start the cooldown timer
+	mIsCooldownActive = true;
+	mCollisionCooldownTime = 2.0f;  // 2 second cooldown
 }
 
 bool Player::WasHit() {
@@ -281,6 +302,13 @@ void Player::Update() {
 		// Update distance traveled based on movement conditions
 		float speed = mCurrentSpeed * (1000.0f / 3600.0f); // Convert km/h to m/s
 		mDistanceTraveled += speed * mTimer->DeltaTime() / 1000.0f; // Convert to kilometers
+	}
+	// Cooldown logic: decrement the cooldown time if active
+	if (mIsCooldownActive) {
+		mCollisionCooldownTime -= mTimer->DeltaTime();
+		if (mCollisionCooldownTime <= 0.0f) {
+			mIsCooldownActive = false;  // Cooldown is over
+		}
 	}
 
 	/*for (int i = 0; i < MAX_BULLETS; ++i) {
@@ -322,5 +350,5 @@ void Player::Reset() {
 	mWasHit = false;
 	mWasHitByPolice = false;
 	mVisible = true;
-	Position(Vector2(Graphics::SCREEN_WIDTH * 0.503f, Graphics::SCREEN_HEIGHT * 0.9f));
+	Position(mStartPosition);  // Reset position to the start position
 }

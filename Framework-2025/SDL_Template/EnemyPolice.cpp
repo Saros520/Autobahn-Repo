@@ -108,8 +108,8 @@ void EnemyPolice::Update() {
         Vector2 pos = Position();
         std::cout << "Police car position: (" << pos.x << ", " << pos.y << ")" << std::endl;
 
-        // Check if the police car has been chasing for 1 minute
-        if (sChaseDuration >= 60.0f) {
+        // Check if the police car has been chasing for 20 seconds
+        if (sChaseDuration >= 20.0f) {
             StopChase();
         }
 

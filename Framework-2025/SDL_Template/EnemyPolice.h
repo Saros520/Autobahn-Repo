@@ -6,6 +6,7 @@
 #include "EnemySpawner.h"
 #include <vector>
 
+
 class EnemyPolice : public Enemy {
 private:
     static EnemyPolice* sActivePoliceCar;

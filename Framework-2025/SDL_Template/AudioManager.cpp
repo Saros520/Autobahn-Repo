@@ -2,6 +2,8 @@
 
 namespace SDLFramework {
 
+
+
 	AudioManager * AudioManager::sInstance = nullptr;
 
 	AudioManager * AudioManager::Instance() {

@@ -9,7 +9,30 @@ GameOverScreen::GameOverScreen(std::string northRoadSprite, std::string southRoa
     mInput = InputManager::Instance();
     mPlayerScore = new Scoreboard();
     mHighScoreBoard = new Scoreboard({ 255, 0, 0 }); // Red color for high score
-    mBustedText = new Texture("Busted", "emulogic.ttf", 72, { 255, 0, 0 });
+    mBustedText = new Texture("GAME OVER", "emulogic.ttf", 72, { 255, 255, 255 });
+    // Top Bar entities
+    mTopBar = new GameEntity(Graphics::SCREEN_WIDTH * 0.7f, Graphics::SCREEN_HEIGHT * 0.4f);
+    mGameOver2 = new Texture("game over", "emulogic.ttf", 72, { 255, 0, 0 });
+    // bottom bar entities
+    mBottomBar = new GameEntity(Graphics::SCREEN_WIDTH * 0.7f, Graphics::SCREEN_HEIGHT * 0.4f);
+    mCreator = new Texture("creators", "namco__.ttf", 26, { 255, 0, 0 });
+    mTopBorder = new Texture("------------------------", "emulogic.ttf", 26, { 0, 0, 0 });
+    mCreatorName = new Texture("keigan", "namco__.ttf", 26, { 0, 0, 0 });
+    mCreatorName2 = new Texture("andrew", "namco__.ttf", 26, { 0, 0, 0 });
+    mCreatorName3 = new Texture("josh", "namco__.ttf", 26, { 0, 0, 0 });
+    mBottomBorder = new Texture("------------------------", "emulogic.ttf", 26, { 0, 0, 0 });
+    mMainMenu2 = new Texture("press enter to return", "namco__.ttf", 26, { 0, 0, 0 });
+    mMainMenu3 = new Texture("to main menu", "namco__.ttf", 26, { 0, 0, 0 });
+
+    mBottomBar->Parent(this);
+    mCreator->Parent(mBottomBar);
+    mTopBorder->Parent(mBottomBar);
+    mCreatorName->Parent(mBottomBar);
+    mCreatorName2->Parent(mBottomBar);
+    mCreatorName3->Parent(mBottomBar);
+    mBottomBorder->Parent(mBottomBar);
+    mMainMenu2->Parent(mBottomBar);
+    mMainMenu3->Parent(mBottomBar);
 
     // Set the backgrounds for the GameOver screen
     SetBackground(northRoadSprite, southRoadSprite);
@@ -31,6 +54,30 @@ GameOverScreen::~GameOverScreen() {
     delete mNorthRoadBackground;
     delete mSouthRoadBackground;
     delete mBustedText;
+
+    delete mTopBar;
+    mTopBar = nullptr;
+    delete mGameOver2;
+    mGameOver2 = nullptr;
+
+    delete mBottomBar;
+    mBottomBar = nullptr;
+    delete mCreator;
+    mCreator = nullptr;
+    delete mTopBorder;
+    mTopBorder = nullptr;
+    delete mCreatorName;
+    mCreatorName = nullptr;
+    delete mCreatorName2;
+    mCreatorName2 = nullptr;
+    delete mCreatorName3;
+    mCreatorName3 = nullptr;
+    delete mBottomBorder;
+    mBottomBorder = nullptr;
+    delete mMainMenu2;
+    mMainMenu2 = nullptr;
+    delete mMainMenu3;
+    mMainMenu3 = nullptr;
 }
 
 void GameOverScreen::SetBackground(std::string NorthRoadSprite, std::string SouthRoadSprite) {
@@ -60,6 +107,15 @@ void GameOverScreen::SetBackground(std::string NorthRoadSprite, std::string Sout
     // Center the backgrounds on the screen
     mNorthRoadBackground->Position(Graphics::SCREEN_WIDTH * 0.78f, Graphics::SCREEN_HEIGHT * 0.5f);
     mSouthRoadBackground->Position(Graphics::SCREEN_WIDTH * 0.22f, Graphics::SCREEN_HEIGHT * 0.5f);
+    mCreator->Position(Graphics::SCREEN_WIDTH * -0.20f, Graphics::SCREEN_HEIGHT * -0.36f);
+    mTopBorder->Position(Graphics::SCREEN_WIDTH * -0.20f, Graphics::SCREEN_HEIGHT * 0.055f);
+    mCreatorName->Position(Graphics::SCREEN_WIDTH * -0.20f, Graphics::SCREEN_HEIGHT * -0.30f);
+    mCreatorName2->Position(Graphics::SCREEN_WIDTH * -0.20f, Graphics::SCREEN_HEIGHT * -0.25f);
+    mCreatorName3->Position(Graphics::SCREEN_WIDTH * -0.20f, Graphics::SCREEN_HEIGHT * -0.20f);
+    mBottomBorder->Position(Graphics::SCREEN_WIDTH * -0.20f, Graphics::SCREEN_HEIGHT * 0.15f);
+    mMainMenu2->Position(Graphics::SCREEN_WIDTH * -0.20f, Graphics::SCREEN_HEIGHT * 0.40f);
+    mMainMenu3->Position(Graphics::SCREEN_WIDTH * -0.20f, Graphics::SCREEN_HEIGHT * 0.45f);
+    mGameOver2->Position(Graphics::SCREEN_WIDTH * 0.49f, Graphics::SCREEN_HEIGHT * 0.5f);
 }
 
 void GameOverScreen::SetCurrentScore(int score) {
@@ -112,5 +168,16 @@ void GameOverScreen::Render() {
 
         mBustedText->Position(x, y); // Set position for "Busted" text
         mBustedText->Render(); // Render "Busted" text
+        
+
     }
+    mCreator->Render();
+    mTopBorder->Render();
+    mCreatorName->Render();
+    mCreatorName2->Render();
+    mCreatorName3->Render();
+    mBottomBorder->Render();
+    mMainMenu2->Render();
+    mMainMenu3->Render();
+    mGameOver2->Render();
 }
