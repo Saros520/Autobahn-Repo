@@ -17,7 +17,7 @@ EnemyPolice::EnemyPolice(Player* player, EnemySpawner* enemySpawner, bool isTopP
     mChasing = false;
     mBaseSpeed = 60.0f;
     mSpikeStripTimer = 0.0f;
-    mSpikeStripInterval = 3.6f;
+    mSpikeStripInterval = 3.0f;
 
     PhysicsManager::Instance()->UnregisterEntity(mId);
     mId = PhysicsManager::Instance()->RegisterEntity(this, PhysicsManager::CollisionLayers::Police);
@@ -27,6 +27,9 @@ EnemyPolice::EnemyPolice(Player* player, EnemySpawner* enemySpawner, bool isTopP
     Tag("PoliceCar");
 
     mPlayScreen = dynamic_cast<PlayScreen*>(mPlayer->Parent()); // Set mPlayScreen
+
+    // Ensure the spawn position is correct
+    Position(Vector2(Graphics::SCREEN_WIDTH * 0.5f, isTopPoliceCar ? -50.0f : Graphics::SCREEN_HEIGHT + 50.0f));
 }
 
 EnemyPolice::~EnemyPolice() {

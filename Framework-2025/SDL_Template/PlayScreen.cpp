@@ -301,6 +301,7 @@ void PlayScreen::SpawnPoliceCarAtMidpoint(bool isTopPoliceCar) {
     float spawnY = isTopPoliceCar ? -50.0f : Graphics::SCREEN_HEIGHT + 50.0f;
 
     EnemyPolice* policeCar = new EnemyPolice(mPlayer, mEnemySpawner, isTopPoliceCar);
+    policeCar->Parent(this);
     policeCar->Position(Vector2(spawnX, spawnY));
 
     if (isTopPoliceCar) {
