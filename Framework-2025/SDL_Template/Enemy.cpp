@@ -3,7 +3,6 @@
 #include "PhysicsManager.h"
 #include <cstdlib>
 #include <ctime>
-#include <iostream> // for debugging crash
 
 std::vector<float> Enemy::mLeftLanes;
 std::vector<float> Enemy::mRightLanes;
@@ -39,7 +38,6 @@ Enemy::Enemy(bool moveDownward, int vehicleIndex) {
     SetSpeedForVehicle(vehicleIndex); // Set speed based on the selected car
 
     mId = PhysicsManager::Instance()->RegisterEntity(this, PhysicsManager::CollisionLayers::Hostile);
-    std::cout << "Enemy created with ID: " << mId << std::endl; // Debug log
 }
 
 Enemy::~Enemy() {
@@ -53,7 +51,6 @@ Enemy::~Enemy() {
     mDeathAnimation = nullptr;
 
     PhysicsManager::Instance()->UnregisterEntity(mId);
-    std::cout << "Enemy destroyed with ID: " << mId << std::endl; // Debug log
 }
 
 void Enemy::InitializeLanes() {

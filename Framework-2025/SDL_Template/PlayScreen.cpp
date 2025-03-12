@@ -273,11 +273,85 @@ void PlayScreen::UpdateEnvironmentTransition() {
     }
 }
 
-void PlayScreen::StartPoliceChase() {
-    if (!mPoliceChaseActive && EnemyPolice::GetActivePoliceCar() == nullptr) {
-        mEnemyPolice = EnemyPolice::SpawnNewPoliceCar(mPlayer, mEnemySpawner, false);
+void PlayScreen::SpawnPoliceCar(bool isTopPoliceCar) {
+    if (isTopPoliceCar) {
+        mTopPoliceCar = new EnemyPolice(mPlayer, mEnemySpawner, true);
+        mTopPoliceChaseActive = true;
+        mTopPoliceChaseTimer = 0.0f;
+    }
+    else {
+        mEnemyPolice = new EnemyPolice(mPlayer, mEnemySpawner, false);
         mPoliceChaseActive = true;
         mPoliceChaseTimer = 0.0f;
+    }
+    std::cout << "Police car spawned. Top police car: " << isTopPoliceCar << std::endl; // Debug log
+}
+
+void PlayScreen::HandlePoliceCarSpawning(bool isTopPoliceCar) {
+    if (isTopPoliceCar && mTopPoliceChaseTimer < 60.0f) {
+        SpawnPoliceCar(true);
+    }
+    else if (!isTopPoliceCar && mPoliceChaseTimer < 60.0f) {
+        SpawnPoliceCar(false);
+    }
+}
+
+void PlayScreen::SpawnPoliceCarAtMidpoint(bool isTopPoliceCar) {
+    float spawnX = Graphics::SCREEN_WIDTH * 0.5f;
+    float spawnY = isTopPoliceCar ? -50.0f : Graphics::SCREEN_HEIGHT + 50.0f;
+
+    EnemyPolice* policeCar = new EnemyPolice(mPlayer, mEnemySpawner, isTopPoliceCar);
+    policeCar->Position(Vector2(spawnX, spawnY));
+
+    if (isTopPoliceCar) {
+        mTopPoliceCar = policeCar;
+        mTopPoliceChaseActive = true;
+        mTopPoliceChaseTimer = 0.0f;
+    }
+    else {
+        mEnemyPolice = policeCar;
+        mPoliceChaseActive = true;
+        mPoliceChaseTimer = 0.0f;
+    }
+    std::cout << "Police car spawned at midpoint. Top police car: " << isTopPoliceCar << std::endl; // Debug log
+}
+
+void PlayScreen::DestroyPoliceCar() {
+    if (mTopPoliceChaseActive && mTopPoliceCar) {
+        mTopPoliceCar->Destroy();
+        delete mTopPoliceCar;
+        mTopPoliceCar = nullptr;
+        mTopPoliceChaseActive = false;
+    }
+
+    if (mPoliceChaseActive && mEnemyPolice) {
+        mEnemyPolice->Destroy();
+        delete mEnemyPolice;
+        mEnemyPolice = nullptr;
+        mPoliceChaseActive = false;
+    }
+    std::cout << "Police car destroyed." << std::endl; // Debug log
+}
+
+void PlayScreen::AddSpikeStrip(SpikeStrip* spikeStrip) {
+    if (spikeStrip != nullptr) {
+        mSpikeStrips.push_back(spikeStrip);
+    }
+}
+
+void PlayScreen::RemoveOffScreenSpikeStrips() {
+    for (int i = mSpikeStrips.size() - 1; i >= 0; i--) {
+        if (mSpikeStrips[i]->Position().y > mScreenBoundsY) {
+            std::vector<SpikeStrip*>::iterator iter = std::find(mSpikeStrips.begin(), mSpikeStrips.end(), mSpikeStrips[i]);
+            mSpikeStrips.erase(iter);
+        }
+
+    }
+}
+
+void PlayScreen::StartPoliceChase() {
+    if (!mPoliceChaseActive && EnemyPolice::GetActivePoliceCar() == nullptr) {
+        SpawnPoliceCar(false);
     }
 }
 
@@ -293,11 +367,7 @@ void PlayScreen::EndPoliceChase() {
 
 void PlayScreen::StartTopPoliceChase() {
     if (!mTopPoliceChaseActive && mTopPoliceCar == nullptr) {
-        mTopPoliceCar = EnemyPolice::SpawnNewPoliceCar(mPlayer, mEnemySpawner, true);
-        if (mTopPoliceCar != nullptr) {
-            mTopPoliceChaseActive = true;
-            mTopPoliceChaseTimer = 0.0f;
-        }
+        SpawnPoliceCar(true);
     }
 }
 
@@ -322,22 +392,6 @@ void PlayScreen::EndTopPoliceChase() {
             mTopPoliceCar = nullptr;
         }
         mTopPoliceChaseActive = false;
-    }
-}
-
-void PlayScreen::AddSpikeStrip(SpikeStrip* spikeStrip) {
-    if (spikeStrip != nullptr) {
-        mSpikeStrips.push_back(spikeStrip);
-    }
-}
-
-void PlayScreen::RemoveOffScreenSpikeStrips() {
-    for (int i = mSpikeStrips.size() - 1; i >= 0; i--) {
-        if (mSpikeStrips[i]->Position().y > mScreenBoundsY) {
-            std::vector<SpikeStrip*>::iterator iter = std::find(mSpikeStrips.begin(), mSpikeStrips.end(), mSpikeStrips[i]);
-            mSpikeStrips.erase(iter);
-        }
-        
     }
 }
 

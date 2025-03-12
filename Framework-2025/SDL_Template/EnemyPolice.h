@@ -36,7 +36,6 @@ public:
     void StopChase();
     void Destroy();
     void LaySpikeStrip();
-    static EnemyPolice* SpawnNewPoliceCar(Player* player, EnemySpawner* enemySpawner, bool isTopPoliceCar = false);
     static EnemyPolice* GetActivePoliceCar() { return sActivePoliceCar; }
     bool IsDestroyed() const { return mDestroyed; }
 

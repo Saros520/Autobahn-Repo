@@ -119,12 +119,16 @@ public:
 	int GetCurrentSouthRoadIndex() const;
 
 	void AddSpikeStrip(SpikeStrip* spikeStrip);
+	void RemoveOffScreenSpikeStrips();
+
+	// New methods for police car management
+	void SpawnPoliceCar(bool isTopPoliceCar);
+	void HandlePoliceCarSpawning(bool isTopPoliceCar);
+	void SpawnPoliceCarAtMidpoint(bool isTopPoliceCar);
+	void DestroyPoliceCar();
 
 	// Method to handle game over event
 	void OnGameOver();
-
-	// Method to remove off-screen spike strips
-	void RemoveOffScreenSpikeStrips();
 
 };
 #endif

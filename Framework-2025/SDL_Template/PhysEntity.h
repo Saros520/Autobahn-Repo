@@ -9,7 +9,7 @@ protected:
 	unsigned long mId;
 	std::string mTag;
 
-	std::vector<Collider *> mColliders;
+	std::vector<Collider*> mColliders;
 
 	Collider * mBroadPhaseCollider;
 

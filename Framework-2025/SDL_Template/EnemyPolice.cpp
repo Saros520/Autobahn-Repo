@@ -17,7 +17,7 @@ EnemyPolice::EnemyPolice(Player* player, EnemySpawner* enemySpawner, bool isTopP
     mChasing = false;
     mBaseSpeed = 60.0f;
     mSpikeStripTimer = 0.0f;
-    mSpikeStripInterval = 4.0f;
+    mSpikeStripInterval = 3.6f;
 
     PhysicsManager::Instance()->UnregisterEntity(mId);
     mId = PhysicsManager::Instance()->RegisterEntity(this, PhysicsManager::CollisionLayers::Police);
@@ -132,18 +132,6 @@ void EnemyPolice::Update() {
         if (sChaseDuration >= 60.0f) {
             StopChase();
         }
-
-        // Check for collision with other enemy vehicles
-        for (Enemy* enemy : mEnemySpawner->GetEnemies()) {
-            if (enemy != this && enemy != nullptr && CheckCollision(enemy)) {
-                enemy->Destroy();
-                Destroy();
-                if (sChaseDuration < 60.0f) {
-                    SpawnNewPoliceCar(mPlayer, mEnemySpawner, true);
-                }
-                return;
-            }
-        }
     }
     // Bottom Police Car Logic
     else if (mChasing) {
@@ -226,18 +214,6 @@ void EnemyPolice::Update() {
         if (sChaseDuration >= 60.0f) {
             StopChase();
         }
-
-        // Check for collision with other enemy vehicles
-        for (Enemy* enemy : mEnemySpawner->GetEnemies()) {
-            if (enemy != this && enemy != nullptr && CheckCollision(enemy)) {
-                enemy->Destroy();
-                Destroy();
-                if (sChaseDuration < 60.0f) {
-                    SpawnNewPoliceCar(mPlayer, mEnemySpawner, mIsTopPoliceCar);
-                }
-                return;
-            }
-        }
     }
 }
 
@@ -303,10 +279,11 @@ void EnemyPolice::StopChase() {
 }
 
 void EnemyPolice::Destroy() {
-    // Properly delete the police car
-    sActivePoliceCar = nullptr;
     mDestroyed = true; // Set the destroyed flag
     PhysicsManager::Instance()->UnregisterEntity(mId);
+    if (mPlayScreen) {
+        mPlayScreen->HandlePoliceCarSpawning(mIsTopPoliceCar);
+    }
 }
 
 void EnemyPolice::LaySpikeStrip() {
@@ -318,24 +295,4 @@ void EnemyPolice::LaySpikeStrip() {
     else {
         std::cerr << "Error: mPlayScreen is nullptr. Cannot lay spike strip." << std::endl;
     }
-}
-
-EnemyPolice* EnemyPolice::SpawnNewPoliceCar(Player* player, EnemySpawner* enemySpawner, bool isTopPoliceCar) {
-    // Spawn a new police car if there isn't already an active one
-    if (sActivePoliceCar == nullptr) {
-        EnemyPolice* newPoliceCar = new EnemyPolice(player, enemySpawner, isTopPoliceCar);
-
-        // Set the initial positions of both police cars 
-        float spawnY = isTopPoliceCar ? -newPoliceCar->GetTextureDimensions().y : Graphics::SCREEN_HEIGHT + 50.0f;
-        newPoliceCar->Position(Vector2(Graphics::SCREEN_WIDTH * 0.5f, spawnY));
-
-        // Debug output to verify the position
-        Vector2 pos = newPoliceCar->Position();
-        std::cout << "Police car spawned at position: (" << pos.x << ", " << pos.y << ")" << std::endl;
-
-        newPoliceCar->StartChase();
-
-        return newPoliceCar;
-    }
-    return nullptr;
 }
