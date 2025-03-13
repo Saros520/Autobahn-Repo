@@ -319,14 +319,12 @@ void PlayScreen::SpawnPoliceCarAtMidpoint(bool isTopPoliceCar) {
 
 void PlayScreen::DestroyPoliceCar() {
     if (mTopPoliceChaseActive && mTopPoliceCar) {
-        mTopPoliceCar->Destroy();
         delete mTopPoliceCar;
         mTopPoliceCar = nullptr;
         mTopPoliceChaseActive = false;
     }
 
     if (mPoliceChaseActive && mEnemyPolice) {
-        mEnemyPolice->Destroy();
         delete mEnemyPolice;
         mEnemyPolice = nullptr;
         mPoliceChaseActive = false;

@@ -84,7 +84,6 @@ void Enemy::Hit(PhysEntity* other) {
     mAnimating = true;
     mDeathAnimation->ResetAnimation();
     mAudio->PlaySFX("SFX/PlayerExplosion.wav");
-    PhysicsManager::Instance()->UnregisterEntity(mId);
 }
 
 void Enemy::Update() {
@@ -117,6 +116,9 @@ void Enemy::Update() {
     if (mAnimating) {
         mDeathAnimation->Update();
         mAnimating = mDeathAnimation->IsAnimating();
+        if (!mAnimating) {
+            Active(false);
+        }
     }
 }
 
@@ -292,6 +294,5 @@ void Enemy::SetSpeedForVehicle(int vehicleIndex) {
 
 void Enemy::Destroy() {
     // Properly delete the enemy
-    PhysicsManager::Instance()->UnregisterEntity(mId);
     Active(false);
 }
