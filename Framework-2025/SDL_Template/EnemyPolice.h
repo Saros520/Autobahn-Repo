@@ -4,6 +4,7 @@
 #include "Enemy.h"
 #include "Player.h"
 #include "EnemySpawner.h"
+#include "SpikeStrip.h"
 #include <vector>
 
 
@@ -15,13 +16,17 @@ private:
     Timer* mTimer;
     Player* mPlayer;
     EnemySpawner* mEnemySpawner;
+    PlayScreen* mPlayScreen;
     bool mAvoiding;
     float mBaseSpeed;
     bool mChasing;
     bool mDestroyed;
+    bool mIsTopPoliceCar;
+    float mSpikeStripTimer;
+    float mSpikeStripInterval;
 
 public:
-    EnemyPolice(Player* player, EnemySpawner* enemySpawner);
+    EnemyPolice(Player* player, EnemySpawner* enemySpawner, bool isTopPoliceCar = false);
     ~EnemyPolice();
 
     void Update() override;
@@ -29,7 +34,7 @@ public:
     void StartChase();
     void StopChase();
     void Destroy();
-    static void SpawnNewPoliceCar(Player* player, EnemySpawner* enemySpawner);
+    void LaySpikeStrip();
     static EnemyPolice* GetActivePoliceCar() { return sActivePoliceCar; }
     bool IsDestroyed() const { return mDestroyed; }
 

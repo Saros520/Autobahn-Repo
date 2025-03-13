@@ -54,9 +54,12 @@ void ScreenManager::SetScreen(Screens newScreen) {
         delete mGameOverScreen; // Delete the previous game over screen if it exists
         mGameOverScreen = new GameOverScreen(
             mGameOverNorthRoadSprite,
-            mGameOverSouthRoadSprite
+            mGameOverSouthRoadSprite,
+            mPlayScreen->GetPlayer()->DistanceTraveled()
         );
-        mGameOverScreen->SetCurrentScore(mPlayScreen->GetPlayer()->Score());
+    }
+    else if (mCurrentScreen == Start) {
+        mStartScreen->ReloadHighScore(); // Reload the high score when transitioning to the Start screen
     }
 }
 

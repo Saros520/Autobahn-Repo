@@ -2,7 +2,7 @@
 #include "Graphics.h"
 #include <cstdlib>
 #include <ctime>
-#include <iostream> // For debug output
+//#include <iostream> For debug output
 
 
 EnemySpawner::EnemySpawner(float spawnInterval, int vehicleIndex) {
@@ -31,7 +31,7 @@ EnemySpawner::~EnemySpawner() {
 }
 
 void EnemySpawner::Update() {
-    std::cout << "Number of Enemies in EnemySpawner: " << mEnemies.size() << std::endl;
+    // std::cout << "Number of Enemies in EnemySpawner: " << mEnemies.size() << std::endl;
 
     mTimeSinceLastSpawn += mTimer->DeltaTime();
 

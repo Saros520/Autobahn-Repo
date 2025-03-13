@@ -5,6 +5,8 @@
 #include <ctime>
 #include <sys/stat.h>
 #include <iostream>
+#include <iomanip>
+#include <sstream>
 
 bool FileExists(const std::string& filePath) {
     struct stat buffer;
@@ -85,13 +87,16 @@ PlayScreen::PlayScreen() {
     mTopBar = new GameEntity(Graphics::SCREEN_WIDTH * 0.5f, 80.0f);
     mPlayerScore = new Texture("High-Score", "emulogic.ttf", 32, { 200, 0, 0 });
     mPlayerScoreNumber = new Scoreboard();
+    mHighScoreNumber = new Scoreboard();
 
     mTopBar->Parent(this);
     mPlayerScore->Parent(mTopBar);
     mPlayerScoreNumber->Parent(mTopBar);
+    mHighScoreNumber->Parent(mTopBar);
 
     mPlayerScore->Position(Graphics::SCREEN_WIDTH * -0.12f, -63.0f);
     mPlayerScoreNumber->Position(Graphics::SCREEN_WIDTH * 0.35f, -63.0f);
+    mHighScoreNumber->Position(Graphics::SCREEN_WIDTH * 0.2f, -63.0f);
 
     mPlayer = new Player();
     mPlayer->Parent(this);
@@ -103,12 +108,9 @@ PlayScreen::PlayScreen() {
     mPoliceChaseActive = false;
     mPoliceChaseTimer = 0.0f;
 
-    /*mLevelTime = 0.0f;
-    mLevelTimeText = new Scoreboard();
-    mLevelTimeText->Parent(this);
-    mLevelTimeText->Position(Graphics::SCREEN_WIDTH * 0.5f, 32.0f);*/
-
-    /*mLevelTimeText->Score(mLevelTime);*/
+    mTopPoliceCar = nullptr;
+    mTopPoliceChaseActive = false;
+    mTopPoliceChaseTimer = 0.0f;
 
     mPauseGame = new PauseGame();
     mPauseGame->Parent(this);
@@ -129,6 +131,10 @@ PlayScreen::PlayScreen() {
     mSpeedLabel->Position(Graphics::SCREEN_WIDTH * 0.10f, 30.0f);
     mSpeedScoreboard->Position(Graphics::SCREEN_WIDTH * 0.169f, 86.0f);
     mLivesLabel->Position(Graphics::SCREEN_WIDTH * -0.7579f, 30.0f);
+
+    mLivesScoreboard = new Scoreboard();
+    mLivesScoreboard->Parent(mBottomBar);
+    mLivesScoreboard->Position(Graphics::SCREEN_WIDTH * -0.72f, 86.0f);
 
 }
 
@@ -167,14 +173,14 @@ PlayScreen::~PlayScreen() {
         delete EnemyPolice::GetActivePoliceCar();
     }
 
-    /*delete mLevelTimeText;
-    mLevelTimeText = nullptr;*/
-
     delete mPlayerScore;
     mPlayerScore = nullptr;
 
     delete mPlayerScoreNumber;
     mPlayerScoreNumber = nullptr;
+
+    delete mHighScoreNumber;
+    mHighScoreNumber = nullptr;
 
     delete mTopBar;
     mTopBar = nullptr;
@@ -188,9 +194,17 @@ PlayScreen::~PlayScreen() {
     delete mLivesLabel;
     mLivesLabel = nullptr;
 
+    delete mLivesScoreboard;
+    mLivesScoreboard = nullptr;
+
     delete mBottomBar;
     mBottomBar = nullptr;
 
+    // Clean up spike strips
+    for (auto& spikeStrip : mSpikeStrips) {
+        delete spikeStrip;
+    }
+    mSpikeStrips.clear();
 }
 
 void PlayScreen::UpdateHighway() {
@@ -259,11 +273,86 @@ void PlayScreen::UpdateEnvironmentTransition() {
     }
 }
 
-void PlayScreen::StartPoliceChase() {
-    if (!mPoliceChaseActive && EnemyPolice::GetActivePoliceCar() == nullptr) {
-        EnemyPolice::SpawnNewPoliceCar(mPlayer, mEnemySpawner);
+void PlayScreen::SpawnPoliceCar(bool isTopPoliceCar) {
+    if (isTopPoliceCar) {
+        mTopPoliceCar = new EnemyPolice(mPlayer, mEnemySpawner, true);
+        mTopPoliceChaseActive = true;
+        mTopPoliceChaseTimer = 0.0f;
+    }
+    else {
+        mEnemyPolice = new EnemyPolice(mPlayer, mEnemySpawner, false);
         mPoliceChaseActive = true;
         mPoliceChaseTimer = 0.0f;
+    }
+    std::cout << "Police car spawned. Top police car: " << isTopPoliceCar << std::endl; // Debug log
+}
+
+void PlayScreen::HandlePoliceCarSpawning(bool isTopPoliceCar) {
+    if (isTopPoliceCar && mTopPoliceChaseTimer < 60.0f) {
+        SpawnPoliceCar(true);
+    }
+    else if (!isTopPoliceCar && mPoliceChaseTimer < 60.0f) {
+        SpawnPoliceCar(false);
+    }
+}
+
+void PlayScreen::SpawnPoliceCarAtMidpoint(bool isTopPoliceCar) {
+    float spawnX = Graphics::SCREEN_WIDTH * 0.5f;
+    float spawnY = isTopPoliceCar ? -50.0f : Graphics::SCREEN_HEIGHT + 50.0f;
+
+    EnemyPolice* policeCar = new EnemyPolice(mPlayer, mEnemySpawner, isTopPoliceCar);
+    policeCar->Parent(this);
+    policeCar->Position(Vector2(spawnX, spawnY));
+
+    if (isTopPoliceCar) {
+        mTopPoliceCar = policeCar;
+        mTopPoliceChaseActive = true;
+        mTopPoliceChaseTimer = 0.0f;
+    }
+    else {
+        mEnemyPolice = policeCar;
+        mPoliceChaseActive = true;
+        mPoliceChaseTimer = 0.0f;
+    }
+    std::cout << "Police car spawned at midpoint. Top police car: " << isTopPoliceCar << std::endl; // Debug log
+}
+
+void PlayScreen::DestroyPoliceCar() {
+    if (mTopPoliceChaseActive && mTopPoliceCar) {
+        mTopPoliceCar->Destroy();
+        delete mTopPoliceCar;
+        mTopPoliceCar = nullptr;
+        mTopPoliceChaseActive = false;
+    }
+
+    if (mPoliceChaseActive && mEnemyPolice) {
+        mEnemyPolice->Destroy();
+        delete mEnemyPolice;
+        mEnemyPolice = nullptr;
+        mPoliceChaseActive = false;
+    }
+    std::cout << "Police car destroyed." << std::endl; // Debug log
+}
+
+void PlayScreen::AddSpikeStrip(SpikeStrip* spikeStrip) {
+    if (spikeStrip != nullptr) {
+        mSpikeStrips.push_back(spikeStrip);
+    }
+}
+
+void PlayScreen::RemoveOffScreenSpikeStrips() {
+    for (int i = mSpikeStrips.size() - 1; i >= 0; i--) {
+        if (mSpikeStrips[i]->Position().y > mScreenBoundsY) {
+            std::vector<SpikeStrip*>::iterator iter = std::find(mSpikeStrips.begin(), mSpikeStrips.end(), mSpikeStrips[i]);
+            mSpikeStrips.erase(iter);
+        }
+
+    }
+}
+
+void PlayScreen::StartPoliceChase() {
+    if (!mPoliceChaseActive && EnemyPolice::GetActivePoliceCar() == nullptr) {
+        SpawnPoliceCar(false);
     }
 }
 
@@ -274,6 +363,36 @@ void PlayScreen::EndPoliceChase() {
             mEnemyPolice = nullptr; // Set the pointer to nullptr after deletion
         }
         mPoliceChaseActive = false;
+    }
+}
+
+void PlayScreen::StartTopPoliceChase() {
+    if (!mTopPoliceChaseActive && mTopPoliceCar == nullptr) {
+        SpawnPoliceCar(true);
+    }
+}
+
+void PlayScreen::UpdateTopPoliceCar() {
+    if (mTopPoliceChaseActive) {
+        mTopPoliceChaseTimer += mTimer->DeltaTime();
+        if (mTopPoliceCar != nullptr) {
+            mTopPoliceCar->Update();
+        }
+
+        if (mTopPoliceChaseTimer >= 60.0f) {
+            EndTopPoliceChase();
+        }
+
+    }
+}
+
+void PlayScreen::EndTopPoliceChase() {
+    if (mTopPoliceChaseActive) {
+        if (EnemyPolice::GetActivePoliceCar() != nullptr) {
+            EnemyPolice::GetActivePoliceCar()->Destroy();
+            mTopPoliceCar = nullptr;
+        }
+        mTopPoliceChaseActive = false;
     }
 }
 
@@ -301,6 +420,9 @@ int PlayScreen::GetCurrentSouthRoadIndex() const {
 }
 
 void PlayScreen::Update() {
+
+    mLivesScoreboard->Score(mPlayer->Lives()); 
+    mLivesScoreboard->Update();
 
     if (mInput->KeyPressed(SDL_SCANCODE_ESCAPE)) {
         mIsPaused = !mIsPaused;
@@ -336,22 +458,32 @@ void PlayScreen::Update() {
         mPlayer->Update();
         mEnemySpawner->Update();
 
-        // Start the police chase after about 2 minutes
-        if (mLevelTime >= 2.0f && !mPoliceChaseActive) {
+        // Start the first police chase after about 2 minutes
+        if (mLevelTime >= 240.0f && !mPoliceChaseActive) {
             StartPoliceChase();
         }
 
-        // Update police chase 
+        // Update first police chase 
         if (mPoliceChaseActive) {
             mPoliceChaseTimer += mTimer->DeltaTime();
             if (EnemyPolice::GetActivePoliceCar() != nullptr) {
                 EnemyPolice::GetActivePoliceCar()->Update();
             }
 
-            // End the police chase/player gets away for now after 1 minute
+            // End the first police chase/player gets away for now after 1 minute
             if (mPoliceChaseTimer >= 60.0f) {
                 EndPoliceChase();
             }
+        }
+
+        // Start the second police chase after about 4 minutes
+        if (mLevelTime >= 2.0f && !mTopPoliceChaseActive) {
+            StartTopPoliceChase();
+        }
+
+        // Update second police chase
+        if (mTopPoliceChaseActive) {
+            UpdateTopPoliceCar();
         }
 
         // Check for game over conditions
@@ -409,8 +541,6 @@ void PlayScreen::Update() {
             musicPaused = !musicPaused;  // Toggle the pause state
         }
 
-        /*mLevelTimeText->Score(mLevelTime);
-        mLevelTimeText->Update();*/
         mPlayerScoreNumber->Score(mPlayer->Score());
         mPlayerScoreNumber->Update();
 
@@ -418,12 +548,31 @@ void PlayScreen::Update() {
         mSpeedScoreboard->Score(playerLives); // Display remaining lives
         mSpeedScoreboard->Update();
 
+        // Display distance traveled in kilometers to the hundredths place
         mPlayerScoreNumber->Distance(mPlayer->DistanceTraveled());
         mPlayerScoreNumber->Update();
+
+        // Update high score if the current distance is greater
+        float currentDistance = mPlayer->DistanceTraveled();
+        float highScore = mHighScoreNumber->GetHighScore();
+        if (currentDistance > highScore) {
+            mHighScoreNumber->SetHighScore(currentDistance);
+        }
+        mHighScoreNumber->Distance(mHighScoreNumber->GetHighScore());
+        mHighScoreNumber->Update();
 
         float speed = mPlayer->GetSpeed();
         mSpeedScoreboard->Score(static_cast<int>(speed));
         mSpeedScoreboard->Update();
+
+        // Update the spike strip
+        for (auto it : mSpikeStrips) {
+            it->Update();
+        }
+
+        // Check for out-of-bounds spike strips and remove them
+        RemoveOffScreenSpikeStrips();
+        
     }
 }
 
@@ -433,12 +582,13 @@ void PlayScreen::Render() {
         mSouthRoadSprites[mCurrentEnvironment][i]->Render();
         if (mTransitioning) {
             mNorthRoadSprites[mNextEnvironment][i]->Render();
-			mSouthRoadSprites[mNextEnvironment][i]->Render();
-		}
-	}
+            mSouthRoadSprites[mNextEnvironment][i]->Render();
+        }
+    }
 
 	mSpeedBox->Render();
 	mLivesBox->Render();
+    mLivesScoreboard->Render();
 	mPlayer->Render();
 	mEnemySpawner->Render();
 	if (mPoliceChaseActive) {
@@ -446,47 +596,62 @@ void PlayScreen::Render() {
 			EnemyPolice::GetActivePoliceCar()->Render();
 		}
 	}
+    if (mTopPoliceChaseActive) {
+        if (mTopPoliceCar != nullptr) {
+            mTopPoliceCar->Render();
+        }
+    }
 
-	/*mLevelTimeText->Render();*/
-	mPlayerScore->Render();
-	mPlayerScoreNumber->Render();
-	mSpeedLabel->Render();
-	mSpeedScoreboard->Render();
-	mLivesLabel->Render();
-	
-	if (mIsPaused) {
-		mPauseGame->Render();
-	}
+    for (auto& spikeStrip : mSpikeStrips) {
+        spikeStrip->Render();
+    }
+
+    mPlayerScore->Render();
+    mPlayerScoreNumber->Render();
+    mHighScoreNumber->Render();
+    mSpeedLabel->Render();
+    mSpeedScoreboard->Render();
+    mLivesLabel->Render();
+
+    if (mIsPaused) {
+        mPauseGame->Render();
+    }
 }
 
 void PlayScreen::OnGameOver() {
-	std::string currentNorthRoadType = GetCurrentNorthRoadType();
-	int currentNorthRoadIndex = GetCurrentNorthRoadIndex();
-	std::string currentSouthRoadType = GetCurrentSouthRoadType();
-	int currentSouthRoadIndex = GetCurrentSouthRoadIndex();
+    std::string currentNorthRoadType = GetCurrentNorthRoadType();
+    int currentNorthRoadIndex = GetCurrentNorthRoadIndex();
+    std::string currentSouthRoadType = GetCurrentSouthRoadType();
+    int currentSouthRoadIndex = GetCurrentSouthRoadIndex();
 
-	ScreenManager::Instance()->SetScreen(ScreenManager::GameOver);
+    ScreenManager::Instance()->SetScreen(ScreenManager::GameOver);
+    ScreenManager::Instance()->SetGameOverBackground(
+        currentNorthRoadType + std::to_string(currentNorthRoadIndex) + ".png",
+        currentSouthRoadType + std::to_string(currentSouthRoadIndex) + ".png"
+    );
 }
 
 void PlayScreen::Reset() {
-	mHighWaySpeed = 550.0f; // Reset highway speed
-	mCurrentEnvironment = 2;
-	mNextEnvironment = 1;
-	mEnvironmentChangeTimer = 0.0f;
-	mTransitioning = false;
-	mTransitionAlpha = 0.0f;
+    mHighWaySpeed = 550.0f; // Reset highway speed
+    mCurrentEnvironment = 2;
+    mNextEnvironment = 1;
+    mEnvironmentChangeTimer = 0.0f;
+    mTransitioning = false;
+    mTransitionAlpha = 0.0f;
 
-	for (int i = 0; i < NUM_ROAD_SPRITES; ++i) {
-		mHighwayPosY[i] = mNorthRoadSprites[mCurrentEnvironment][i]->Position().y;
-	}
+    for (int i = 0; i < NUM_ROAD_SPRITES; ++i) {
+        mHighwayPosY[i] = mNorthRoadSprites[mCurrentEnvironment][i]->Position().y;
+    }
 
-	mPlayer->ResetLives();  // Reset player lives
-	mPlayer->Reset();  // Reset player state
-	mEnemySpawner->Reset();  // Reset enemy spawner
-	mPoliceChaseActive = false;
-	mPoliceChaseTimer = 0.0f;
-	mLevelTime = 0.0f;
+    mPlayer->ResetLives();  // Reset player lives
+    mPlayer->Reset();  // Reset player state
+    mEnemySpawner->Reset();  // Reset enemy spawner
+    mPoliceChaseActive = false;
+    mPoliceChaseTimer = 0.0f;
+    mTopPoliceChaseActive = false;
+    mTopPoliceChaseTimer = 0.0f;
+    mLevelTime = 0.0f;
 
-	mPlayerScoreNumber->Score(0);  // Reset score
-	mSpeedScoreboard->Score(0);  // Reset speed
+    mPlayerScoreNumber->Score(0);  // Reset score
+    mSpeedScoreboard->Score(0);  // Reset speed
 }

@@ -4,30 +4,30 @@
 #include "ScreenManager.h"
 
 Player::Player() {
-	mTimer = Timer::Instance();
-	mInput = InputManager::Instance();
-	mAudio = AudioManager::Instance();
+    mTimer = Timer::Instance();
+    mInput = InputManager::Instance();
+    mAudio = AudioManager::Instance();
 
-	mVisible = true;
-	mAnimating = false;
-	mWasHit = false;
+    mVisible = true;
+    mAnimating = false;
+    mWasHit = false;
 
-	mScore = 0;
-	mLives = 3;
+    mScore = 0;
+    mLives = 3;
 
-	mTexture = nullptr;
+    mTexture = nullptr;
 
-	SetCarTexture(0);
+    SetCarTexture(0);
 
-	mMoveSpeed = 223.0f;
-	mHorizontalMoveSpeed = 200.0f;
-	mAcceleration = 40.0f;
-	mDeceleration = 30.0f;
-	mCurrentSpeed = 186.0f;
-	mMoveBoundsX = Vector2(120.0f + mTexture->ScaledDimensions().x / 2, 780.0f - mTexture->ScaledDimensions().x / 2);
-	mMoveBoundsY = Vector2(90.0f, Graphics::SCREEN_HEIGHT);
+    mMoveSpeed = 223.0f;
+    mHorizontalMoveSpeed = 200.0f;
+    mAcceleration = 40.0f;
+    mDeceleration = 30.0f;
+    mCurrentSpeed = 186.0f;
+    mMoveBoundsX = Vector2(120.0f + mTexture->ScaledDimensions().x / 2, 780.0f - mTexture->ScaledDimensions().x / 2);
+    mMoveBoundsY = Vector2(90.0f, Graphics::SCREEN_HEIGHT);
 
-	mDistanceTraveled = 0.0f;
+    mDistanceTraveled = 0.0f;
 
 	mStartPosition = Vector2(Graphics::SCREEN_WIDTH * 0.503f, Graphics::SCREEN_HEIGHT * 0.9f);
 	Position(mStartPosition);  // Set the initial position of the car
@@ -40,56 +40,48 @@ Player::Player() {
 	mDeathAnimation->Position(Vec2_Zero);
 	mDeathAnimation->SetWrapMode(Animation::WrapModes::Once);
 
-	/*for (int i = 0; i < MAX_BULLETS; ++i) {
-		mBullets[i] = new Bullet(true);
-	}*/
+    SetColliderForCar(0);
 
-	SetColliderForCar(0);
-
-	mId = PhysicsManager::Instance()->RegisterEntity(this, PhysicsManager::CollisionLayers::Friendly);
+    mId = PhysicsManager::Instance()->RegisterEntity(this, PhysicsManager::CollisionLayers::Friendly);
 }
 
 void Player::SetCarTexture(int carIndex) {
-	std::string fileName = "PlayerCar" + std::to_string(carIndex + 1) + ".png";
-	delete mTexture;
-	mTexture = new Texture(fileName);
-	mTexture->Parent(this);
-	mTexture->Position(Vec2_Zero);
+    std::string fileName = "PlayerCar" + std::to_string(carIndex + 1) + ".png";
+    delete mTexture;
+    mTexture = new Texture(fileName);
+    mTexture->Parent(this);
+    mTexture->Position(Vec2_Zero);
 
-	SetColliderForCar(carIndex);
+    SetColliderForCar(carIndex);
 }
 
 void Player::SetColliderForCar(int carIndex) {
-	int* collider = 0;
-	// Clear existing colliders 
-	for (auto c : mColliders) {
-		delete collider;
-	}
-	mColliders.clear();
+    int* collider = 0;
+    for (auto c : mColliders) {
+        delete collider;
+    }
+    mColliders.clear();
 
-	AddCollider(new BoxCollider(mTexture->ScaledDimensions()));
+    AddCollider(new BoxCollider(mTexture->ScaledDimensions()));
 }
 
 Player::~Player() {
-	mTimer = nullptr;
-	mInput = nullptr;
-	mAudio = nullptr;
+    mTimer = nullptr;
+    mInput = nullptr;
+    mAudio = nullptr;
 
-	delete mTexture;
-	mTexture = nullptr;
+    delete mTexture;
+    mTexture = nullptr;
 
-	delete mDeathAnimation;
-	mDeathAnimation = nullptr;
+    delete mDeathAnimation;
+    mDeathAnimation = nullptr;
 
-	/*for (auto b : mBullets) {
-		delete b;
-	}*/
-	PhysicsManager::Instance()->UnregisterEntity(mId);
+    PhysicsManager::Instance()->UnregisterEntity(mId);
 }
 
 void Player::HandleMovement() {
-	const float Gravity = 100.0f;
-	Vector2 moveDir = Vec2_Zero;
+    const float Gravity = 100.0f;
+    Vector2 moveDir = Vec2_Zero;
 
 	if (mInput->KeyPressed(SDL_SCANCODE_W) || mInput->KeyDown(SDL_SCANCODE_UP)) {
 		moveDir.y -= 1;
@@ -112,133 +104,120 @@ void Player::HandleMovement() {
 		mAudio->PlaySFX("CarRev.MP3");
 	}
 
-	if (moveDir.MagnitudeSqr() > 0.0f) {
-		moveDir = moveDir.Normalized();
-		if (moveDir.y > 0) { // Decelerating
-			mCurrentSpeed -= mDeceleration * mTimer->DeltaTime();
-			if (mCurrentSpeed < 150.0f) { 
-				mCurrentSpeed = 150.0f;
-			}
-		}
-		else if (moveDir.y < 0) { // Accelerating
-			mCurrentSpeed += mAcceleration * mTimer->DeltaTime();
-			if (mCurrentSpeed > mMoveSpeed) {
-				mCurrentSpeed = mMoveSpeed;
-			}
-		}
-	}
-	else {
-		if (mCurrentSpeed > 186.0f) { // Decelerate to 186 km/h
-			mCurrentSpeed -= mDeceleration * mTimer->DeltaTime();
-			if (mCurrentSpeed < 186.0f) {
-				mCurrentSpeed = 186.0f;
-			}
-		}
-		else if (mCurrentSpeed < 186.0f) { // Accelerate to 186 km/h
-			mCurrentSpeed += mAcceleration * mTimer->DeltaTime();
-			if (mCurrentSpeed > 186.0f) {
-				mCurrentSpeed = 186.0f;
-			}
-		}
-	}
+    if (moveDir.MagnitudeSqr() > 0.0f) {
+        moveDir = moveDir.Normalized();
+        mMoveDirection = moveDir; // Update mMoveDirection
+        if (moveDir.y > 0) {
+            mCurrentSpeed -= mDeceleration * mTimer->DeltaTime();
+            if (mCurrentSpeed < 150.0f) {
+                mCurrentSpeed = 150.0f;
+            }
+        }
+        else if (moveDir.y < 0) {
+            mCurrentSpeed += mAcceleration * mTimer->DeltaTime();
+            if (mCurrentSpeed > mMoveSpeed) {
+                mCurrentSpeed = mMoveSpeed;
+            }
+        }
+    }
+    else {
+        if (mCurrentSpeed > 186.0f) {
+            mCurrentSpeed -= mDeceleration * mTimer->DeltaTime();
+            if (mCurrentSpeed < 186.0f) {
+                mCurrentSpeed = 186.0f;
+            }
+        }
+        else if (mCurrentSpeed < 186.0f) {
+            mCurrentSpeed += mAcceleration * mTimer->DeltaTime();
+            if (mCurrentSpeed > 186.0f) {
+                mCurrentSpeed = 186.0f;
+            }
+        }
+    }
 
-	Vector2 moveAmount = moveDir * mCurrentSpeed * mTimer->DeltaTime(); // Convert km/h to m/s
-	if (moveDir.x != 0) {
-		moveAmount.x = moveDir.x * mHorizontalMoveSpeed * mTimer->DeltaTime(); // Convert km/h to m/s
-	}
-	Translate(moveAmount, World);
+    Vector2 moveAmount = moveDir * mCurrentSpeed * mTimer->DeltaTime();
+    if (moveDir.x != 0) {
+        moveAmount.x = moveDir.x * mHorizontalMoveSpeed * mTimer->DeltaTime();
+    }
+    Translate(moveAmount, World);
 
-	if (!(mInput->KeyDown(SDL_SCANCODE_W) || mInput->KeyDown(SDL_SCANCODE_UP))) {
-		Vector2 pos = Position();
-		pos.y += Gravity * mTimer->DeltaTime(); // Move down constantly
-		Position(pos);
-	}
+    if (!(mInput->KeyDown(SDL_SCANCODE_W) || mInput->KeyDown(SDL_SCANCODE_UP))) {
+        Vector2 pos = Position();
+        pos.y += Gravity * mTimer->DeltaTime();
+        Position(pos);
+    }
 
-	// Keep player within movement bounds
-	Vector2 pos = Position(Local);
-	if (pos.x < mMoveBoundsX.x) {
-		pos.x = mMoveBoundsX.x;
-	}
-	else if (pos.x > mMoveBoundsX.y) {
-		pos.x = mMoveBoundsX.y;
-	}
+    Vector2 pos = Position(Local);
+    if (pos.x < mMoveBoundsX.x) {
+        pos.x = mMoveBoundsX.x;
+    }
+    else if (pos.x > mMoveBoundsX.y) {
+        pos.x = mMoveBoundsX.y;
+    }
 
-	if (pos.y < mMoveBoundsY.x) {
-		pos.y = mMoveBoundsY.x;
-	}
-	else if (pos.y > mMoveBoundsY.y) {
-		pos.y = mMoveBoundsY.y;
-	}
+    if (pos.y < mMoveBoundsY.x) {
+        pos.y = mMoveBoundsY.x;
+    }
+    else if (pos.y > mMoveBoundsY.y) {
+        pos.y = mMoveBoundsY.y;
+    }
 
-	Position(pos);
+    Position(pos);
 
-	// Check if the player is off the highway
-	if (IsOffHighway()) {
-		mAnimating = true;
-		mDeathAnimation->ResetAnimation();
-		mAudio->PlaySFX("SFX/PlayerExplosion.wav");
-		mWasHit = true;
-	}
+    if (IsOffHighway()) {
+        mAnimating = true;
+        mDeathAnimation->ResetAnimation();
+        mAudio->PlaySFX("SFX/CrashSound.wav");
+        mWasHit = true;
+    }
 }
 
 bool Player::IsOffHighway() {
-	Vector2 pos = Position(Local);
-	return (pos.x < mMoveBoundsX.x || pos.x > mMoveBoundsX.y);
+    Vector2 pos = Position(Local);
+    return (pos.x < mMoveBoundsX.x || pos.x > mMoveBoundsX.y);
 }
 
-//void Player::HandleFiring() {
-//	if (mInput->KeyPressed(SDL_SCANCODE_SPACE)) {
-//		for (int i = 0; i < MAX_BULLETS; ++i) {
-//			if (!mBullets[i]->Active()) {
-//				mBullets[i]->Fire(Position());
-//				mAudio->PlaySFX("SFX/Fire.wav");
-//				break;
-//			}
-//		}
-//	}
-//}
-
 void Player::Visible(bool visible) {
-	mVisible = visible;
+    mVisible = visible;
 }
 
 bool Player::IsAnimating() {
-	return mAnimating;
+    return mAnimating;
 }
 
 int Player::Score() {
-	return mScore;
+    return mScore;
 }
 
 void Player::AddScore(int change) {
-	mScore += change;
+    mScore += change;
 }
 
-float Player::DistanceTraveled() {
-	return mDistanceTraveled;
+float Player::DistanceTraveled() const {
+    return mDistanceTraveled;
+}
+
+Vector2 Player::GetVelocity() const {
+    return mMoveDirection * mCurrentSpeed;
 }
 
 float Player::GetSpeed() {
-	
-	// Calculate Speed based on movement conditions
-	float speed = 50.0f; 
-	if (mInput->KeyDown(SDL_SCANCODE_W) || mInput->KeyDown(SDL_SCANCODE_UP)) {
-		speed = 62.0f; // Speed when moving up
-	}
-	else if (mInput->KeyDown(SDL_SCANCODE_S) || mInput->KeyDown(SDL_SCANCODE_DOWN)) {
-		speed = 42.0f; // Speed when moving down
-	}
-	return mCurrentSpeed; 
-
+    float speed = 50.0f;
+    if (mInput->KeyDown(SDL_SCANCODE_W) || mInput->KeyDown(SDL_SCANCODE_UP)) {
+        speed = 62.0f;
+    }
+    else if (mInput->KeyDown(SDL_SCANCODE_S) || mInput->KeyDown(SDL_SCANCODE_DOWN)) {
+        speed = 42.0f;
+    }
+    return mCurrentSpeed;
 }
 
-bool Player::IgnoreCollisions()
-{
-	return !mVisible || mAnimating;
+bool Player::IgnoreCollisions() {
+    return !mVisible || mAnimating;
 }
 
 bool Player::IsOutOfLives() {
-	return mLives <= 0;
+    return mLives <= 0;
 }
 
 void Player::Hit(PhysEntity* other) {
@@ -251,7 +230,7 @@ void Player::Hit(PhysEntity* other) {
 		mWasHitByPolice = true;
 	}
 
-	mLives -= 1;
+    mLives -= 1;
 
 	if (mLives <= 0) {
 		mAnimating = true;
@@ -270,34 +249,30 @@ void Player::Hit(PhysEntity* other) {
 }
 
 bool Player::WasHit() {
-	return mWasHit;
+    return mWasHit;
 }
 
 bool Player::WasHitByPolice() const {
-	return mWasHitByPolice;
+    return mWasHitByPolice;
 }
 
 void Player::Update() {
-	if (mAnimating) {
+    if (mAnimating) {
+        if (mWasHit) {
+            mWasHit = false;
+        }
 
-		if (mWasHit) {
-			mWasHit = false;
-		}
+        mDeathAnimation->Update();
+        mAnimating = mDeathAnimation->IsAnimating();
 
-		//mDeathAnimation->Update();
-		//mAnimating = mDeathAnimation->IsAnimating();
-
-		if (!mAnimating && mLives <= 0) {
-			ScreenManager::Instance()->SetScreen(ScreenManager::Start);
-		}
-		mDeathAnimation->Update();
-		mAnimating = mDeathAnimation->IsAnimating();
-	}
-	else {
-		if (Active()) {
-			HandleMovement();
-	//		HandleFiring();
-		}
+        if (!mAnimating && mLives <= 0) {
+            ScreenManager::Instance()->SetScreen(ScreenManager::Start);
+        }
+    }
+    else {
+        if (Active()) {
+            HandleMovement();
+        }
 
 		// Update distance traveled based on movement conditions
 		float speed = mCurrentSpeed * (1000.0f / 3600.0f); // Convert km/h to m/s
@@ -317,28 +292,24 @@ void Player::Update() {
 }
 
 void Player::Render() {
-	if (mVisible) {
-		if (mAnimating) {
-			mDeathAnimation->Render();
-		}
-		else {
-			mTexture->Render();
-		}
-	}
+    if (mVisible) {
+        if (mAnimating) {
+            mDeathAnimation->Render();
+        }
+        else {
+            mTexture->Render();
+        }
+    }
 
-	/*for (int i = 0; i < MAX_BULLETS; ++i) {
-		mBullets[i]->Render();
-	}*/
-
-	PhysEntity::Render();
+    PhysEntity::Render();
 }
 
 int Player::Lives() {
-	return mLives;
+    return mLives;
 }
 
 void Player::ResetLives() {
-	mLives = 3;  // Reset lives when starting a new game
+    mLives = 3;
 }
 
 void Player::Reset() {

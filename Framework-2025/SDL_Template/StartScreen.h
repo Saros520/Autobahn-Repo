@@ -101,7 +101,9 @@ public:
 
 	void ChangeSelectedMode(int change);
 
-	void SetHighScore(int score);
+	void SetHighScore(float score);
+
+	void ReloadHighScore();
 
 	void Update() override;
 	void Render() override;

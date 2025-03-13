@@ -8,6 +8,7 @@
 #include "EnemyPolice.h"
 #include "PauseGame.h"
 #include "Texture.h"
+#include "SpikeStrip.h"
 #include <vector>
 
 class PlayScreen : public GameEntity {
@@ -16,6 +17,8 @@ private:
 	Timer * mTimer;
 	AudioManager * mAudio;
 	InputManager* mInput;
+	
+	float mScreenBoundsY = 1100;
 
 	static const int NUM_ROAD_SPRITES = 5;
 	static const int NUM_ENVIRONMENTS = 4;
@@ -48,12 +51,20 @@ private:
 	GameEntity* mTopBar;
 	Texture* mPlayerScore;
 	Scoreboard* mPlayerScoreNumber;
+	Scoreboard* mHighScoreNumber;
 
 	Player * mPlayer;
 	EnemySpawner* mEnemySpawner;
 	EnemyPolice* mEnemyPolice;
 	bool mPoliceChaseActive;
 	float mPoliceChaseTimer;
+
+	EnemyPolice* mTopPoliceCar;
+	bool mTopPoliceChaseActive;
+	float mTopPoliceChaseTimer;
+
+	std::vector<SpikeStrip*> mSpikeStrips;
+
 	PauseGame* mPauseGame;
 
 	float mLevelTime;
@@ -66,12 +77,16 @@ private:
 	Texture* mLivesLabel;
 	Texture* mSpeedBox;
 	Texture* mLivesBox;
+	Scoreboard* mLivesScoreboard;
 
 	void UpdateHighway();
 	void StartEnvironmentTransition();
     void UpdateEnvironmentTransition();
 	void StartPoliceChase();
 	void EndPoliceChase();
+	void StartTopPoliceChase();
+	void EndTopPoliceChase();
+	void UpdateTopPoliceCar();
 	void UpdatePlayer();
 	void UpdateEnemy();
 
@@ -102,6 +117,15 @@ public:
 	int GetCurrentNorthRoadIndex() const;
 	std::string GetCurrentSouthRoadType() const;
 	int GetCurrentSouthRoadIndex() const;
+
+	void AddSpikeStrip(SpikeStrip* spikeStrip);
+	void RemoveOffScreenSpikeStrips();
+
+	// New methods for police car management
+	void SpawnPoliceCar(bool isTopPoliceCar);
+	void HandlePoliceCarSpawning(bool isTopPoliceCar);
+	void SpawnPoliceCarAtMidpoint(bool isTopPoliceCar);
+	void DestroyPoliceCar();
 
 	// Method to handle game over event
 	void OnGameOver();

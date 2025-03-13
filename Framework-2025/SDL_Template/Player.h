@@ -43,6 +43,8 @@ private:
 
     float mDistanceTraveled;
 
+    Vector2 mMoveDirection;
+
     //static const int MAX_BULLETS = 2;
     //Bullet* mBullets[MAX_BULLETS];
 
@@ -71,7 +73,7 @@ public:
 
     void AddScore(int change);
 
-    float DistanceTraveled();
+    float DistanceTraveled() const;
     float GetSpeed(); // New method to get the current speed
 
     // Inherited from PhysEntity
@@ -85,6 +87,8 @@ public:
     bool IsOutOfLives();
 
     void SetMoveBounds(float top, float bottom, float left, float right);
+
+    Vector2 GetVelocity() const;
 
     void Update() override;
     void Render() override;

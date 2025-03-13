@@ -12,6 +12,7 @@ private:
 	std::vector<Texture *> mScore;
 	int mScoreValue;
 	int mHighScoreValue;
+	float mDistanceValue;
 
 	SDL_Color mColor;
 
@@ -20,17 +21,18 @@ public:
 	Scoreboard(SDL_Color color);
 	~Scoreboard();
 
-	void Score(int score);
+	void Score(float score);
 	void Distance(float distance);
 
 	void Update() override;
 	void Render() override;
 
-	void SaveHighScore();
-	void LoadHighScore();
-	int GetHighScore();
+	float GetHighScore() const;
+	void SetHighScore(float highScore);
 
 private:
 	void ClearBoard();
+	void UpdateScoreDisplay();
+
 };
 #endif

@@ -1,5 +1,6 @@
 #ifndef __PHYSENTITY_H
 #define __PHYSENTITY_H
+
 #include <vector>
 #include "Collider.h"
 
@@ -8,7 +9,7 @@ protected:
 	unsigned long mId;
 	std::string mTag;
 
-	std::vector<Collider *> mColliders;
+	std::vector<Collider*> mColliders;
 
 	Collider * mBroadPhaseCollider;
 
