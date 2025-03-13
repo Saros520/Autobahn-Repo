@@ -83,7 +83,7 @@ bool Enemy::IgnoreCollisions() {
 void Enemy::Hit(PhysEntity* other) {
     mAnimating = true;
     mDeathAnimation->ResetAnimation();
-    mAudio->PlaySFX("SFX/PlayerExplosion.wav");
+    mAudio->PlaySFX("SFX/CrashSound.wav");
     PhysicsManager::Instance()->UnregisterEntity(mId);
 }
 
