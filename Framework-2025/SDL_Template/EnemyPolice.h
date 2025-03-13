@@ -39,6 +39,9 @@ public:
     static EnemyPolice* GetActivePoliceCar() { return sActivePoliceCar; }
     bool IsDestroyed() const { return mDestroyed; }
 
+    bool IgnoreCollisions() override;
+    void Hit(PhysEntity* other) override;
+
 };
 
 #endif

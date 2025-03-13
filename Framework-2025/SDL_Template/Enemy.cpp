@@ -24,7 +24,7 @@ Enemy::Enemy(bool moveDownward, int vehicleIndex) {
     mTexture->Parent(this);
     mTexture->Position(Vec2_Zero);
 
-    mDeathAnimation = new AnimatedTexture("EnemyExplosion.png", 0, 0, 128, 128, 4, 3.0f, Animation::Layouts::Horizontal);
+    mDeathAnimation = new AnimatedTexture("EnemyExplosion.png", 0, 0, 128, 128, 1, 1.0f, Animation::Layouts::Horizontal);
     mDeathAnimation->Parent(this);
     mDeathAnimation->Position(Vec2_Zero);
     mDeathAnimation->SetWrapMode(Animation::WrapModes::Once);
@@ -77,14 +77,21 @@ bool Enemy::IsAnimating() {
 }
 
 bool Enemy::IgnoreCollisions() {
-    return false;
+    if (!Active()) {
+        return true;
+    }
+    else {
+        return false;
+    }
 }
 
 void Enemy::Hit(PhysEntity* other) {
-    mAnimating = true;
-    mDeathAnimation->ResetAnimation();
-    mAudio->PlaySFX("SFX/CrashSound.wav");
-    PhysicsManager::Instance()->UnregisterEntity(mId);
+    if (!mAnimating) {
+        mAnimating = true;
+        mDeathAnimation->ResetAnimation();
+        mAudio->PlaySFX("SFX/CrashSound.wav");
+        Active(false);
+    }
 }
 
 void Enemy::Update() {
@@ -118,7 +125,7 @@ void Enemy::Update() {
         mDeathAnimation->Update();
         mAnimating = mDeathAnimation->IsAnimating();
         if (!mAnimating) {
-            Active(false);
+            Position(Vector2(Graphics::SCREEN_WIDTH * 0.5f, Graphics::SCREEN_HEIGHT * 1.5f));
         }
     }
 }

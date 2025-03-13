@@ -219,6 +219,11 @@ void EnemyPolice::Update() {
             }
         }
     }
+    else {
+        
+            Destroy();
+        
+    }
 }
 
 void EnemyPolice::Render() {
@@ -277,14 +282,12 @@ void EnemyPolice::StopChase() {
             Destroy();
         }
     }
-    else {
-        Destroy();
-    }
+    
 }
 
 void EnemyPolice::Destroy() {
     mDestroyed = true; // Set the destroyed flag
-    if (mPlayScreen) {
+    if (mPlayScreen != nullptr) {
         mPlayScreen->HandlePoliceCarSpawning(mIsTopPoliceCar);
     }
 }
@@ -297,5 +300,21 @@ void EnemyPolice::LaySpikeStrip() {
     }
     else {
         std::cerr << "Error: mPlayScreen is nullptr. Cannot lay spike strip." << std::endl;
+    }
+}
+
+void EnemyPolice::Hit(PhysEntity* other) {
+    ResetAnimation();
+    IsAnimating(true);
+    Active(false);
+    
+}
+
+bool EnemyPolice::IgnoreCollisions() {
+    if (!Active()) {
+        return true;
+    }
+    else {
+        return false;
     }
 }

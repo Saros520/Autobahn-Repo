@@ -44,6 +44,8 @@ public:
     static const std::vector<float>& GetRightLanes();
 
     bool IsAnimating();
+    void IsAnimating(bool change) { mAnimating = change; }
+    void ResetAnimation() { mDeathAnimation->ResetAnimation(); }
     bool IgnoreCollisions() override;
     void Hit(PhysEntity* other) override;
     void Update() override;
