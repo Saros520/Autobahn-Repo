@@ -209,21 +209,18 @@ bool Player::IsOutOfLives() {
 }
 
 void Player::Hit(PhysEntity* other) {
-    if (other->Tag() == "PoliceCar" || other->Tag() == "SpikeStrip") {
+    if (mLives == 1 || other->Tag() == "PoliceCar" || other->Tag() == "SpikeStrip") {
         mWasHit = true;
         mAnimating = true;
         mAudio->PlaySFX("SFX/CrashSound.wav");
-        ScreenManager::Instance()->SetScreen(ScreenManager::GameOver);
     }
     else if (other->Tag() == "PoliceCar") {
         mWasHitByPolice = true;
-    }
-
-    mLives -= 1;
-
-    if (mLives <= 0) {
         mAnimating = true;
-        mAudio->PlaySFX("SFX/CrashSound.wav");
+    }
+    else if (other->Tag() == "SpikeStrip") {
+        mWasHit = true;
+        mAnimating = true;
     }
     else {
         mAnimating = true;
@@ -231,6 +228,8 @@ void Player::Hit(PhysEntity* other) {
         mAudio->PlaySFX("SFX/CrashSound.wav");
         mWasHit = true;
     }
+
+    mLives -= 1;
 }
 
 bool Player::WasHit() {

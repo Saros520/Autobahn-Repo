@@ -485,7 +485,7 @@ void PlayScreen::Update() {
         }
 
         // Check for game over conditions
-        if (mPlayer->IsOutOfLives() || mPlayer->WasHitByPolice()) {
+        if (mPlayer->IsOutOfLives() || mPlayer->WasHitByPolice() || mPlayer->WasHit()) {
             std::string northRoadSprite, southRoadSprite;
             switch (mCurrentEnvironment) {
             case 0:
