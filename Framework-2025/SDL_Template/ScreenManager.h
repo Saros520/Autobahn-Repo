@@ -29,12 +29,17 @@ private:
 
     int mSelectedCar;
 
+    float mHighScore = 0.0f;
+
 public:
     static ScreenManager* Instance();
     static void Release();
 
     void SetScreen(Screens newScreen);
     void SetGameOverBackground(std::string northRoadSprite, std::string southRoadSprite);
+
+    void UpdateHighScore(float newHighScore);
+    float GetHighScore();
 
     void Update();
     void Render();

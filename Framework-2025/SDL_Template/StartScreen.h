@@ -89,7 +89,7 @@ private:
 	Vector2 mSliderKnobEndPos;
 	bool mInOptions;
 
-	int mHighScore;
+	float mHighScore;
 
 public:
 	StartScreen();

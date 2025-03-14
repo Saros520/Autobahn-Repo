@@ -221,6 +221,10 @@ void StartScreen::ChangeSelectedMode(int change) {
 bool musicPlaying = false;
 
 void StartScreen::Update() {
+
+    float highScore = ScreenManager::Instance()->GetHighScore();
+    mPlayerScoreNumber->Distance(mHighScore);
+
     if (!musicPlaying) {
         //mAudio->PlayMusic("GetLow.mp3", -1); // play music
         musicPlaying = true; // Ensure it only plays once

@@ -55,12 +55,22 @@ void ScreenManager::SetScreen(Screens newScreen) {
         mGameOverScreen = new GameOverScreen(
             mGameOverNorthRoadSprite,
             mGameOverSouthRoadSprite,
-            mPlayScreen->GetPlayer()->DistanceTraveled()
+            ScreenManager::Instance()->GetHighScore()
         );
     }
     else if (mCurrentScreen == Start) {
-        mStartScreen->ReloadHighScore(); // Reload the high score when transitioning to the Start screen
+        mStartScreen->Update(); // Reload the high score when transitioning to the Start screen
     }
+}
+
+void ScreenManager::UpdateHighScore(float newHighScore) {
+    if (newHighScore > mHighScore) {
+        mHighScore = newHighScore;
+    }
+}
+
+float ScreenManager::GetHighScore() {
+    return mHighScore;
 }
 
 void ScreenManager::Update() {

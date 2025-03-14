@@ -17,9 +17,9 @@ GameOverScreen::GameOverScreen(std::string northRoadSprite, std::string southRoa
     mBottomBar = new GameEntity(Graphics::SCREEN_WIDTH * 0.7f, Graphics::SCREEN_HEIGHT * 0.4f);
     mCreator = new Texture("creators", "namco__.ttf", 26, { 255, 0, 0 });
     mTopBorder = new Texture("------------------------", "emulogic.ttf", 26, { 0, 0, 0 });
-    mCreatorName = new Texture("keigan", "namco__.ttf", 26, { 0, 0, 0 });
-    mCreatorName2 = new Texture("andrew", "namco__.ttf", 26, { 0, 0, 0 });
-    mCreatorName3 = new Texture("josh", "namco__.ttf", 26, { 0, 0, 0 });
+    mCreatorName = new Texture("keigan macneil", "namco__.ttf", 26, { 0, 0, 0 });
+    mCreatorName2 = new Texture("andrew thomas", "namco__.ttf", 26, { 0, 0, 0 });
+    mCreatorName3 = new Texture("josh goulden", "namco__.ttf", 26, { 0, 0, 0 });
     mBottomBorder = new Texture("------------------------", "emulogic.ttf", 26, { 0, 0, 0 });
     mMainMenu2 = new Texture("press enter to return", "namco__.ttf", 26, { 0, 0, 0 });
     mMainMenu3 = new Texture("to main menu", "namco__.ttf", 26, { 0, 0, 0 });
@@ -140,6 +140,9 @@ void GameOverScreen::SetBackground(std::string northRoadSprite, std::string sout
 }
 
 void GameOverScreen::Update() {
+    float highScore = ScreenManager::Instance()->GetHighScore();
+    mHighScoreBoard->Distance(highScore);
+
     if (mInput->KeyPressed(SDL_SCANCODE_RETURN)) {
         ScreenManager::Instance()->SetScreen(ScreenManager::Start);
     }

@@ -521,7 +521,7 @@ void PlayScreen::Update() {
         mEnemySpawner->Update();
 
         // First police chase (120s start, lasts 60s)
-        if (mLevelTime >= 120.0f && mEnemyPolice == nullptr) {
+        if (mLevelTime >= 2.0f && mEnemyPolice == nullptr) {
             StartPoliceChase();
         }
         if (mEnemyPolice) {
@@ -553,7 +553,7 @@ void PlayScreen::Update() {
         }
         
         // Third police chase (420s start, lasts 10,000s)
-        if (mLevelTime >= 2.0f && !mDualPoliceChaseActive) {
+        if (mLevelTime >= 420.0f && !mDualPoliceChaseActive) {
             StartDualPoliceChase();
             mDualPoliceChaseActive = true;
             mDualPoliceChaseTimer = 0.0f; // Reset timer
@@ -647,10 +647,13 @@ void PlayScreen::Update() {
         // Update high score if the current distance is greater
         float currentDistance = mPlayer->DistanceTraveled();
         float highScore = mHighScoreNumber->GetHighScore();
+        
         if (currentDistance > highScore) {
             mHighScoreNumber->SetHighScore(currentDistance);
+            ScreenManager::Instance()->UpdateHighScore(currentDistance);  // Store globally
         }
-        mHighScoreNumber->Distance(mHighScoreNumber->GetHighScore());
+        
+        mHighScoreNumber->Distance(ScreenManager::Instance()->GetHighScore());
         mHighScoreNumber->Update();
 
         float speed = mPlayer->GetSpeed();
