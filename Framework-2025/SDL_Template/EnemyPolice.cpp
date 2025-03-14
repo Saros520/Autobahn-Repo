@@ -237,7 +237,7 @@ void EnemyPolice::Render() {
 
     mTexture->Render();
 
-    PhysEntity::Render();
+    // PhysEntity::Render();
 }
 
 void EnemyPolice::StartChase() {
