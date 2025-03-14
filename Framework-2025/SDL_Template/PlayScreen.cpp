@@ -546,7 +546,7 @@ void PlayScreen::Update() {
                 }
             }
         }
-
+        
         // Third police chase (400s start, lasts 10,000s)
         if (mLevelTime >= 420.0f && !mDualPoliceChaseActive) {
             SpawnPoliceCar(false); // Bottom police car
@@ -681,6 +681,7 @@ void PlayScreen::Render() {
 	mEnemySpawner->Render();
 	
     if (mPoliceChaseActive && mEnemyPolice) {
+        std::cout << "Rendering bottom police car at: " << mEnemyPolice->Position().x << ", " << mEnemyPolice->Position().y << std::endl;
         mEnemyPolice->Render();
     }
 
@@ -689,7 +690,9 @@ void PlayScreen::Render() {
     }
 
     for (auto policeCar : mPoliceCars) {
-        policeCar->Render();
+        if (policeCar) {
+            policeCar->Render();
+        }
     }
 
     for (auto& spikeStrip : mSpikeStrips) {

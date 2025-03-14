@@ -13,7 +13,7 @@ EnemyPolice::EnemyPolice(Player* player, EnemySpawner* enemySpawner, bool isTopP
     : Enemy(isTopPoliceCar ? false : true, 18), mEnemySpawner(enemySpawner), mAvoiding(false), mDestroyed(false), mIsTopPoliceCar(isTopPoliceCar), mPlayScreen(nullptr) {
     mTimer = Timer::Instance();
     mPlayer = player;
-    mChasing = false;
+    mChasing = true;
     mBaseSpeed = 60.0f;
     mSpikeStripTimer = 0.0f;
     mSpikeStripInterval = 3.0f;
@@ -26,7 +26,8 @@ EnemyPolice::EnemyPolice(Player* player, EnemySpawner* enemySpawner, bool isTopP
     mPlayScreen = dynamic_cast<PlayScreen*>(mPlayer->Parent()); // Set mPlayScreen
 
     // Ensure the spawn position is correct
-    Position(Vector2(Graphics::SCREEN_WIDTH * 0.5f, isTopPoliceCar ? -50.0f : Graphics::SCREEN_HEIGHT + 50.0f));
+    float spawnY = isTopPoliceCar ? 20.0f : Graphics::SCREEN_HEIGHT - 120.0f;
+    Position(Vector2(Graphics::SCREEN_WIDTH * 0.5f, spawnY));
 }
 
 EnemyPolice::~EnemyPolice() {
@@ -56,7 +57,7 @@ void EnemyPolice::Update() {
             Vector2 predictedPlayerPos = playerPos + playerVelocity * 0.5f; // Predict 0.5 seconds ahead
 
             // Move horizontally to track the player car
-            Vector2 moveAmount(2.0f, 2.0f);
+            Vector2 moveAmount(0.0f, 2.0f);
             float horizontalMultiplier = 3.8f;
             if (predictedPlayerPos.x < Position().x) {
                 moveAmount.x = -mBaseSpeed * mTimer->DeltaTime();
@@ -70,7 +71,7 @@ void EnemyPolice::Update() {
                 moveAmount.y = -mBaseSpeed * mTimer->DeltaTime();
             }
             else {
-                moveAmount.y = 1.0f;
+                moveAmount.y = 2.0f;
             }
 
             mAvoiding = false;
