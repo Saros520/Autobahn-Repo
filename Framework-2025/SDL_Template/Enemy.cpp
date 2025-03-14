@@ -139,7 +139,7 @@ void Enemy::Render() {
         mTexture->Render();
     }
 
-    PhysEntity::Render();
+    //PhysEntity::Render();
 }
 
 Vector2 Enemy::GetTextureDimensions() const {

@@ -273,7 +273,7 @@ void Player::Render() {
         }
     }
 
-    PhysEntity::Render();
+    //PhysEntity::Render();
 }
 
 int Player::Lives() {

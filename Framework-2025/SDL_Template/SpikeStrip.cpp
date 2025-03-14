@@ -39,7 +39,7 @@ void SpikeStrip::Update() {
 
 void SpikeStrip::Render() {
 	mTexture->Render();
-	PhysEntity::Render();
+	//PhysEntity::Render();
 
 }
 
