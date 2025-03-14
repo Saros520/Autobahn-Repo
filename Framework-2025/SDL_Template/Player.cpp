@@ -225,18 +225,27 @@ void Player::Hit(PhysEntity* other) {
         // If the cooldown is active, ignore collisions
         return;
     }
-    if (mLives == 1 || other->Tag() == "PoliceCar" || other->Tag() == "SpikeStrip") {
+    
+    if (other->Tag() == "PoliceCar" || other->Tag() == "SpikeStrip") {
+       
+        mAudio->PlaySFX("SFX/CrashSound.wav");
+
+        // Call PlayScreen's Game Over function
+        PlayScreen* playScreen = dynamic_cast<PlayScreen*>(Parent());
+        if (playScreen) {
+            playScreen->OnGameOver();
+        }
+    }
+    else if (mLives <= 0) {
+        // Normal collision behavior (only applies if NOT PoliceCar or SpikeStrip)
         mWasHit = true;
         mAnimating = true;
         mAudio->PlaySFX("SFX/CrashSound.wav");
-    }
-    else if (other->Tag() == "PoliceCar") {
-        mWasHitByPolice = true;
-        mAnimating = true;
-    }
-    else if (other->Tag() == "SpikeStrip") {
-        mWasHit = true;
-        mAnimating = true;
+
+        PlayScreen* playScreen = dynamic_cast<PlayScreen*>(Parent());
+        if (playScreen) {
+            playScreen->OnGameOver();
+        }
     }
     else {
         mAnimating = true;
@@ -254,7 +263,8 @@ void Player::Hit(PhysEntity* other) {
 
     // Start the cooldown timer
     mIsCooldownActive = true;
-    mCollisionCooldownTime = 1.0f;  // 2 second cooldown
+    mCollisionCooldownTime = 1.0f;  // 1 second cooldown
+
 }
 
 bool Player::WasHit() {

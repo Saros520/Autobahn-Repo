@@ -303,7 +303,7 @@ void PlayScreen::SpawnPoliceCar(bool isTopPoliceCar) {
     }
 
     // Third chase (both police cars active)
-    if (mLevelTime >= 400.0f) {
+    if (mLevelTime >= 420.0f) {
         EnemyPolice* newPoliceCar = new EnemyPolice(mPlayer, mEnemySpawner, isTopPoliceCar);
         mPoliceCars.push_back(newPoliceCar);
         std::cout << "Spawned dual police car. Top: " << isTopPoliceCar << std::endl;

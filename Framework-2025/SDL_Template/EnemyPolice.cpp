@@ -220,10 +220,8 @@ void EnemyPolice::Update() {
             }
         }
     }
-    else {
-        
-            Destroy();
-        
+    else {    
+         Destroy();  
     }
 }
 
