@@ -4,6 +4,15 @@ namespace SDLFramework {
 
     AudioManager* AudioManager::sInstance = nullptr;
 
+    void AudioManager::SetVolume(float volume) {
+        // Ensure the volume is between 0.0 and 1.0
+        if (volume < 0.0f) volume = 0.0f;
+        if (volume > 1.0f) volume = 1.0f;
+
+        // Set the volume for all sound effects (Mix_Volume sets the volume for all channels)
+        Mix_Volume(-1, static_cast<int>(volume * MIX_MAX_VOLUME)); // MIX_MAX_VOLUME is usually 128
+    }
+
     AudioManager* AudioManager::Instance() {
         if (sInstance == nullptr) {
             sInstance = new AudioManager();

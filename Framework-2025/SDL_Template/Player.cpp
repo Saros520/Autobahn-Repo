@@ -29,8 +29,11 @@ Player::Player() {
 
     mDistanceTraveled = 0.0f;
 
-    Position(Vector2(Graphics::SCREEN_WIDTH * 0.503f, Graphics::SCREEN_HEIGHT * 0.9f));
+    mStartPosition = Vector2(Graphics::SCREEN_WIDTH * 0.503f, Graphics::SCREEN_HEIGHT * 0.9f);
+    Position(mStartPosition);  // Set the initial position of the car
 
+    mCollisionCooldownTime = 0.0f;
+    mIsCooldownActive = false;
     mDeathAnimation = new AnimatedTexture("CarExplosion.png", 0, 0, 128, 128, 5, 1.0f, Animation::Layouts::Horizontal);
     mDeathAnimation->Parent(this);
     mDeathAnimation->Position(Vec2_Zero);
@@ -79,17 +82,26 @@ void Player::HandleMovement() {
     const float Gravity = 100.0f;
     Vector2 moveDir = Vec2_Zero;
 
-    if (mInput->KeyDown(SDL_SCANCODE_W) || mInput->KeyDown(SDL_SCANCODE_UP)) {
+    if (mInput->KeyPressed(SDL_SCANCODE_W) || mInput->KeyDown(SDL_SCANCODE_UP)) {
         moveDir.y -= 1;
+        mAudio->SetVolume(0.1f);
+        mAudio->PlaySFX("CarRev.MP3");
     }
-    if (mInput->KeyDown(SDL_SCANCODE_S) || mInput->KeyDown(SDL_SCANCODE_DOWN)) {
+    else if (!(mInput->KeyDown(SDL_SCANCODE_W) || mInput->KeyDown(SDL_SCANCODE_UP))) {
+        mAudio->StopSFX("CarRev.MP3"); // Stop sound when the key is not pressed
+    }
+
+    if (mInput->KeyPressed(SDL_SCANCODE_S) || mInput->KeyDown(SDL_SCANCODE_DOWN)) {
         moveDir.y += 1;
+
     }
-    if (mInput->KeyDown(SDL_SCANCODE_A) || mInput->KeyDown(SDL_SCANCODE_LEFT)) {
+    if (mInput->KeyPressed(SDL_SCANCODE_A) || mInput->KeyDown(SDL_SCANCODE_LEFT)) {
         moveDir.x -= 1;
+
     }
-    if (mInput->KeyDown(SDL_SCANCODE_D) || mInput->KeyDown(SDL_SCANCODE_RIGHT)) {
+    if (mInput->KeyPressed(SDL_SCANCODE_D) || mInput->KeyDown(SDL_SCANCODE_RIGHT)) {
         moveDir.x += 1;
+
     }
 
     if (moveDir.MagnitudeSqr() > 0.0f) {
@@ -155,7 +167,7 @@ void Player::HandleMovement() {
     if (IsOffHighway()) {
         mAnimating = true;
         mDeathAnimation->ResetAnimation();
-        mAudio->PlaySFX("SFX/CrashSound.wav");
+        mAudio->SetVolume(0.2f);
         mWasHit = true;
     }
 }
@@ -209,6 +221,10 @@ bool Player::IsOutOfLives() {
 }
 
 void Player::Hit(PhysEntity* other) {
+    if (mIsCooldownActive) {
+        // If the cooldown is active, ignore collisions
+        return;
+    }
     if (mLives == 1 || other->Tag() == "PoliceCar" || other->Tag() == "SpikeStrip") {
         mWasHit = true;
         mAnimating = true;
@@ -227,9 +243,18 @@ void Player::Hit(PhysEntity* other) {
         mDeathAnimation->ResetAnimation();
         mAudio->PlaySFX("SFX/CrashSound.wav");
         mWasHit = true;
+		Position(mStartPosition);
     }
 
     mLives -= 1;
+
+    // Play the crash sound only during a collision
+    mAudio->SetVolume(0.1f);
+    mAudio->PlaySFX("CrashSound.wav");
+
+    // Start the cooldown timer
+    mIsCooldownActive = true;
+    mCollisionCooldownTime = 1.0f;  // 2 second cooldown
 }
 
 bool Player::WasHit() {
@@ -258,8 +283,16 @@ void Player::Update() {
             HandleMovement();
         }
 
-        float speed = mCurrentSpeed * (1000.0f / 3600.0f);
-        mDistanceTraveled += speed * mTimer->DeltaTime() / 1000.0f;
+        // Update distance traveled based on movement conditions
+        float speed = mCurrentSpeed * (1000.0f / 3600.0f); // Convert km/h to m/s
+        mDistanceTraveled += speed * mTimer->DeltaTime() / 1000.0f; // Convert to kilometers
+    }
+    // Cooldown logic: decrement the cooldown time if active
+    if (mIsCooldownActive) {
+        mCollisionCooldownTime -= mTimer->DeltaTime();
+        if (mCollisionCooldownTime <= 0.0f) {
+            mIsCooldownActive = false;  // Cooldown is over
+        }
     }
 }
 

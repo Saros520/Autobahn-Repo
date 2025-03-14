@@ -37,15 +37,15 @@ private:
     Vector2 mMoveBoundsX;
     Vector2 mMoveBoundsY;
 
+    Vector2 mStartPosition;
+    float mCollisionCooldownTime;
+    bool mIsCooldownActive;
+
     float mDistanceTraveled;
 
     Vector2 mMoveDirection;
 
-    //static const int MAX_BULLETS = 2;
-    //Bullet* mBullets[MAX_BULLETS];
-
     void HandleMovement();
-  //  void HandleFiring();
 
     bool IsOffHighway();
 
@@ -54,6 +54,8 @@ private:
 public:
     Player();
     ~Player();
+
+    float mVolume = 1.0f;
 
     void SetCarTexture(int carIndex);
 
