@@ -55,13 +55,17 @@ private:
 
 	Player * mPlayer;
 	EnemySpawner* mEnemySpawner;
-	EnemyPolice* mEnemyPolice;
-	bool mPoliceChaseActive;
-	float mPoliceChaseTimer;
+	EnemyPolice* mEnemyPolice; // For the first chase
+	EnemyPolice* mTopPoliceCar; // for the second chase
+	std::vector<EnemyPolice*> mPoliceCars; // only used for the third/final police chase
 
-	EnemyPolice* mTopPoliceCar;
+	bool mPoliceChaseActive;
 	bool mTopPoliceChaseActive;
+	bool mDualPoliceChaseActive;
+
+	float mPoliceChaseTimer;
 	float mTopPoliceChaseTimer;
+	float mDualPoliceChaseTimer;
 
 	std::vector<SpikeStrip*> mSpikeStrips;
 
@@ -83,10 +87,12 @@ private:
 	void StartEnvironmentTransition();
     void UpdateEnvironmentTransition();
 	void StartPoliceChase();
-	void EndPoliceChase();
+	void EndPoliceChase(bool isTopPoliceCar);
 	void StartTopPoliceChase();
 	void EndTopPoliceChase();
 	void UpdateTopPoliceCar();
+	void StartDualPoliceChase();
+	void EndDualPoliceChase();
 	void UpdatePlayer();
 	void UpdateEnemy();
 

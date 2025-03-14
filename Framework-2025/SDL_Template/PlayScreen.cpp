@@ -112,6 +112,9 @@ PlayScreen::PlayScreen() {
     mTopPoliceChaseActive = false;
     mTopPoliceChaseTimer = 0.0f;
 
+    mDualPoliceChaseActive = false;
+    mDualPoliceChaseTimer = 0.0f;
+
     mPauseGame = new PauseGame();
     mPauseGame->Parent(this);
     mIsPaused = false;
@@ -169,9 +172,20 @@ PlayScreen::~PlayScreen() {
     delete mEnemySpawner;
     mEnemySpawner = nullptr;
 
-    if (EnemyPolice::GetActivePoliceCar() != nullptr) {
-        delete EnemyPolice::GetActivePoliceCar();
+    if (mEnemyPolice) {
+        delete mEnemyPolice;
+        mEnemyPolice = nullptr;
     }
+
+    if (mTopPoliceCar) {
+        delete mTopPoliceCar;
+        mTopPoliceCar = nullptr;
+    }
+
+    for (auto policeCar : mPoliceCars) {
+        delete policeCar;
+    }
+    mPoliceCars.clear();
 
     delete mPlayerScore;
     mPlayerScore = nullptr;
@@ -274,24 +288,33 @@ void PlayScreen::UpdateEnvironmentTransition() {
 }
 
 void PlayScreen::SpawnPoliceCar(bool isTopPoliceCar) {
-    if (isTopPoliceCar) {
-        mTopPoliceCar = new EnemyPolice(mPlayer, mEnemySpawner, true);
-        mTopPoliceChaseActive = true;
-        mTopPoliceChaseTimer = 0.0f;
-    }
-    else {
+    // First police chase (only bottom police car)
+    if (!isTopPoliceCar && mEnemyPolice == nullptr) {
         mEnemyPolice = new EnemyPolice(mPlayer, mEnemySpawner, false);
-        mPoliceChaseActive = true;
-        mPoliceChaseTimer = 0.0f;
+        std::cout << "Spawned bottom police car." << std::endl;
+        return;
     }
-    std::cout << "Police car spawned. Top police car: " << isTopPoliceCar << std::endl; // Debug log
+
+    // Second police chase (only top police car)
+    if (isTopPoliceCar && mTopPoliceCar == nullptr) {
+        mTopPoliceCar = new EnemyPolice(mPlayer, mEnemySpawner, true);
+        std::cout << "Spawned top police car." << std::endl;
+        return;
+    }
+
+    // Third chase (both police cars active)
+    if (mLevelTime >= 400.0f) {
+        EnemyPolice* newPoliceCar = new EnemyPolice(mPlayer, mEnemySpawner, isTopPoliceCar);
+        mPoliceCars.push_back(newPoliceCar);
+        std::cout << "Spawned dual police car. Top: " << isTopPoliceCar << std::endl;
+    }
 }
 
 void PlayScreen::HandlePoliceCarSpawning(bool isTopPoliceCar) {
-    if (isTopPoliceCar && mTopPoliceChaseTimer < 60.0f) {
+    if (isTopPoliceCar && mTopPoliceChaseActive) {
         SpawnPoliceCar(true);
     }
-    else if (!isTopPoliceCar && mPoliceChaseTimer < 60.0f) {
+    else if (!isTopPoliceCar && mPoliceChaseActive) {
         SpawnPoliceCar(false);
     }
 }
@@ -319,7 +342,7 @@ void PlayScreen::SpawnPoliceCarAtMidpoint(bool isTopPoliceCar) {
 
 void PlayScreen::DestroyPoliceCar() {
     if (mTopPoliceChaseActive && mTopPoliceCar) {
-        mEnemyPolice->Destroy();
+        mTopPoliceCar->Destroy();
         delete mTopPoliceCar;
         mTopPoliceCar = nullptr;
         mTopPoliceChaseActive = false;
@@ -351,24 +374,37 @@ void PlayScreen::RemoveOffScreenSpikeStrips() {
 }
 
 void PlayScreen::StartPoliceChase() {
-    if (!mPoliceChaseActive && EnemyPolice::GetActivePoliceCar() == nullptr) {
+    if (!mPoliceChaseActive && mEnemyPolice == nullptr) {
         SpawnPoliceCar(false);
+        mPoliceChaseActive = true;
+        mPoliceChaseTimer = 0.0f;
     }
 }
 
-void PlayScreen::EndPoliceChase() {
-    if (mPoliceChaseActive) {
-        if (EnemyPolice::GetActivePoliceCar() != nullptr) {
-            EnemyPolice::GetActivePoliceCar()->Destroy();
-            mEnemyPolice = nullptr; // Set the pointer to nullptr after deletion
-        }
+void PlayScreen::EndPoliceChase(bool isTopPoliceCar) {
+    if (isTopPoliceCar && mTopPoliceCar) {
+        mTopPoliceCar->Destroy();
+        delete mTopPoliceCar;
+        mTopPoliceCar = nullptr;
+        mTopPoliceChaseActive = false;
+        mTopPoliceChaseTimer = 0.0f;
+        std::cout << "Ended top police chase." << std::endl;
+    }
+    else if (!isTopPoliceCar && mEnemyPolice) {
+        mEnemyPolice->Destroy();
+        delete mEnemyPolice;
+        mEnemyPolice = nullptr;
         mPoliceChaseActive = false;
+        mPoliceChaseTimer = 0.0f;
+        std::cout << "Ended bottom police chase." << std::endl;
     }
 }
 
 void PlayScreen::StartTopPoliceChase() {
     if (!mTopPoliceChaseActive && mTopPoliceCar == nullptr) {
         SpawnPoliceCar(true);
+        mTopPoliceChaseActive = true;
+        mTopPoliceChaseTimer = 0.0f;
     }
 }
 
@@ -388,12 +424,33 @@ void PlayScreen::UpdateTopPoliceCar() {
 
 void PlayScreen::EndTopPoliceChase() {
     if (mTopPoliceChaseActive) {
-        if (EnemyPolice::GetActivePoliceCar() != nullptr) {
-            EnemyPolice::GetActivePoliceCar()->Destroy();
+        if (mTopPoliceCar != nullptr) {
+            mTopPoliceCar->Destroy();
+            delete mTopPoliceCar;
             mTopPoliceCar = nullptr;
         }
         mTopPoliceChaseActive = false;
     }
+}
+
+void PlayScreen::StartDualPoliceChase() {
+    if (!mDualPoliceChaseActive) {
+        SpawnPoliceCar(false); // Bottom police car
+        SpawnPoliceCar(true);  // Top police car
+        mDualPoliceChaseActive = true;
+        mDualPoliceChaseTimer = 0.0f;
+    }
+}
+
+void PlayScreen::EndDualPoliceChase() {
+    for (auto it = mPoliceCars.begin(); it != mPoliceCars.end(); ) {
+        (*it)->Destroy();
+        delete* it;
+        it = mPoliceCars.erase(it);
+    }
+    mDualPoliceChaseActive = false;
+    mDualPoliceChaseTimer = 0.0f; // Reset timer
+    std::cout << "Ended dual police chase." << std::endl;
 }
 
 void PlayScreen::SetCurrentBackground(std::string northRoadType, int northRoadIndex, std::string southRoadType, int southRoadIndex) {
@@ -458,32 +515,63 @@ void PlayScreen::Update() {
         mPlayer->Update();
         mEnemySpawner->Update();
 
-        // Start the first police chase after about 2 minutes
-        if (mLevelTime >= 240.0f && !mPoliceChaseActive) {
-            StartPoliceChase();
+        // First police chase (120s start, lasts 60s)
+        if (mLevelTime >= 2.0f && mEnemyPolice == nullptr) {
+            SpawnPoliceCar(false);
         }
-
-        // Update first police chase 
-        if (mPoliceChaseActive) {
+        if (mEnemyPolice) {
             mPoliceChaseTimer += mTimer->DeltaTime();
-            if (EnemyPolice::GetActivePoliceCar() != nullptr) {
-                EnemyPolice::GetActivePoliceCar()->Update();
-            }
-
-            // End the first police chase/player gets away for now after 1 minute
+            mEnemyPolice->Update();
             if (mPoliceChaseTimer >= 60.0f) {
-                EndPoliceChase();
+                EndPoliceChase(false);
+                if (mEnemyPolice) {
+                    delete mEnemyPolice;
+                    mEnemyPolice = nullptr;
+                }
             }
         }
 
-        // Start the second police chase after about 4 minutes
-        if (mLevelTime >= 2.0f && !mTopPoliceChaseActive) {
-            StartTopPoliceChase();
+        // Second police chase (240s start, lasts 60s)
+        if (mLevelTime >= 240.0f && mTopPoliceCar == nullptr) {
+            SpawnPoliceCar(true);
+        }
+        if (mTopPoliceCar) {
+            mTopPoliceChaseTimer += mTimer->DeltaTime();
+            mTopPoliceCar->Update();
+            if (mTopPoliceChaseTimer >= 60.0f) {
+                EndPoliceChase(true);
+                if (mTopPoliceCar) {
+                    delete mTopPoliceCar;
+                    mTopPoliceCar = nullptr;
+                }
+            }
         }
 
-        // Update second police chase
-        if (mTopPoliceChaseActive) {
-            UpdateTopPoliceCar();
+        // Third police chase (400s start, lasts 10,000s)
+        if (mLevelTime >= 420.0f && !mDualPoliceChaseActive) {
+            SpawnPoliceCar(false); // Bottom police car
+            SpawnPoliceCar(true);  // Top police car
+            mDualPoliceChaseActive = true;
+            mDualPoliceChaseTimer = 0.0f; // Reset timer
+        }
+        if (mDualPoliceChaseActive) {
+            mDualPoliceChaseTimer += mTimer->DeltaTime();
+
+            // Update both police cars in the third chase
+            for (auto it = mPoliceCars.begin(); it != mPoliceCars.end();) {
+                if ((*it)->IsDestroyed()) {
+                    delete* it;
+                    it = mPoliceCars.erase(it);
+                }
+                else {
+                    (*it)->Update();
+                    ++it;
+                }
+            }
+
+            if (mDualPoliceChaseTimer >= 10000.0f) {
+                EndDualPoliceChase();
+            }
         }
 
         // Check for game over conditions
@@ -528,7 +616,7 @@ void PlayScreen::Update() {
                 break;  // Only process the first matching key
             }
         }
-
+        
         // Pause or resume music when the 0 key is pressed
         if (mInput->KeyPressed(SDL_SCANCODE_0)) {
             static bool musicPaused = false;
@@ -591,15 +679,17 @@ void PlayScreen::Render() {
     mLivesScoreboard->Render();
 	mPlayer->Render();
 	mEnemySpawner->Render();
-	if (mPoliceChaseActive) {
-		if (EnemyPolice::GetActivePoliceCar() != nullptr) {
-			EnemyPolice::GetActivePoliceCar()->Render();
-		}
-	}
-    if (mTopPoliceChaseActive) {
-        if (mTopPoliceCar != nullptr) {
-            mTopPoliceCar->Render();
-        }
+	
+    if (mPoliceChaseActive && mEnemyPolice) {
+        mEnemyPolice->Render();
+    }
+
+    if (mTopPoliceChaseActive && mTopPoliceCar) {
+        mTopPoliceCar->Render();
+    }
+
+    for (auto policeCar : mPoliceCars) {
+        policeCar->Render();
     }
 
     for (auto& spikeStrip : mSpikeStrips) {

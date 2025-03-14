@@ -7,7 +7,6 @@
 #include <iostream>
 #include <cmath>
 
-EnemyPolice* EnemyPolice::sActivePoliceCar = nullptr;
 float EnemyPolice::sChaseDuration = 0.0f; // Initialize static chase duration
 
 EnemyPolice::EnemyPolice(Player* player, EnemySpawner* enemySpawner, bool isTopPoliceCar)
@@ -22,8 +21,6 @@ EnemyPolice::EnemyPolice(Player* player, EnemySpawner* enemySpawner, bool isTopP
     PhysicsManager::Instance()->UnregisterEntity(mId);
     mId = PhysicsManager::Instance()->RegisterEntity(this, PhysicsManager::CollisionLayers::Police);
 
-    sActivePoliceCar = this; // Set the active police car
-
     Tag("PoliceCar");
 
     mPlayScreen = dynamic_cast<PlayScreen*>(mPlayer->Parent()); // Set mPlayScreen
@@ -37,7 +34,6 @@ EnemyPolice::~EnemyPolice() {
     mPlayer = nullptr;
     mEnemySpawner = nullptr;
     mPlayScreen = nullptr; // clearing the play screen pointer
-    sActivePoliceCar = nullptr; // clearing the active police car
 
     PhysicsManager::Instance()->UnregisterEntity(mId);
 }
@@ -45,7 +41,6 @@ EnemyPolice::~EnemyPolice() {
 void EnemyPolice::Update() {
     if (Active()) {
         // Do not update if the object is destroyed
-
 
         // Call the base class update method first
         Enemy::Update();
@@ -61,7 +56,7 @@ void EnemyPolice::Update() {
             Vector2 predictedPlayerPos = playerPos + playerVelocity * 0.5f; // Predict 0.5 seconds ahead
 
             // Move horizontally to track the player car
-            Vector2 moveAmount(0.0f, 0.0f);
+            Vector2 moveAmount(2.0f, 2.0f);
             float horizontalMultiplier = 3.8f;
             if (predictedPlayerPos.x < Position().x) {
                 moveAmount.x = -mBaseSpeed * mTimer->DeltaTime();

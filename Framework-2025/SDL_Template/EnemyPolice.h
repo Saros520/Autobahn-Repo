@@ -11,7 +11,7 @@ class PlayScreen;
 
 class EnemyPolice : public Enemy {
 private:
-    static EnemyPolice* sActivePoliceCar;
+    
     static float sChaseDuration;
 
     Timer* mTimer;
@@ -36,7 +36,6 @@ public:
     void StopChase();
     void Destroy();
     void LaySpikeStrip();
-    static EnemyPolice* GetActivePoliceCar() { return sActivePoliceCar; }
     bool IsDestroyed() const { return mDestroyed; }
 
     bool IgnoreCollisions() override;
