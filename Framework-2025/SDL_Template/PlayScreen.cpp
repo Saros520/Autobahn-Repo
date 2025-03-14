@@ -440,8 +440,8 @@ void PlayScreen::EndTopPoliceChase() {
 
 void PlayScreen::StartDualPoliceChase() {
     if (!mDualPoliceChaseActive) {
-        SpawnPoliceCar(false); // Bottom police car
-        SpawnPoliceCar(true);  // Top police car
+        StartPoliceChase();
+        StartTopPoliceChase();
         mDualPoliceChaseActive = true;
         mDualPoliceChaseTimer = 0.0f;
     }
