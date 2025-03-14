@@ -15,7 +15,7 @@ EnemyPolice::EnemyPolice(Player* player, EnemySpawner* enemySpawner, bool isTopP
     mTimer = Timer::Instance();
     mPlayer = player;
     mChasing = true;
-    mBaseSpeed = 60.0f;
+    mBaseSpeed = 100.0f;
     mSpikeStripTimer = 0.0f;
     mSpikeStripInterval = 3.0f;
 
@@ -33,6 +33,7 @@ EnemyPolice::EnemyPolice(Player* player, EnemySpawner* enemySpawner, bool isTopP
     mTexture = new Texture("EnemyCar18.png");
     mTexture->Parent(this);
     mTexture->Position(Vec2_Zero);
+    mTexture->Scale(Vector2(2.0f, 2.0f));
 }
 
 EnemyPolice::~EnemyPolice() {
@@ -234,10 +235,9 @@ void EnemyPolice::Render() {
         << Position().x << ", "
         << Position().y << std::endl;
 
-    Texture* policeCarTexture = new Texture("EnemyCar18.png");
-    policeCarTexture->Position(Position());
-    policeCarTexture->Render();
-    delete policeCarTexture;  // Clean up memory
+    mTexture->Render();
+
+    PhysEntity::Render();
 }
 
 void EnemyPolice::StartChase() {

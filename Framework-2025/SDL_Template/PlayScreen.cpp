@@ -289,14 +289,19 @@ void PlayScreen::UpdateEnvironmentTransition() {
 
 void PlayScreen::SpawnPoliceCar(bool isTopPoliceCar) {
     // First police chase (only bottom police car)
-    if (!isTopPoliceCar && mEnemyPolice == nullptr) {
+    if (!isTopPoliceCar) {
+        delete mEnemyPolice;
+        mEnemyPolice = nullptr;
         mEnemyPolice = new EnemyPolice(mPlayer, mEnemySpawner, false);
+        mEnemyPolice->Position(Graphics::SCREEN_WIDTH * 0.5f, Graphics::SCREEN_HEIGHT * 1.05f);
         std::cout << "Spawned bottom police car." << std::endl;
         return;
     }
 
     // Second police chase (only top police car)
-    if (isTopPoliceCar && mTopPoliceCar == nullptr) {
+    if (isTopPoliceCar) {
+        delete mTopPoliceCar;
+        mTopPoliceCar = nullptr;
         mTopPoliceCar = new EnemyPolice(mPlayer, mEnemySpawner, true);
         std::cout << "Spawned top police car." << std::endl;
         return;
@@ -517,7 +522,7 @@ void PlayScreen::Update() {
 
         // First police chase (120s start, lasts 60s)
         if (mLevelTime >= 2.0f && mEnemyPolice == nullptr) {
-            SpawnPoliceCar(false);
+            StartPoliceChase();
         }
         if (mEnemyPolice) {
             mPoliceChaseTimer += mTimer->DeltaTime();
@@ -680,12 +685,12 @@ void PlayScreen::Render() {
 	mPlayer->Render();
 	mEnemySpawner->Render();
 	
-    if (mPoliceChaseActive && mEnemyPolice) {
+    if (mPoliceChaseActive && mEnemyPolice != nullptr) {
         std::cout << "Rendering bottom police car at: " << mEnemyPolice->Position().x << ", " << mEnemyPolice->Position().y << std::endl;
         mEnemyPolice->Render();
     }
 
-    if (mTopPoliceChaseActive && mTopPoliceCar) {
+    if (mTopPoliceChaseActive && mTopPoliceCar != nullptr) {
         mTopPoliceCar->Render();
     }
 
