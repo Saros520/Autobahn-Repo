@@ -10,7 +10,8 @@
 float EnemyPolice::sChaseDuration = 0.0f; // Initialize static chase duration
 
 EnemyPolice::EnemyPolice(Player* player, EnemySpawner* enemySpawner, bool isTopPoliceCar)
-    : Enemy(isTopPoliceCar ? false : true, 18), mEnemySpawner(enemySpawner), mAvoiding(false), mDestroyed(false), mIsTopPoliceCar(isTopPoliceCar), mPlayScreen(nullptr) {
+    : Enemy(true, 18), mEnemySpawner(enemySpawner), mAvoiding(false), mDestroyed(false), mIsTopPoliceCar(isTopPoliceCar), mPlayScreen(nullptr) {
+    
     mTimer = Timer::Instance();
     mPlayer = player;
     mChasing = true;
@@ -28,6 +29,10 @@ EnemyPolice::EnemyPolice(Player* player, EnemySpawner* enemySpawner, bool isTopP
     // Ensure the spawn position is correct
     float spawnY = isTopPoliceCar ? 20.0f : Graphics::SCREEN_HEIGHT - 120.0f;
     Position(Vector2(Graphics::SCREEN_WIDTH * 0.5f, spawnY));
+
+    mTexture = new Texture("EnemyCar18.png");
+    mTexture->Parent(this);
+    mTexture->Position(Vec2_Zero);
 }
 
 EnemyPolice::~EnemyPolice() {
@@ -227,7 +232,14 @@ void EnemyPolice::Render() {
         return; // Do not render if the object is destroyed
     }
 
-    Enemy::Render();
+    std::cout << "Rendering bottom police car at: "
+        << Position().x << ", "
+        << Position().y << std::endl;
+
+    Texture* policeCarTexture = new Texture("EnemyCar18.png");
+    policeCarTexture->Position(Position());
+    policeCarTexture->Render();
+    delete policeCarTexture;  // Clean up memory
 }
 
 void EnemyPolice::StartChase() {
