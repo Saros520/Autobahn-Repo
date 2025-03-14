@@ -521,7 +521,7 @@ void PlayScreen::Update() {
         mEnemySpawner->Update();
 
         // First police chase (120s start, lasts 60s)
-        if (mLevelTime >= 2.0f && mEnemyPolice == nullptr) {
+        if (mLevelTime >= 120.0f && mEnemyPolice == nullptr) {
             StartPoliceChase();
         }
         if (mEnemyPolice) {

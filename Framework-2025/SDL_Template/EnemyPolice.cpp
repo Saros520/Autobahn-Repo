@@ -15,7 +15,7 @@ EnemyPolice::EnemyPolice(Player* player, EnemySpawner* enemySpawner, bool isTopP
     mTimer = Timer::Instance();
     mPlayer = player;
     mChasing = true;
-    mBaseSpeed = 100.0f;
+    mBaseSpeed = 120.0f;
     mSpikeStripTimer = 0.0f;
     mSpikeStripInterval = 3.0f;
 
