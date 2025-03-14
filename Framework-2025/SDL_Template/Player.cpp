@@ -82,7 +82,7 @@ void Player::HandleMovement() {
     const float Gravity = 100.0f;
     Vector2 moveDir = Vec2_Zero;
 
-    if (mInput->KeyPressed(SDL_SCANCODE_W) || mInput->KeyDown(SDL_SCANCODE_UP)) {
+    if (mInput->KeyDown(SDL_SCANCODE_W) || mInput->KeyDown(SDL_SCANCODE_UP)) {
         moveDir.y -= 1;
         mAudio->SetVolume(0.1f);
         mAudio->PlaySFX("CarRev.MP3");
@@ -91,15 +91,15 @@ void Player::HandleMovement() {
         mAudio->StopSFX("CarRev.MP3"); // Stop sound when the key is not pressed
     }
 
-    if (mInput->KeyPressed(SDL_SCANCODE_S) || mInput->KeyDown(SDL_SCANCODE_DOWN)) {
+    if (mInput->KeyDown(SDL_SCANCODE_S) || mInput->KeyDown(SDL_SCANCODE_DOWN)) {
         moveDir.y += 1;
 
     }
-    if (mInput->KeyPressed(SDL_SCANCODE_A) || mInput->KeyDown(SDL_SCANCODE_LEFT)) {
+    if (mInput->KeyDown(SDL_SCANCODE_A) || mInput->KeyDown(SDL_SCANCODE_LEFT)) {
         moveDir.x -= 1;
 
     }
-    if (mInput->KeyPressed(SDL_SCANCODE_D) || mInput->KeyDown(SDL_SCANCODE_RIGHT)) {
+    if (mInput->KeyDown(SDL_SCANCODE_D) || mInput->KeyDown(SDL_SCANCODE_RIGHT)) {
         moveDir.x += 1;
 
     }
