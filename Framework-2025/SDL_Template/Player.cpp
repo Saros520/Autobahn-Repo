@@ -229,30 +229,26 @@ void Player::Hit(PhysEntity* other) {
     if (other->Tag() == "PoliceCar" || other->Tag() == "SpikeStrip") {
        
         mAudio->PlaySFX("SFX/CrashSound.wav");
-
-        // Call PlayScreen's Game Over function
-        PlayScreen* playScreen = dynamic_cast<PlayScreen*>(Parent());
-        if (playScreen) {
-            playScreen->OnGameOver();
-        }
+        mAnimating = true;
+        mDeathAnimation->ResetAnimation();
+        mAudio->PlaySFX("SFX/CrashSound.wav");
+        mWasHit = true;
+        mWasHitByPolice = true;
+        //Position(mStartPosition);
     }
     else if (mLives <= 0) {
         // Normal collision behavior (only applies if NOT PoliceCar or SpikeStrip)
         mWasHit = true;
         mAnimating = true;
         mAudio->PlaySFX("SFX/CrashSound.wav");
-
-        PlayScreen* playScreen = dynamic_cast<PlayScreen*>(Parent());
-        if (playScreen) {
-            playScreen->OnGameOver();
-        }
+       
     }
     else {
         mAnimating = true;
         mDeathAnimation->ResetAnimation();
         mAudio->PlaySFX("SFX/CrashSound.wav");
         mWasHit = true;
-		Position(mStartPosition);
+		//Position(mStartPosition);
     }
 
     mLives -= 1;
@@ -283,9 +279,8 @@ void Player::Update() {
 
         mDeathAnimation->Update();
         mAnimating = mDeathAnimation->IsAnimating();
-
-        if (!mAnimating && mLives <= 0) {
-            ScreenManager::Instance()->SetScreen(ScreenManager::Start);
+        if (!mAnimating) {
+            Position(mStartPosition);
         }
     }
     else {
