@@ -521,7 +521,7 @@ void PlayScreen::Update() {
         mEnemySpawner->Update();
 
         // First police chase (120s start, lasts 60s)
-        if (mLevelTime >= 2.0f && mEnemyPolice == nullptr) {
+        if (mLevelTime >= 120.0f && mEnemyPolice == nullptr) {
             StartPoliceChase();
         }
         if (mEnemyPolice) {
@@ -538,7 +538,7 @@ void PlayScreen::Update() {
 
         // Second police chase (240s start, lasts 60s)
         if (mLevelTime >= 240.0f && mTopPoliceCar == nullptr) {
-            SpawnPoliceCar(true);
+            StartTopPoliceChase();
         }
         if (mTopPoliceCar) {
             mTopPoliceChaseTimer += mTimer->DeltaTime();
@@ -552,10 +552,9 @@ void PlayScreen::Update() {
             }
         }
         
-        // Third police chase (400s start, lasts 10,000s)
-        if (mLevelTime >= 420.0f && !mDualPoliceChaseActive) {
-            SpawnPoliceCar(false); // Bottom police car
-            SpawnPoliceCar(true);  // Top police car
+        // Third police chase (420s start, lasts 10,000s)
+        if (mLevelTime >= 2.0f && !mDualPoliceChaseActive) {
+            StartDualPoliceChase();
             mDualPoliceChaseActive = true;
             mDualPoliceChaseTimer = 0.0f; // Reset timer
         }
